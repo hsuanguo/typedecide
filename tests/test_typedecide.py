@@ -6,6 +6,7 @@ import typedecide as td
 from typedecide.backends.jev import JevBackend
 from typedecide.backends.laya import LayaBackend
 from typedecide.backends.semif import SemIfBackend
+from typedecide.backends.thisthat import ThisThatBackend
 
 
 def questions():
@@ -59,6 +60,22 @@ def test_jev_backend_normalizes_all_primitives():
     assert result.input_tokens == 19
 
 
+def test_jev_score_uses_ordered_level_probabilities():
+    question = td.score("severity", "How severe?", ["low", "medium", "high"])
+    response = SimpleNamespace(
+        model="jev-1.13.0",
+        usage=SimpleNamespace(input_tokens=1, output_tokens=1),
+        answers={"severity": SimpleNamespace(probabilities={0: 0.0, 1: 0.57, 2: 0.43}, confidence=0.35)},
+    )
+    result = JevBackend(SimpleNamespace(system_one=lambda **kwargs: response, close=lambda: None), "jev-1.13.0").predict(
+        "state", (question,)
+    )
+    answer = result.answers["severity"]
+    assert answer.selected == "1"
+    assert answer.probabilities == pytest.approx((0.0, 0.57, 0.43))
+    assert answer.score == pytest.approx(1.43)
+
+
 def test_laya_backend_normalizes_rounded_maps_and_noul():
     route, eligible, severity = questions()
     agent = SimpleNamespace(predict=lambda state, native: {
@@ -79,6 +96,18 @@ def test_laya_backend_normalizes_rounded_maps_and_noul():
     assert result.answers["severity"].score == pytest.approx(0.8)
 
 
+def test_laya_score_uses_ordered_level_probabilities():
+    question = td.score("severity", "How severe?", ["low", "medium", "high"])
+    agent = SimpleNamespace(predict=lambda state, native: {
+        "answers": {"severity": {"probabilities": {"0": 0.0, "1": 0.57, "2": 0.43}}},
+    })
+    result = LayaBackend(agent, "model", "typed-decisions").predict("state", (question,))
+    answer = result.answers["severity"]
+    assert answer.selected == "1"
+    assert answer.probabilities == pytest.approx((0.0, 0.57, 0.43))
+    assert answer.score == pytest.approx(1.43)
+
+
 def test_semif_backend_maps_canonical_rows(monkeypatch):
     route, eligible, severity = questions()
     responses = iter([
@@ -93,3 +122,25 @@ def test_semif_backend_maps_canonical_rows(monkeypatch):
     assert result.answers["eligible"].selected == "true"
     assert result.answers["severity"].score == pytest.approx(0.9)
     assert result.input_tokens == 12
+
+
+def test_semif_score_uses_ordered_option_probabilities(monkeypatch):
+    question = td.score("severity", "How severe?", ["low", "medium", "high"])
+    monkeypatch.setattr(
+        "semif_phase1.direct.score",
+        lambda *args: {"probabilities": [0.0, 0.57, 0.43], "total_seconds": 0.01, "input_tokens": 1},
+    )
+    backend = SemIfBackend("model", "tokenizer", {"source": "model", "revision": "a" * 40})
+    answer = backend.predict("state", (question,)).answers["severity"]
+    assert answer.selected == "1"
+    assert answer.probabilities == pytest.approx((0.0, 0.57, 0.43))
+    assert answer.score == pytest.approx(1.43)
+
+
+def test_thisthat_score_uses_ordered_option_probabilities():
+    question = td.score("severity", "How severe?", ["low", "medium", "high"])
+    decider = SimpleNamespace(decide=lambda state, questions: [SimpleNamespace(probabilities=[0.0, 0.57, 0.43], index=1)])
+    answer = ThisThatBackend(decider, "model").predict("state", (question,)).answers["severity"]
+    assert answer.selected == "1"
+    assert answer.probabilities == pytest.approx((0.0, 0.57, 0.43))
+    assert answer.score == pytest.approx(1.43)

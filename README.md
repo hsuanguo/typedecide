@@ -81,9 +81,26 @@ uv sync --extra jev
 uv sync --extra laya
 uv sync --extra semif
 uv sync --extra thisthat
+uv sync --extra all
 ```
 
 SemIf pins a specific Torch and Transformers stack. Use `uv sync --extra semif` in a dedicated environment if it conflicts with another backend.
+
+## Examples
+
+Run the mixed Choice, Noul, and Score policy example:
+
+```bash
+uv sync --extra jev
+uv run python examples/policy_screening.py --backend jev
+```
+
+Evaluate a resume against multiple typed hiring-screen questions:
+
+```bash
+uv sync --extra jev
+uv run python examples/resume_screening.py --backend jev
+```
 
 ## Benchmark
 
