@@ -1,0 +1,42 @@
+[
+  {
+    "id": "support-routing-refund-status-with-policy",
+    "family": "support_routing",
+    "state": {
+      "routing_policy": {
+        "account": "Login, identity verification, and account permissions",
+        "billing": "Charges, invoices, refunds, and payment status",
+        "orders": "Order placement, delivery, cancellation, and returns",
+        "other": "Requests unrelated to the listed teams"
+      },
+      "ticket": "My return was approved last Thursday, but the refund has not appeared on my card. When will the money arrive?"
+    },
+    "primitive": "choice",
+    "instructions": "Which team should own `ticket`?",
+    "criteria": [
+      {"label": "account", "description": "Login, identity verification, and account permissions"},
+      {"label": "billing", "description": "Charges, invoices, refunds, and payment status"},
+      {"label": "orders", "description": "Order placement, delivery, cancellation, and returns"},
+      {"label": "other", "description": "Requests unrelated to the listed teams"}
+    ],
+    "gold_label": "billing",
+    "tags": ["smoke", "clear", "rule_grounded", "policy_repeated"]
+  },
+  {
+    "id": "support-routing-refund-status-without-policy",
+    "family": "support_routing",
+    "state": {
+      "ticket": "My return was approved last Thursday, but the refund has not appeared on my card. When will the money arrive?"
+    },
+    "primitive": "choice",
+    "instructions": "Which team should own `ticket`?",
+    "criteria": [
+      {"label": "account", "description": "Login, identity verification, and account permissions"},
+      {"label": "billing", "description": "Charges, invoices, refunds, and payment status"},
+      {"label": "orders", "description": "Order placement, delivery, cancellation, and returns"},
+      {"label": "other", "description": "Requests unrelated to the listed teams"}
+    ],
+    "gold_label": "billing",
+    "tags": ["smoke", "clear", "rule_grounded", "policy_in_criteria_only"]
+  }
+]

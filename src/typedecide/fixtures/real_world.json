@@ -1,0 +1,1238 @@
+[
+  {
+    "id": "support-routing-billing",
+    "family": "support_routing",
+    "state": {"ticket": "My card shows two charges for order A-104. Please remove the duplicate."},
+    "primitive": "choice",
+    "instructions": "Which team should own `ticket`?",
+    "criteria": [
+      {"label": "account", "description": "Login, identity verification, and account permissions"},
+      {"label": "billing", "description": "Charges, invoices, refunds, and payment status"},
+      {"label": "orders", "description": "Order placement, delivery, cancellation, and returns"},
+      {"label": "other", "description": "Requests unrelated to the listed teams"}
+    ],
+    "gold_label": "billing",
+    "tags": ["clear", "rule_grounded"]
+  },
+  {
+    "id": "support-routing-account",
+    "family": "support_routing",
+    "state": {"ticket": "I replaced my phone and cannot pass the sign-in verification step."},
+    "primitive": "choice",
+    "instructions": "Which team should own `ticket`?",
+    "criteria": [
+      {"label": "account", "description": "Login, identity verification, and account permissions"},
+      {"label": "billing", "description": "Charges, invoices, refunds, and payment status"},
+      {"label": "orders", "description": "Order placement, delivery, cancellation, and returns"},
+      {"label": "other", "description": "Requests unrelated to the listed teams"}
+    ],
+    "gold_label": "account",
+    "tags": ["alternative", "rule_grounded"]
+  },
+  {
+    "id": "support-routing-other",
+    "family": "support_routing",
+    "state": {"ticket": "Where can I find your company's annual sustainability report?"},
+    "primitive": "choice",
+    "instructions": "Which team should own `ticket`?",
+    "criteria": [
+      {"label": "account", "description": "Login, identity verification, and account permissions"},
+      {"label": "billing", "description": "Charges, invoices, refunds, and payment status"},
+      {"label": "orders", "description": "Order placement, delivery, cancellation, and returns"},
+      {"label": "other", "description": "Requests unrelated to the listed teams"}
+    ],
+    "gold_label": "other",
+    "tags": ["no_match", "rule_grounded"]
+  },
+  {
+    "id": "refund-eligible-damaged",
+    "family": "refund_eligibility",
+    "state": {
+      "policy": "A delivered item is refundable within 30 days if it arrived damaged. Final-sale items and damage reported after 30 days are not refundable.",
+      "order": {"final_sale": false, "days_since_delivery": 8},
+      "request": "The vase arrived cracked. I would like a refund."
+    },
+    "primitive": "noul",
+    "instructions": "Is `request` eligible for a refund under `policy` given `order`?",
+    "criteria": [
+      {"label": "false", "description": "At least one required policy condition fails"},
+      {"label": "true", "description": "Every required policy condition is satisfied"}
+    ],
+    "gold_label": "true",
+    "tags": ["clear", "policy"]
+  },
+  {
+    "id": "refund-ineligible-final-sale",
+    "family": "refund_eligibility",
+    "state": {
+      "policy": "A delivered item is refundable within 30 days if it arrived damaged. Final-sale items and damage reported after 30 days are not refundable.",
+      "order": {"final_sale": true, "days_since_delivery": 5},
+      "request": "The final-sale jacket arrived with a torn sleeve. I would like a refund."
+    },
+    "primitive": "noul",
+    "instructions": "Is `request` eligible for a refund under `policy` given `order`?",
+    "criteria": [
+      {"label": "false", "description": "At least one required policy condition fails"},
+      {"label": "true", "description": "Every required policy condition is satisfied"}
+    ],
+    "gold_label": "false",
+    "tags": ["negative", "policy"]
+  },
+  {
+    "id": "refund-ineligible-day-31",
+    "family": "refund_eligibility",
+    "state": {
+      "policy": "A delivered item is refundable within 30 days if it arrived damaged. Final-sale items and damage reported after 30 days are not refundable.",
+      "order": {"final_sale": false, "days_since_delivery": 31},
+      "request": "The blender arrived with a broken switch. I would like a refund."
+    },
+    "primitive": "noul",
+    "instructions": "Is `request` eligible for a refund under `policy` given `order`?",
+    "criteria": [
+      {"label": "false", "description": "At least one required policy condition fails"},
+      {"label": "true", "description": "Every required policy condition is satisfied"}
+    ],
+    "gold_label": "false",
+    "tags": ["boundary", "policy"]
+  },
+  {
+    "id": "command-risk-read-only",
+    "family": "command_risk",
+    "state": {"environment": "production Linux host", "command": "cat /etc/os-release"},
+    "primitive": "choice",
+    "instructions": "Classify the direct operational effect of `command` in `environment`.",
+    "criteria": [
+      {"label": "read_only", "description": "Reads local state without changing data or contacting a network"},
+      {"label": "mutating", "description": "Changes local state but is not primarily destructive"},
+      {"label": "destructive", "description": "Deletes data, overwrites storage, or stops critical service"},
+      {"label": "network", "description": "Primarily sends data or contacts a remote service"}
+    ],
+    "gold_label": "read_only",
+    "tags": ["clear", "operations"]
+  },
+  {
+    "id": "command-risk-destructive",
+    "family": "command_risk",
+    "state": {"environment": "production database host", "command": "rm -rf /var/lib/postgresql/data"},
+    "primitive": "choice",
+    "instructions": "Classify the direct operational effect of `command` in `environment`.",
+    "criteria": [
+      {"label": "read_only", "description": "Reads local state without changing data or contacting a network"},
+      {"label": "mutating", "description": "Changes local state but is not primarily destructive"},
+      {"label": "destructive", "description": "Deletes data, overwrites storage, or stops critical service"},
+      {"label": "network", "description": "Primarily sends data or contacts a remote service"}
+    ],
+    "gold_label": "destructive",
+    "tags": ["negative", "operations"]
+  },
+  {
+    "id": "command-risk-network",
+    "family": "command_risk",
+    "state": {"environment": "production host", "command": "curl -X POST https://collector.example/upload --data-binary @/var/log/app.log"},
+    "primitive": "choice",
+    "instructions": "Classify the direct operational effect of `command` in `environment`.",
+    "criteria": [
+      {"label": "read_only", "description": "Reads local state without changing data or contacting a network"},
+      {"label": "mutating", "description": "Changes local state but is not primarily destructive"},
+      {"label": "destructive", "description": "Deletes data, overwrites storage, or stops critical service"},
+      {"label": "network", "description": "Primarily sends data or contacts a remote service"}
+    ],
+    "gold_label": "network",
+    "tags": ["boundary", "operations"]
+  },
+  {
+    "id": "access-allowed-owner",
+    "family": "access_policy",
+    "state": {
+      "policy": "Employees may read their own payroll record. Payroll administrators may read any payroll record. Contractors may not read payroll records.",
+      "actor": {"type": "employee", "employee_id": "E-17"},
+      "resource": {"type": "payroll_record", "employee_id": "E-17"},
+      "action": "read"
+    },
+    "primitive": "noul",
+    "instructions": "Does `policy` permit `actor` to perform `action` on `resource`?",
+    "criteria": [
+      {"label": "false", "description": "The policy does not explicitly permit this access"},
+      {"label": "true", "description": "The policy explicitly permits this access"}
+    ],
+    "gold_label": "true",
+    "tags": ["clear", "policy"]
+  },
+  {
+    "id": "access-denied-other-employee",
+    "family": "access_policy",
+    "state": {
+      "policy": "Employees may read their own payroll record. Payroll administrators may read any payroll record. Contractors may not read payroll records.",
+      "actor": {"type": "employee", "employee_id": "E-17"},
+      "resource": {"type": "payroll_record", "employee_id": "E-23"},
+      "action": "read"
+    },
+    "primitive": "noul",
+    "instructions": "Does `policy` permit `actor` to perform `action` on `resource`?",
+    "criteria": [
+      {"label": "false", "description": "The policy does not explicitly permit this access"},
+      {"label": "true", "description": "The policy explicitly permits this access"}
+    ],
+    "gold_label": "false",
+    "tags": ["negative", "policy"]
+  },
+  {
+    "id": "access-allowed-admin",
+    "family": "access_policy",
+    "state": {
+      "policy": "Employees may read their own payroll record. Payroll administrators may read any payroll record. Contractors may not read payroll records.",
+      "actor": {"type": "payroll_administrator", "employee_id": "E-99"},
+      "resource": {"type": "payroll_record", "employee_id": "E-23"},
+      "action": "read"
+    },
+    "primitive": "noul",
+    "instructions": "Does `policy` permit `actor` to perform `action` on `resource`?",
+    "criteria": [
+      {"label": "false", "description": "The policy does not explicitly permit this access"},
+      {"label": "true", "description": "The policy explicitly permits this access"}
+    ],
+    "gold_label": "true",
+    "tags": ["boundary", "policy"]
+  },
+  {
+    "id": "incident-severity-low",
+    "family": "incident_severity",
+    "state": {"incident": "The dashboard logo is shifted four pixels in Safari. All controls and data remain usable."},
+    "primitive": "score",
+    "instructions": "Rate the operational severity of `incident`.",
+    "criteria": [
+      {"label": "low", "description": "Cosmetic issue with no functional impact"},
+      {"label": "medium", "description": "A feature is degraded or unavailable, but a practical workaround exists"},
+      {"label": "high", "description": "A core workflow is blocked for many users with no practical workaround"},
+      {"label": "critical", "description": "Active security breach, irreversible data loss, or widespread total outage"}
+    ],
+    "gold_label": "low",
+    "tags": ["clear", "rubric"]
+  },
+  {
+    "id": "incident-severity-medium",
+    "family": "incident_severity",
+    "state": {"incident": "PDF export fails in Safari, but affected users can export the same reports as CSV or use Chrome."},
+    "primitive": "score",
+    "instructions": "Rate the operational severity of `incident`.",
+    "criteria": [
+      {"label": "low", "description": "Cosmetic issue with no functional impact"},
+      {"label": "medium", "description": "A feature is degraded or unavailable, but a practical workaround exists"},
+      {"label": "high", "description": "A core workflow is blocked for many users with no practical workaround"},
+      {"label": "critical", "description": "Active security breach, irreversible data loss, or widespread total outage"}
+    ],
+    "gold_label": "medium",
+    "tags": ["alternative", "rubric"]
+  },
+  {
+    "id": "incident-severity-critical",
+    "family": "incident_severity",
+    "state": {"incident": "An attacker is currently downloading unencrypted customer identity records using a compromised production credential."},
+    "primitive": "score",
+    "instructions": "Rate the operational severity of `incident`.",
+    "criteria": [
+      {"label": "low", "description": "Cosmetic issue with no functional impact"},
+      {"label": "medium", "description": "A feature is degraded or unavailable, but a practical workaround exists"},
+      {"label": "high", "description": "A core workflow is blocked for many users with no practical workaround"},
+      {"label": "critical", "description": "Active security breach, irreversible data loss, or widespread total outage"}
+    ],
+    "gold_label": "critical",
+    "tags": ["boundary", "rubric"]
+  },
+  {
+    "id": "evidence-supported",
+    "family": "evidence_support",
+    "state": {
+      "source": "The trial enrolled 240 adults. At week 12, the treatment group had a mean reduction of 8.2 points and the placebo group 3.1 points.",
+      "claim": "The treatment group improved more than the placebo group at week 12."
+    },
+    "primitive": "choice",
+    "instructions": "How does `source` relate to `claim`?",
+    "criteria": [
+      {"label": "supported", "description": "The source directly entails the claim"},
+      {"label": "contradicted", "description": "The source directly conflicts with the claim"},
+      {"label": "insufficient", "description": "The source does not contain enough information to establish or refute the claim"}
+    ],
+    "gold_label": "supported",
+    "tags": ["clear", "evidence"]
+  },
+  {
+    "id": "evidence-contradicted",
+    "family": "evidence_support",
+    "state": {
+      "source": "The trial enrolled 240 adults. At week 12, the treatment group had a mean reduction of 8.2 points and the placebo group 3.1 points.",
+      "claim": "The placebo group improved more than the treatment group at week 12."
+    },
+    "primitive": "choice",
+    "instructions": "How does `source` relate to `claim`?",
+    "criteria": [
+      {"label": "supported", "description": "The source directly entails the claim"},
+      {"label": "contradicted", "description": "The source directly conflicts with the claim"},
+      {"label": "insufficient", "description": "The source does not contain enough information to establish or refute the claim"}
+    ],
+    "gold_label": "contradicted",
+    "tags": ["negative", "evidence"]
+  },
+  {
+    "id": "evidence-insufficient",
+    "family": "evidence_support",
+    "state": {
+      "source": "The trial enrolled 240 adults. At week 12, the treatment group had a mean reduction of 8.2 points and the placebo group 3.1 points.",
+      "claim": "The treatment caused no serious adverse events."
+    },
+    "primitive": "choice",
+    "instructions": "How does `source` relate to `claim`?",
+    "criteria": [
+      {"label": "supported", "description": "The source directly entails the claim"},
+      {"label": "contradicted", "description": "The source directly conflicts with the claim"},
+      {"label": "insufficient", "description": "The source does not contain enough information to establish or refute the claim"}
+    ],
+    "gold_label": "insufficient",
+    "tags": ["boundary", "evidence"]
+  },
+  {
+    "id": "entity-match-strong",
+    "family": "entity_matching",
+    "state": {
+      "record_a": {"name": "Jon Smith", "city": "Oakland, CA", "employer": "Northstar Labs", "email": "jsmith@northstar.example"},
+      "record_b": {"name": "John Smith", "city": "Oakland, California", "employer": "Northstar Labs", "email": "jsmith@northstar.example"}
+    },
+    "primitive": "noul",
+    "instructions": "Do `record_a` and `record_b` describe the same person?",
+    "criteria": [
+      {"label": "false", "description": "The records contain conflicting identity evidence or lack a meaningful match"},
+      {"label": "true", "description": "The records share strong identity evidence despite harmless formatting or spelling variation"}
+    ],
+    "gold_label": "true",
+    "tags": ["clear", "identity"]
+  },
+  {
+    "id": "entity-match-conflict",
+    "family": "entity_matching",
+    "state": {
+      "record_a": {"name": "Alex Lee", "city": "Boston, MA", "employer": "Harbor Health", "email": "alex.lee@harbor.example"},
+      "record_b": {"name": "Alex Lee", "city": "Austin, TX", "employer": "Mesa Freight", "email": "alee@mesa.example"}
+    },
+    "primitive": "noul",
+    "instructions": "Do `record_a` and `record_b` describe the same person?",
+    "criteria": [
+      {"label": "false", "description": "The records contain conflicting identity evidence or lack a meaningful match"},
+      {"label": "true", "description": "The records share strong identity evidence despite harmless formatting or spelling variation"}
+    ],
+    "gold_label": "false",
+    "tags": ["negative", "identity"]
+  },
+  {
+    "id": "entity-match-boundary",
+    "family": "entity_matching",
+    "state": {
+      "record_a": {"name": "Maria Garcia", "city": "Chicago, IL", "employer": "Cedar School"},
+      "record_b": {"name": "Maria Garcia", "city": "Chicago, Illinois", "employer": "Cedar School"}
+    },
+    "primitive": "noul",
+    "instructions": "Do `record_a` and `record_b` describe the same person?",
+    "criteria": [
+      {"label": "false", "description": "The records contain conflicting identity evidence or lack a meaningful match"},
+      {"label": "true", "description": "The records share strong identity evidence despite harmless formatting or spelling variation"}
+    ],
+    "gold_label": "true",
+    "tags": ["boundary", "identity"]
+  },
+  {
+    "id": "value-selection-invoice-total",
+    "family": "value_selection",
+    "state": {
+      "request": "What is the final amount due on invoice INV-44?",
+      "document": "Invoice INV-44 lists subtotal $84.00, tax $6.72, and total due $90.72.",
+      "candidates": ["$84.00", "$6.72", "$90.72"]
+    },
+    "primitive": "choice",
+    "instructions": "Which candidate is the value requested by `request` according to `document`?",
+    "criteria": [
+      {"label": "candidate_1", "description": "$84.00"},
+      {"label": "candidate_2", "description": "$6.72"},
+      {"label": "candidate_3", "description": "$90.72"},
+      {"label": "none", "description": "No candidate is the requested value"}
+    ],
+    "gold_label": "candidate_3",
+    "tags": ["clear", "extraction"]
+  },
+  {
+    "id": "value-selection-tax",
+    "family": "value_selection",
+    "state": {
+      "request": "How much tax appears on invoice INV-44?",
+      "document": "Invoice INV-44 lists subtotal $84.00, tax $6.72, and total due $90.72.",
+      "candidates": ["$84.00", "$6.72", "$90.72"]
+    },
+    "primitive": "choice",
+    "instructions": "Which candidate is the value requested by `request` according to `document`?",
+    "criteria": [
+      {"label": "candidate_1", "description": "$84.00"},
+      {"label": "candidate_2", "description": "$6.72"},
+      {"label": "candidate_3", "description": "$90.72"},
+      {"label": "none", "description": "No candidate is the requested value"}
+    ],
+    "gold_label": "candidate_2",
+    "tags": ["alternative", "extraction"]
+  },
+  {
+    "id": "value-selection-none",
+    "family": "value_selection",
+    "state": {
+      "request": "What is the payment due date on invoice INV-44?",
+      "document": "Invoice INV-44 lists subtotal $84.00, tax $6.72, and total due $90.72. Payment terms are not shown.",
+      "candidates": ["$84.00", "$6.72", "$90.72"]
+    },
+    "primitive": "choice",
+    "instructions": "Which candidate is the value requested by `request` according to `document`?",
+    "criteria": [
+      {"label": "candidate_1", "description": "$84.00"},
+      {"label": "candidate_2", "description": "$6.72"},
+      {"label": "candidate_3", "description": "$90.72"},
+      {"label": "none", "description": "No candidate is the requested value"}
+    ],
+    "gold_label": "none",
+    "tags": ["no_match", "extraction"]
+  },
+  {
+    "id": "passage-relevance-direct",
+    "family": "passage_relevance",
+    "state": {
+      "query": "How can an administrator revoke an active API token?",
+      "passage": "On the Security > API Tokens page, administrators can select an active token and click Revoke. Revocation takes effect immediately."
+    },
+    "primitive": "score",
+    "instructions": "Rate how useful `passage` is for directly answering `query`.",
+    "criteria": [
+      {"label": "irrelevant", "description": "Unrelated to the query"},
+      {"label": "context_only", "description": "Same broad topic but does not provide the requested information"},
+      {"label": "partial", "description": "Provides some requested information but misses an important part"},
+      {"label": "direct", "description": "Directly provides the information needed to answer the query"}
+    ],
+    "gold_label": "direct",
+    "tags": ["clear", "retrieval"]
+  },
+  {
+    "id": "passage-relevance-partial",
+    "family": "passage_relevance",
+    "state": {
+      "query": "How can an administrator revoke an active API token, and when does revocation take effect?",
+      "passage": "Administrators can manage active API tokens from the Security page and revoke a selected token."
+    },
+    "primitive": "score",
+    "instructions": "Rate how useful `passage` is for directly answering `query`.",
+    "criteria": [
+      {"label": "irrelevant", "description": "Unrelated to the query"},
+      {"label": "context_only", "description": "Same broad topic but does not provide the requested information"},
+      {"label": "partial", "description": "Provides some requested information but misses an important part"},
+      {"label": "direct", "description": "Directly provides the information needed to answer the query"}
+    ],
+    "gold_label": "partial",
+    "tags": ["alternative", "retrieval"]
+  },
+  {
+    "id": "passage-relevance-irrelevant",
+    "family": "passage_relevance",
+    "state": {
+      "query": "How can an administrator revoke an active API token?",
+      "passage": "Monthly invoices can be downloaded as PDF files from the Billing page."
+    },
+    "primitive": "score",
+    "instructions": "Rate how useful `passage` is for directly answering `query`.",
+    "criteria": [
+      {"label": "irrelevant", "description": "Unrelated to the query"},
+      {"label": "context_only", "description": "Same broad topic but does not provide the requested information"},
+      {"label": "partial", "description": "Provides some requested information but misses an important part"},
+      {"label": "direct", "description": "Directly provides the information needed to answer the query"}
+    ],
+    "gold_label": "irrelevant",
+    "tags": ["negative", "retrieval"]
+  },
+  {
+    "id": "tool-call-valid",
+    "family": "tool_call_validation",
+    "state": {
+      "request": "Show tomorrow's weather in Seattle in Fahrenheit.",
+      "tool_schema": {"name": "get_weather", "required": ["city", "date", "unit"], "unit_values": ["celsius", "fahrenheit"]},
+      "call": {"name": "get_weather", "arguments": {"city": "Seattle", "date": "tomorrow", "unit": "fahrenheit"}}
+    },
+    "primitive": "noul",
+    "instructions": "Is `call` relevant to `request`, complete under `tool_schema`, and consistent with the requested values?",
+    "criteria": [
+      {"label": "false", "description": "The tool is irrelevant, a required argument is missing, or an argument conflicts with the request or schema"},
+      {"label": "true", "description": "The tool is relevant, all required arguments are present, and all arguments match the request and schema"}
+    ],
+    "gold_label": "true",
+    "tags": ["clear", "tooling"]
+  },
+  {
+    "id": "tool-call-wrong-unit",
+    "family": "tool_call_validation",
+    "state": {
+      "request": "Show tomorrow's weather in Seattle in Fahrenheit.",
+      "tool_schema": {"name": "get_weather", "required": ["city", "date", "unit"], "unit_values": ["celsius", "fahrenheit"]},
+      "call": {"name": "get_weather", "arguments": {"city": "Seattle", "date": "tomorrow", "unit": "celsius"}}
+    },
+    "primitive": "noul",
+    "instructions": "Is `call` relevant to `request`, complete under `tool_schema`, and consistent with the requested values?",
+    "criteria": [
+      {"label": "false", "description": "The tool is irrelevant, a required argument is missing, or an argument conflicts with the request or schema"},
+      {"label": "true", "description": "The tool is relevant, all required arguments are present, and all arguments match the request and schema"}
+    ],
+    "gold_label": "false",
+    "tags": ["negative", "tooling"]
+  },
+  {
+    "id": "tool-call-missing-date",
+    "family": "tool_call_validation",
+    "state": {
+      "request": "Show tomorrow's weather in Seattle in Fahrenheit.",
+      "tool_schema": {"name": "get_weather", "required": ["city", "date", "unit"], "unit_values": ["celsius", "fahrenheit"]},
+      "call": {"name": "get_weather", "arguments": {"city": "Seattle", "unit": "fahrenheit"}}
+    },
+    "primitive": "noul",
+    "instructions": "Is `call` relevant to `request`, complete under `tool_schema`, and consistent with the requested values?",
+    "criteria": [
+      {"label": "false", "description": "The tool is irrelevant, a required argument is missing, or an argument conflicts with the request or schema"},
+      {"label": "true", "description": "The tool is relevant, all required arguments are present, and all arguments match the request and schema"}
+    ],
+    "gold_label": "false",
+    "tags": ["boundary", "tooling"]
+  },
+  {
+    "id": "support-routing-orders-delivery",
+    "family": "support_routing",
+    "state": {"ticket": "Tracking says delivered, but the package is not at my address."},
+    "primitive": "choice",
+    "instructions": "Which team should own `ticket`?",
+    "criteria": [
+      {"label": "account", "description": "Login, identity verification, and account permissions"},
+      {"label": "billing", "description": "Charges, invoices, refunds, and payment status"},
+      {"label": "orders", "description": "Order placement, delivery, cancellation, and returns"},
+      {"label": "other", "description": "Requests unrelated to the listed teams"}
+    ],
+    "gold_label": "orders",
+    "tags": ["clear", "rule_grounded"]
+  },
+  {
+    "id": "support-routing-billing-invoice",
+    "family": "support_routing",
+    "state": {"ticket": "Please explain why invoice INV-82 includes a late-payment fee."},
+    "primitive": "choice",
+    "instructions": "Which team should own `ticket`?",
+    "criteria": [
+      {"label": "account", "description": "Login, identity verification, and account permissions"},
+      {"label": "billing", "description": "Charges, invoices, refunds, and payment status"},
+      {"label": "orders", "description": "Order placement, delivery, cancellation, and returns"},
+      {"label": "other", "description": "Requests unrelated to the listed teams"}
+    ],
+    "gold_label": "billing",
+    "tags": ["clear", "rule_grounded"]
+  },
+  {
+    "id": "support-routing-account-permission",
+    "family": "support_routing",
+    "state": {"ticket": "My workspace role should be editor, but every project opens read-only."},
+    "primitive": "choice",
+    "instructions": "Which team should own `ticket`?",
+    "criteria": [
+      {"label": "account", "description": "Login, identity verification, and account permissions"},
+      {"label": "billing", "description": "Charges, invoices, refunds, and payment status"},
+      {"label": "orders", "description": "Order placement, delivery, cancellation, and returns"},
+      {"label": "other", "description": "Requests unrelated to the listed teams"}
+    ],
+    "gold_label": "account",
+    "tags": ["clear", "rule_grounded"]
+  },
+  {
+    "id": "support-routing-orders-cancel",
+    "family": "support_routing",
+    "state": {"ticket": "Order A-220 has not shipped yet. Please cancel it."},
+    "primitive": "choice",
+    "instructions": "Which team should own `ticket`?",
+    "criteria": [
+      {"label": "account", "description": "Login, identity verification, and account permissions"},
+      {"label": "billing", "description": "Charges, invoices, refunds, and payment status"},
+      {"label": "orders", "description": "Order placement, delivery, cancellation, and returns"},
+      {"label": "other", "description": "Requests unrelated to the listed teams"}
+    ],
+    "gold_label": "orders",
+    "tags": ["clear", "rule_grounded"]
+  },
+  {
+    "id": "support-routing-other-press",
+    "family": "support_routing",
+    "state": {"ticket": "I am a journalist requesting your media contact for an interview."},
+    "primitive": "choice",
+    "instructions": "Which team should own `ticket`?",
+    "criteria": [
+      {"label": "account", "description": "Login, identity verification, and account permissions"},
+      {"label": "billing", "description": "Charges, invoices, refunds, and payment status"},
+      {"label": "orders", "description": "Order placement, delivery, cancellation, and returns"},
+      {"label": "other", "description": "Requests unrelated to the listed teams"}
+    ],
+    "gold_label": "other",
+    "tags": ["no_match", "rule_grounded"]
+  },
+  {
+    "id": "support-routing-billing-refund-status",
+    "family": "support_routing",
+    "state": {"ticket": "My refund was approved ten days ago but has not reached my card."},
+    "primitive": "choice",
+    "instructions": "Which team should own `ticket`?",
+    "criteria": [
+      {"label": "account", "description": "Login, identity verification, and account permissions"},
+      {"label": "billing", "description": "Charges, invoices, refunds, and payment status"},
+      {"label": "orders", "description": "Order placement, delivery, cancellation, and returns"},
+      {"label": "other", "description": "Requests unrelated to the listed teams"}
+    ],
+    "gold_label": "billing",
+    "tags": ["clear", "rule_grounded"]
+  },
+  {
+    "id": "support-routing-orders-return",
+    "family": "support_routing",
+    "state": {"ticket": "The shoes are the wrong size. How do I send them back?"},
+    "primitive": "choice",
+    "instructions": "Which team should own `ticket`?",
+    "criteria": [
+      {"label": "account", "description": "Login, identity verification, and account permissions"},
+      {"label": "billing", "description": "Charges, invoices, refunds, and payment status"},
+      {"label": "orders", "description": "Order placement, delivery, cancellation, and returns"},
+      {"label": "other", "description": "Requests unrelated to the listed teams"}
+    ],
+    "gold_label": "orders",
+    "tags": ["clear", "rule_grounded"]
+  },
+  {
+    "id": "refund-eligible-day-30",
+    "family": "refund_eligibility",
+    "state": {"policy": "A delivered item is refundable within 30 days if it arrived damaged. Final-sale items and damage reported after 30 days are not refundable.", "order": {"final_sale": false, "days_since_delivery": 30}, "request": "The monitor arrived with a cracked panel. I would like a refund."},
+    "primitive": "noul",
+    "instructions": "Is `request` eligible for a refund under `policy` given `order`?",
+    "criteria": [{"label": "false", "description": "At least one required policy condition fails"}, {"label": "true", "description": "Every required policy condition is satisfied"}],
+    "gold_label": "true",
+    "tags": ["boundary", "policy"]
+  },
+  {
+    "id": "refund-ineligible-undamaged",
+    "family": "refund_eligibility",
+    "state": {"policy": "A delivered item is refundable within 30 days if it arrived damaged. Final-sale items and damage reported after 30 days are not refundable.", "order": {"final_sale": false, "days_since_delivery": 4}, "request": "The lamp arrived intact, but I changed my mind and want a refund."},
+    "primitive": "noul",
+    "instructions": "Is `request` eligible for a refund under `policy` given `order`?",
+    "criteria": [{"label": "false", "description": "At least one required policy condition fails"}, {"label": "true", "description": "Every required policy condition is satisfied"}],
+    "gold_label": "false",
+    "tags": ["negative", "policy"]
+  },
+  {
+    "id": "refund-eligible-day-zero",
+    "family": "refund_eligibility",
+    "state": {"policy": "A delivered item is refundable within 30 days if it arrived damaged. Final-sale items and damage reported after 30 days are not refundable.", "order": {"final_sale": false, "days_since_delivery": 0}, "request": "The camera arrived today with a shattered lens. I want a refund."},
+    "primitive": "noul",
+    "instructions": "Is `request` eligible for a refund under `policy` given `order`?",
+    "criteria": [{"label": "false", "description": "At least one required policy condition fails"}, {"label": "true", "description": "Every required policy condition is satisfied"}],
+    "gold_label": "true",
+    "tags": ["clear", "policy"]
+  },
+  {
+    "id": "refund-ineligible-day-45",
+    "family": "refund_eligibility",
+    "state": {"policy": "A delivered item is refundable within 30 days if it arrived damaged. Final-sale items and damage reported after 30 days are not refundable.", "order": {"final_sale": false, "days_since_delivery": 45}, "request": "The kettle arrived dented. I want a refund."},
+    "primitive": "noul",
+    "instructions": "Is `request` eligible for a refund under `policy` given `order`?",
+    "criteria": [{"label": "false", "description": "At least one required policy condition fails"}, {"label": "true", "description": "Every required policy condition is satisfied"}],
+    "gold_label": "false",
+    "tags": ["negative", "policy"]
+  },
+  {
+    "id": "refund-ineligible-final-sale-day-one",
+    "family": "refund_eligibility",
+    "state": {"policy": "A delivered item is refundable within 30 days if it arrived damaged. Final-sale items and damage reported after 30 days are not refundable.", "order": {"final_sale": true, "days_since_delivery": 1}, "request": "The final-sale mug arrived chipped. I want a refund."},
+    "primitive": "noul",
+    "instructions": "Is `request` eligible for a refund under `policy` given `order`?",
+    "criteria": [{"label": "false", "description": "At least one required policy condition fails"}, {"label": "true", "description": "Every required policy condition is satisfied"}],
+    "gold_label": "false",
+    "tags": ["negative", "policy"]
+  },
+  {
+    "id": "refund-eligible-day-14",
+    "family": "refund_eligibility",
+    "state": {"policy": "A delivered item is refundable within 30 days if it arrived damaged. Final-sale items and damage reported after 30 days are not refundable.", "order": {"final_sale": false, "days_since_delivery": 14}, "request": "The desk arrived with a broken leg. Please refund it."},
+    "primitive": "noul",
+    "instructions": "Is `request` eligible for a refund under `policy` given `order`?",
+    "criteria": [{"label": "false", "description": "At least one required policy condition fails"}, {"label": "true", "description": "Every required policy condition is satisfied"}],
+    "gold_label": "true",
+    "tags": ["clear", "policy"]
+  },
+  {
+    "id": "refund-ineligible-no-refund-request",
+    "family": "refund_eligibility",
+    "state": {"policy": "A delivered item is refundable within 30 days if it arrived damaged. Final-sale items and damage reported after 30 days are not refundable.", "order": {"final_sale": false, "days_since_delivery": 3}, "request": "The chair arrived scratched. Can you send touch-up paint?"},
+    "primitive": "noul",
+    "instructions": "Is `request` eligible for a refund under `policy` given `order`?",
+    "criteria": [{"label": "false", "description": "The request is not for a refund or at least one required policy condition fails"}, {"label": "true", "description": "The request asks for a refund and every required policy condition is satisfied"}],
+    "gold_label": "false",
+    "tags": ["boundary", "policy"]
+  },
+  {
+    "id": "command-risk-mutating-mkdir",
+    "family": "command_risk",
+    "state": {"environment": "production Linux host", "command": "mkdir -p /opt/app/cache"},
+    "primitive": "choice",
+    "instructions": "Classify the direct operational effect of `command` in `environment`.",
+    "criteria": [{"label": "read_only", "description": "Reads local state without changing data or contacting a network"}, {"label": "mutating", "description": "Changes local state but is not primarily destructive"}, {"label": "destructive", "description": "Deletes data, overwrites storage, or stops critical service"}, {"label": "network", "description": "Primarily sends data or contacts a remote service"}],
+    "gold_label": "mutating",
+    "tags": ["clear", "operations"]
+  },
+  {
+    "id": "command-risk-read-only-processes",
+    "family": "command_risk",
+    "state": {"environment": "production Linux host", "command": "ps aux"},
+    "primitive": "choice",
+    "instructions": "Classify the direct operational effect of `command` in `environment`.",
+    "criteria": [{"label": "read_only", "description": "Reads local state without changing data or contacting a network"}, {"label": "mutating", "description": "Changes local state but is not primarily destructive"}, {"label": "destructive", "description": "Deletes data, overwrites storage, or stops critical service"}, {"label": "network", "description": "Primarily sends data or contacts a remote service"}],
+    "gold_label": "read_only",
+    "tags": ["clear", "operations"]
+  },
+  {
+    "id": "command-risk-mutating-chmod",
+    "family": "command_risk",
+    "state": {"environment": "production Linux host", "command": "chmod 640 /etc/app/config.ini"},
+    "primitive": "choice",
+    "instructions": "Classify the direct operational effect of `command` in `environment`.",
+    "criteria": [{"label": "read_only", "description": "Reads local state without changing data or contacting a network"}, {"label": "mutating", "description": "Changes local state but is not primarily destructive"}, {"label": "destructive", "description": "Deletes data, overwrites storage, or stops critical service"}, {"label": "network", "description": "Primarily sends data or contacts a remote service"}],
+    "gold_label": "mutating",
+    "tags": ["clear", "operations"]
+  },
+  {
+    "id": "command-risk-destructive-stop-database",
+    "family": "command_risk",
+    "state": {"environment": "production database host", "command": "systemctl stop postgresql"},
+    "primitive": "choice",
+    "instructions": "Classify the direct operational effect of `command` in `environment`.",
+    "criteria": [{"label": "read_only", "description": "Reads local state without changing data or contacting a network"}, {"label": "mutating", "description": "Changes local state but is not primarily destructive"}, {"label": "destructive", "description": "Deletes data, overwrites storage, or stops critical service"}, {"label": "network", "description": "Primarily sends data or contacts a remote service"}],
+    "gold_label": "destructive",
+    "tags": ["negative", "operations"]
+  },
+  {
+    "id": "command-risk-network-scp",
+    "family": "command_risk",
+    "state": {"environment": "production host", "command": "scp /var/log/app.log analyst@audit.example:/incoming/"},
+    "primitive": "choice",
+    "instructions": "Classify the direct operational effect of `command` in `environment`.",
+    "criteria": [{"label": "read_only", "description": "Reads local state without changing data or contacting a network"}, {"label": "mutating", "description": "Changes local state but is not primarily destructive"}, {"label": "destructive", "description": "Deletes data, overwrites storage, or stops critical service"}, {"label": "network", "description": "Primarily sends data or contacts a remote service"}],
+    "gold_label": "network",
+    "tags": ["clear", "operations"]
+  },
+  {
+    "id": "command-risk-destructive-overwrite-disk",
+    "family": "command_risk",
+    "state": {"environment": "production host", "command": "dd if=/dev/zero of=/dev/sda bs=1M"},
+    "primitive": "choice",
+    "instructions": "Classify the direct operational effect of `command` in `environment`.",
+    "criteria": [{"label": "read_only", "description": "Reads local state without changing data or contacting a network"}, {"label": "mutating", "description": "Changes local state but is not primarily destructive"}, {"label": "destructive", "description": "Deletes data, overwrites storage, or stops critical service"}, {"label": "network", "description": "Primarily sends data or contacts a remote service"}],
+    "gold_label": "destructive",
+    "tags": ["negative", "operations"]
+  },
+  {
+    "id": "command-risk-mutating-touch",
+    "family": "command_risk",
+    "state": {"environment": "production Linux host", "command": "touch /tmp/healthcheck"},
+    "primitive": "choice",
+    "instructions": "Classify the direct operational effect of `command` in `environment`.",
+    "criteria": [{"label": "read_only", "description": "Reads local state without changing data or contacting a network"}, {"label": "mutating", "description": "Changes local state but is not primarily destructive"}, {"label": "destructive", "description": "Deletes data, overwrites storage, or stops critical service"}, {"label": "network", "description": "Primarily sends data or contacts a remote service"}],
+    "gold_label": "mutating",
+    "tags": ["clear", "operations"]
+  },
+  {
+    "id": "access-denied-contractor",
+    "family": "access_policy",
+    "state": {"policy": "Employees may read their own payroll record. Payroll administrators may read any payroll record. Contractors may not read payroll records.", "actor": {"type": "contractor", "employee_id": "C-7"}, "resource": {"type": "payroll_record", "employee_id": "C-7"}, "action": "read"},
+    "primitive": "noul",
+    "instructions": "Does `policy` permit `actor` to perform `action` on `resource`?",
+    "criteria": [{"label": "false", "description": "The policy does not explicitly permit this access"}, {"label": "true", "description": "The policy explicitly permits this access"}],
+    "gold_label": "false",
+    "tags": ["negative", "policy"]
+  },
+  {
+    "id": "access-denied-write-own",
+    "family": "access_policy",
+    "state": {"policy": "Employees may read their own payroll record. Payroll administrators may read any payroll record. Contractors may not read payroll records.", "actor": {"type": "employee", "employee_id": "E-17"}, "resource": {"type": "payroll_record", "employee_id": "E-17"}, "action": "write"},
+    "primitive": "noul",
+    "instructions": "Does `policy` permit `actor` to perform `action` on `resource`?",
+    "criteria": [{"label": "false", "description": "The policy does not explicitly permit this access"}, {"label": "true", "description": "The policy explicitly permits this access"}],
+    "gold_label": "false",
+    "tags": ["boundary", "policy"]
+  },
+  {
+    "id": "access-allowed-owner-two",
+    "family": "access_policy",
+    "state": {"policy": "Employees may read their own payroll record. Payroll administrators may read any payroll record. Contractors may not read payroll records.", "actor": {"type": "employee", "employee_id": "E-44"}, "resource": {"type": "payroll_record", "employee_id": "E-44"}, "action": "read"},
+    "primitive": "noul",
+    "instructions": "Does `policy` permit `actor` to perform `action` on `resource`?",
+    "criteria": [{"label": "false", "description": "The policy does not explicitly permit this access"}, {"label": "true", "description": "The policy explicitly permits this access"}],
+    "gold_label": "true",
+    "tags": ["clear", "policy"]
+  },
+  {
+    "id": "access-allowed-admin-two",
+    "family": "access_policy",
+    "state": {"policy": "Employees may read their own payroll record. Payroll administrators may read any payroll record. Contractors may not read payroll records.", "actor": {"type": "payroll_administrator", "employee_id": "E-91"}, "resource": {"type": "payroll_record", "employee_id": "E-12"}, "action": "read"},
+    "primitive": "noul",
+    "instructions": "Does `policy` permit `actor` to perform `action` on `resource`?",
+    "criteria": [{"label": "false", "description": "The policy does not explicitly permit this access"}, {"label": "true", "description": "The policy explicitly permits this access"}],
+    "gold_label": "true",
+    "tags": ["clear", "policy"]
+  },
+  {
+    "id": "access-denied-employee-third-party",
+    "family": "access_policy",
+    "state": {"policy": "Employees may read their own payroll record. Payroll administrators may read any payroll record. Contractors may not read payroll records.", "actor": {"type": "employee", "employee_id": "E-02"}, "resource": {"type": "payroll_record", "employee_id": "E-88"}, "action": "read"},
+    "primitive": "noul",
+    "instructions": "Does `policy` permit `actor` to perform `action` on `resource`?",
+    "criteria": [{"label": "false", "description": "The policy does not explicitly permit this access"}, {"label": "true", "description": "The policy explicitly permits this access"}],
+    "gold_label": "false",
+    "tags": ["negative", "policy"]
+  },
+  {
+    "id": "access-denied-admin-write",
+    "family": "access_policy",
+    "state": {"policy": "Employees may read their own payroll record. Payroll administrators may read any payroll record. Contractors may not read payroll records.", "actor": {"type": "payroll_administrator", "employee_id": "E-91"}, "resource": {"type": "payroll_record", "employee_id": "E-12"}, "action": "write"},
+    "primitive": "noul",
+    "instructions": "Does `policy` permit `actor` to perform `action` on `resource`?",
+    "criteria": [{"label": "false", "description": "The policy does not explicitly permit this access"}, {"label": "true", "description": "The policy explicitly permits this access"}],
+    "gold_label": "false",
+    "tags": ["boundary", "policy"]
+  },
+  {
+    "id": "access-denied-unknown-role",
+    "family": "access_policy",
+    "state": {"policy": "Employees may read their own payroll record. Payroll administrators may read any payroll record. Contractors may not read payroll records.", "actor": {"type": "vendor", "employee_id": "V-3"}, "resource": {"type": "payroll_record", "employee_id": "V-3"}, "action": "read"},
+    "primitive": "noul",
+    "instructions": "Does `policy` permit `actor` to perform `action` on `resource`?",
+    "criteria": [{"label": "false", "description": "The policy does not explicitly permit this access"}, {"label": "true", "description": "The policy explicitly permits this access"}],
+    "gold_label": "false",
+    "tags": ["no_match", "policy"]
+  },
+  {
+    "id": "incident-severity-high-login",
+    "family": "incident_severity",
+    "state": {"incident": "All customers receive an error when signing in, and no workaround is available. Data remains intact."},
+    "primitive": "score",
+    "instructions": "Rate the operational severity of `incident`.",
+    "criteria": [{"label": "low", "description": "Cosmetic issue with no functional impact"}, {"label": "medium", "description": "A feature is degraded or unavailable, but a practical workaround exists"}, {"label": "high", "description": "A core workflow is blocked for many users with no practical workaround"}, {"label": "critical", "description": "Active security breach, irreversible data loss, or widespread total outage"}],
+    "gold_label": "high",
+    "tags": ["clear", "rubric"]
+  },
+  {
+    "id": "incident-severity-medium-search",
+    "family": "incident_severity",
+    "state": {"incident": "Product search is unavailable, but customers can browse categories and place orders normally."},
+    "primitive": "score",
+    "instructions": "Rate the operational severity of `incident`.",
+    "criteria": [{"label": "low", "description": "Cosmetic issue with no functional impact"}, {"label": "medium", "description": "A feature is degraded or unavailable, but a practical workaround exists"}, {"label": "high", "description": "A core workflow is blocked for many users with no practical workaround"}, {"label": "critical", "description": "Active security breach, irreversible data loss, or widespread total outage"}],
+    "gold_label": "medium",
+    "tags": ["clear", "rubric"]
+  },
+  {
+    "id": "incident-severity-low-typo",
+    "family": "incident_severity",
+    "state": {"incident": "The settings page heading contains a spelling mistake. Every function works."},
+    "primitive": "score",
+    "instructions": "Rate the operational severity of `incident`.",
+    "criteria": [{"label": "low", "description": "Cosmetic issue with no functional impact"}, {"label": "medium", "description": "A feature is degraded or unavailable, but a practical workaround exists"}, {"label": "high", "description": "A core workflow is blocked for many users with no practical workaround"}, {"label": "critical", "description": "Active security breach, irreversible data loss, or widespread total outage"}],
+    "gold_label": "low",
+    "tags": ["clear", "rubric"]
+  },
+  {
+    "id": "incident-severity-critical-data-loss",
+    "family": "incident_severity",
+    "state": {"incident": "A storage failure permanently deleted customer documents, and no backups exist."},
+    "primitive": "score",
+    "instructions": "Rate the operational severity of `incident`.",
+    "criteria": [{"label": "low", "description": "Cosmetic issue with no functional impact"}, {"label": "medium", "description": "A feature is degraded or unavailable, but a practical workaround exists"}, {"label": "high", "description": "A core workflow is blocked for many users with no practical workaround"}, {"label": "critical", "description": "Active security breach, irreversible data loss, or widespread total outage"}],
+    "gold_label": "critical",
+    "tags": ["negative", "rubric"]
+  },
+  {
+    "id": "incident-severity-high-checkout",
+    "family": "incident_severity",
+    "state": {"incident": "Checkout fails for every customer, no alternative payment path exists, but browsing and account access work."},
+    "primitive": "score",
+    "instructions": "Rate the operational severity of `incident`.",
+    "criteria": [{"label": "low", "description": "Cosmetic issue with no functional impact"}, {"label": "medium", "description": "A feature is degraded or unavailable, but a practical workaround exists"}, {"label": "high", "description": "A core workflow is blocked for many users with no practical workaround"}, {"label": "critical", "description": "Active security breach, irreversible data loss, or widespread total outage"}],
+    "gold_label": "high",
+    "tags": ["clear", "rubric"]
+  },
+  {
+    "id": "incident-severity-medium-email",
+    "family": "incident_severity",
+    "state": {"incident": "Automated receipt emails are delayed, but customers can download receipts immediately from order history."},
+    "primitive": "score",
+    "instructions": "Rate the operational severity of `incident`.",
+    "criteria": [{"label": "low", "description": "Cosmetic issue with no functional impact"}, {"label": "medium", "description": "A feature is degraded or unavailable, but a practical workaround exists"}, {"label": "high", "description": "A core workflow is blocked for many users with no practical workaround"}, {"label": "critical", "description": "Active security breach, irreversible data loss, or widespread total outage"}],
+    "gold_label": "medium",
+    "tags": ["clear", "rubric"]
+  },
+  {
+    "id": "incident-severity-critical-total-outage",
+    "family": "incident_severity",
+    "state": {"incident": "Every application endpoint is unavailable worldwide, including login, checkout, and support."},
+    "primitive": "score",
+    "instructions": "Rate the operational severity of `incident`.",
+    "criteria": [{"label": "low", "description": "Cosmetic issue with no functional impact"}, {"label": "medium", "description": "A feature is degraded or unavailable, but a practical workaround exists"}, {"label": "high", "description": "A core workflow is blocked for many users with no practical workaround"}, {"label": "critical", "description": "Active security breach, irreversible data loss, or widespread total outage"}],
+    "gold_label": "critical",
+    "tags": ["clear", "rubric"]
+  },
+  {
+    "id": "evidence-supported-release-date",
+    "family": "evidence_support",
+    "state": {"source": "Version 4.2 was released on 18 September 2026 and adds offline export.", "claim": "Version 4.2 became available on 18 September 2026."},
+    "primitive": "choice",
+    "instructions": "How does `source` relate to `claim`?",
+    "criteria": [{"label": "supported", "description": "The source directly entails the claim"}, {"label": "contradicted", "description": "The source directly conflicts with the claim"}, {"label": "insufficient", "description": "The source does not contain enough information to establish or refute the claim"}],
+    "gold_label": "supported",
+    "tags": ["clear", "evidence"]
+  },
+  {
+    "id": "evidence-contradicted-release-date",
+    "family": "evidence_support",
+    "state": {"source": "Version 4.2 was released on 18 September 2026 and adds offline export.", "claim": "Version 4.2 was released in August 2026."},
+    "primitive": "choice",
+    "instructions": "How does `source` relate to `claim`?",
+    "criteria": [{"label": "supported", "description": "The source directly entails the claim"}, {"label": "contradicted", "description": "The source directly conflicts with the claim"}, {"label": "insufficient", "description": "The source does not contain enough information to establish or refute the claim"}],
+    "gold_label": "contradicted",
+    "tags": ["negative", "evidence"]
+  },
+  {
+    "id": "evidence-insufficient-downloads",
+    "family": "evidence_support",
+    "state": {"source": "Version 4.2 was released on 18 September 2026 and adds offline export.", "claim": "Version 4.2 was downloaded more than one million times."},
+    "primitive": "choice",
+    "instructions": "How does `source` relate to `claim`?",
+    "criteria": [{"label": "supported", "description": "The source directly entails the claim"}, {"label": "contradicted", "description": "The source directly conflicts with the claim"}, {"label": "insufficient", "description": "The source does not contain enough information to establish or refute the claim"}],
+    "gold_label": "insufficient",
+    "tags": ["boundary", "evidence"]
+  },
+  {
+    "id": "evidence-supported-policy",
+    "family": "evidence_support",
+    "state": {"source": "Employees receive 20 days of paid annual leave each calendar year.", "claim": "Employees are entitled to paid annual leave."},
+    "primitive": "choice",
+    "instructions": "How does `source` relate to `claim`?",
+    "criteria": [{"label": "supported", "description": "The source directly entails the claim"}, {"label": "contradicted", "description": "The source directly conflicts with the claim"}, {"label": "insufficient", "description": "The source does not contain enough information to establish or refute the claim"}],
+    "gold_label": "supported",
+    "tags": ["clear", "evidence"]
+  },
+  {
+    "id": "evidence-contradicted-policy",
+    "family": "evidence_support",
+    "state": {"source": "Employees receive 20 days of paid annual leave each calendar year.", "claim": "Employees receive no paid annual leave."},
+    "primitive": "choice",
+    "instructions": "How does `source` relate to `claim`?",
+    "criteria": [{"label": "supported", "description": "The source directly entails the claim"}, {"label": "contradicted", "description": "The source directly conflicts with the claim"}, {"label": "insufficient", "description": "The source does not contain enough information to establish or refute the claim"}],
+    "gold_label": "contradicted",
+    "tags": ["negative", "evidence"]
+  },
+  {
+    "id": "evidence-insufficient-carryover",
+    "family": "evidence_support",
+    "state": {"source": "Employees receive 20 days of paid annual leave each calendar year.", "claim": "Unused annual leave carries into the next year."},
+    "primitive": "choice",
+    "instructions": "How does `source` relate to `claim`?",
+    "criteria": [{"label": "supported", "description": "The source directly entails the claim"}, {"label": "contradicted", "description": "The source directly conflicts with the claim"}, {"label": "insufficient", "description": "The source does not contain enough information to establish or refute the claim"}],
+    "gold_label": "insufficient",
+    "tags": ["boundary", "evidence"]
+  },
+  {
+    "id": "evidence-supported-capacity",
+    "family": "evidence_support",
+    "state": {"source": "The venue has 480 seated places and 120 standing places.", "claim": "The venue can accommodate at least 500 people in total."},
+    "primitive": "choice",
+    "instructions": "How does `source` relate to `claim`?",
+    "criteria": [{"label": "supported", "description": "The source directly entails the claim"}, {"label": "contradicted", "description": "The source directly conflicts with the claim"}, {"label": "insufficient", "description": "The source does not contain enough information to establish or refute the claim"}],
+    "gold_label": "supported",
+    "tags": ["clear", "evidence"]
+  },
+  {
+    "id": "entity-match-same-customer-id",
+    "family": "entity_matching",
+    "state": {"record_a": {"customer_id": "C-104", "name": "Priya Shah", "email": "priya@old.example"}, "record_b": {"customer_id": "C-104", "name": "Priya Shah", "email": "priya@new.example"}},
+    "primitive": "noul",
+    "instructions": "Do `record_a` and `record_b` describe the same customer?",
+    "criteria": [{"label": "false", "description": "Unique identifiers conflict or the records contain strong conflicting identity evidence"}, {"label": "true", "description": "Unique identifiers match or the records share strong identity evidence without a unique-identifier conflict"}],
+    "gold_label": "true",
+    "tags": ["clear", "identity"]
+  },
+  {
+    "id": "entity-match-conflicting-customer-id",
+    "family": "entity_matching",
+    "state": {"record_a": {"customer_id": "C-104", "name": "Priya Shah", "email": "priya@example.com"}, "record_b": {"customer_id": "C-991", "name": "Priya Shah", "email": "priya@example.com"}},
+    "primitive": "noul",
+    "instructions": "Do `record_a` and `record_b` describe the same customer?",
+    "criteria": [{"label": "false", "description": "Unique identifiers conflict or the records contain strong conflicting identity evidence"}, {"label": "true", "description": "Unique identifiers match or the records share strong identity evidence without a unique-identifier conflict"}],
+    "gold_label": "false",
+    "tags": ["negative", "identity"]
+  },
+  {
+    "id": "entity-match-email-format",
+    "family": "entity_matching",
+    "state": {"record_a": {"name": "Mina Patel", "city": "London", "email": "Mina.Patel@Example.com"}, "record_b": {"name": "Mina Patel", "city": "London", "email": "mina.patel@example.com"}},
+    "primitive": "noul",
+    "instructions": "Do `record_a` and `record_b` describe the same person?",
+    "criteria": [{"label": "false", "description": "The records contain conflicting identity evidence or lack a meaningful match"}, {"label": "true", "description": "The records share strong identity evidence despite harmless formatting or capitalization variation"}],
+    "gold_label": "true",
+    "tags": ["clear", "identity"]
+  },
+  {
+    "id": "entity-match-different-email",
+    "family": "entity_matching",
+    "state": {"record_a": {"name": "Sam Chen", "city": "Denver", "email": "sam.chen@alpha.example"}, "record_b": {"name": "Sam Chen", "city": "Miami", "email": "sam.chen@beta.example"}},
+    "primitive": "noul",
+    "instructions": "Do `record_a` and `record_b` describe the same person?",
+    "criteria": [{"label": "false", "description": "The records contain conflicting identity evidence or lack a meaningful match"}, {"label": "true", "description": "The records share strong identity evidence despite harmless formatting variation"}],
+    "gold_label": "false",
+    "tags": ["negative", "identity"]
+  },
+  {
+    "id": "entity-match-phone-normalization",
+    "family": "entity_matching",
+    "state": {"record_a": {"name": "Elena Rossi", "phone": "+44 20 7946 0958", "city": "London"}, "record_b": {"name": "Elena Rossi", "phone": "+442079460958", "city": "London"}},
+    "primitive": "noul",
+    "instructions": "Do `record_a` and `record_b` describe the same person?",
+    "criteria": [{"label": "false", "description": "The records contain conflicting identity evidence or lack a meaningful match"}, {"label": "true", "description": "The records share strong identity evidence despite harmless phone formatting variation"}],
+    "gold_label": "true",
+    "tags": ["clear", "identity"]
+  },
+  {
+    "id": "entity-match-different-phone",
+    "family": "entity_matching",
+    "state": {"record_a": {"name": "Noah Williams", "phone": "+1-415-555-0101", "city": "San Francisco"}, "record_b": {"name": "Noah Williams", "phone": "+1-212-555-0199", "city": "New York"}},
+    "primitive": "noul",
+    "instructions": "Do `record_a` and `record_b` describe the same person?",
+    "criteria": [{"label": "false", "description": "The records contain conflicting identity evidence or lack a meaningful match"}, {"label": "true", "description": "The records share strong identity evidence despite harmless formatting variation"}],
+    "gold_label": "false",
+    "tags": ["negative", "identity"]
+  },
+  {
+    "id": "entity-match-employee-id",
+    "family": "entity_matching",
+    "state": {"record_a": {"employee_id": "E-771", "name": "Robert King", "department": "Sales"}, "record_b": {"employee_id": "E-771", "name": "Bob King", "department": "Revenue"}},
+    "primitive": "noul",
+    "instructions": "Do `record_a` and `record_b` describe the same employee?",
+    "criteria": [{"label": "false", "description": "Unique identifiers conflict or the records contain strong conflicting identity evidence"}, {"label": "true", "description": "Unique identifiers match despite ordinary name or department changes"}],
+    "gold_label": "true",
+    "tags": ["clear", "identity"]
+  },
+  {
+    "id": "value-selection-due-date",
+    "family": "value_selection",
+    "state": {"request": "When is invoice INV-90 due?", "document": "Invoice INV-90 was issued 2 September 2026 and is due 2 October 2026.", "candidates": ["2 September 2026", "2 October 2026", "INV-90"]},
+    "primitive": "choice",
+    "instructions": "Which candidate is the value requested by `request` according to `document`?",
+    "criteria": [{"label": "candidate_1", "description": "2 September 2026"}, {"label": "candidate_2", "description": "2 October 2026"}, {"label": "candidate_3", "description": "INV-90"}, {"label": "none", "description": "No candidate is the requested value"}],
+    "gold_label": "candidate_2",
+    "tags": ["clear", "extraction"]
+  },
+  {
+    "id": "value-selection-issue-date",
+    "family": "value_selection",
+    "state": {"request": "When was invoice INV-90 issued?", "document": "Invoice INV-90 was issued 2 September 2026 and is due 2 October 2026.", "candidates": ["2 September 2026", "2 October 2026", "INV-90"]},
+    "primitive": "choice",
+    "instructions": "Which candidate is the value requested by `request` according to `document`?",
+    "criteria": [{"label": "candidate_1", "description": "2 September 2026"}, {"label": "candidate_2", "description": "2 October 2026"}, {"label": "candidate_3", "description": "INV-90"}, {"label": "none", "description": "No candidate is the requested value"}],
+    "gold_label": "candidate_1",
+    "tags": ["clear", "extraction"]
+  },
+  {
+    "id": "value-selection-support-email",
+    "family": "value_selection",
+    "state": {"request": "Which email should customers use for technical support?", "document": "Sales: sales@example.com. Technical support: help@example.com. Privacy: privacy@example.com.", "candidates": ["sales@example.com", "help@example.com", "privacy@example.com"]},
+    "primitive": "choice",
+    "instructions": "Which candidate is the value requested by `request` according to `document`?",
+    "criteria": [{"label": "candidate_1", "description": "sales@example.com"}, {"label": "candidate_2", "description": "help@example.com"}, {"label": "candidate_3", "description": "privacy@example.com"}, {"label": "none", "description": "No candidate is the requested value"}],
+    "gold_label": "candidate_2",
+    "tags": ["clear", "extraction"]
+  },
+  {
+    "id": "value-selection-privacy-email",
+    "family": "value_selection",
+    "state": {"request": "Which email handles privacy requests?", "document": "Sales: sales@example.com. Technical support: help@example.com. Privacy: privacy@example.com.", "candidates": ["sales@example.com", "help@example.com", "privacy@example.com"]},
+    "primitive": "choice",
+    "instructions": "Which candidate is the value requested by `request` according to `document`?",
+    "criteria": [{"label": "candidate_1", "description": "sales@example.com"}, {"label": "candidate_2", "description": "help@example.com"}, {"label": "candidate_3", "description": "privacy@example.com"}, {"label": "none", "description": "No candidate is the requested value"}],
+    "gold_label": "candidate_3",
+    "tags": ["clear", "extraction"]
+  },
+  {
+    "id": "value-selection-phone",
+    "family": "value_selection",
+    "state": {"request": "What is the emergency phone number?", "document": "Reception: +1-555-0100. Emergency line: +1-555-0199.", "candidates": ["+1-555-0100", "+1-555-0199"]},
+    "primitive": "choice",
+    "instructions": "Which candidate is the value requested by `request` according to `document`?",
+    "criteria": [{"label": "candidate_1", "description": "+1-555-0100"}, {"label": "candidate_2", "description": "+1-555-0199"}, {"label": "none", "description": "No candidate is the requested value"}],
+    "gold_label": "candidate_2",
+    "tags": ["clear", "extraction"]
+  },
+  {
+    "id": "value-selection-none-owner",
+    "family": "value_selection",
+    "state": {"request": "Who owns project Atlas?", "document": "Project Atlas status is active. Its budget is $45,000.", "candidates": ["active", "$45,000"]},
+    "primitive": "choice",
+    "instructions": "Which candidate is the value requested by `request` according to `document`?",
+    "criteria": [{"label": "candidate_1", "description": "active"}, {"label": "candidate_2", "description": "$45,000"}, {"label": "none", "description": "No candidate is the requested value"}],
+    "gold_label": "none",
+    "tags": ["no_match", "extraction"]
+  },
+  {
+    "id": "value-selection-budget",
+    "family": "value_selection",
+    "state": {"request": "What is the budget for project Atlas?", "document": "Project Atlas status is active. Its budget is $45,000.", "candidates": ["active", "$45,000"]},
+    "primitive": "choice",
+    "instructions": "Which candidate is the value requested by `request` according to `document`?",
+    "criteria": [{"label": "candidate_1", "description": "active"}, {"label": "candidate_2", "description": "$45,000"}, {"label": "none", "description": "No candidate is the requested value"}],
+    "gold_label": "candidate_2",
+    "tags": ["clear", "extraction"]
+  },
+  {
+    "id": "passage-relevance-context-only",
+    "family": "passage_relevance",
+    "state": {"query": "How do I rotate an API token?", "passage": "API tokens authenticate programmatic requests and should be stored securely."},
+    "primitive": "score",
+    "instructions": "Rate how useful `passage` is for directly answering `query`.",
+    "criteria": [{"label": "irrelevant", "description": "Unrelated to the query"}, {"label": "context_only", "description": "Same broad topic but does not provide the requested information"}, {"label": "partial", "description": "Provides some requested information but misses an important part"}, {"label": "direct", "description": "Directly provides the information needed to answer the query"}],
+    "gold_label": "context_only",
+    "tags": ["boundary", "retrieval"]
+  },
+  {
+    "id": "passage-relevance-direct-password",
+    "family": "passage_relevance",
+    "state": {"query": "How do I reset my password?", "passage": "Open Account Settings, select Security, choose Reset Password, and follow the emailed link."},
+    "primitive": "score",
+    "instructions": "Rate how useful `passage` is for directly answering `query`.",
+    "criteria": [{"label": "irrelevant", "description": "Unrelated to the query"}, {"label": "context_only", "description": "Same broad topic but does not provide the requested information"}, {"label": "partial", "description": "Provides some requested information but misses an important part"}, {"label": "direct", "description": "Directly provides the information needed to answer the query"}],
+    "gold_label": "direct",
+    "tags": ["clear", "retrieval"]
+  },
+  {
+    "id": "passage-relevance-partial-password",
+    "family": "passage_relevance",
+    "state": {"query": "How do I reset my password, and how long is the reset link valid?", "passage": "Open Account Settings, select Security, and choose Reset Password."},
+    "primitive": "score",
+    "instructions": "Rate how useful `passage` is for directly answering `query`.",
+    "criteria": [{"label": "irrelevant", "description": "Unrelated to the query"}, {"label": "context_only", "description": "Same broad topic but does not provide the requested information"}, {"label": "partial", "description": "Provides some requested information but misses an important part"}, {"label": "direct", "description": "Directly provides the information needed to answer the query"}],
+    "gold_label": "partial",
+    "tags": ["boundary", "retrieval"]
+  },
+  {
+    "id": "passage-relevance-irrelevant-password",
+    "family": "passage_relevance",
+    "state": {"query": "How do I reset my password?", "passage": "Invoices are generated on the first day of each month."},
+    "primitive": "score",
+    "instructions": "Rate how useful `passage` is for directly answering `query`.",
+    "criteria": [{"label": "irrelevant", "description": "Unrelated to the query"}, {"label": "context_only", "description": "Same broad topic but does not provide the requested information"}, {"label": "partial", "description": "Provides some requested information but misses an important part"}, {"label": "direct", "description": "Directly provides the information needed to answer the query"}],
+    "gold_label": "irrelevant",
+    "tags": ["negative", "retrieval"]
+  },
+  {
+    "id": "passage-relevance-context-only-refund",
+    "family": "passage_relevance",
+    "state": {"query": "How long does a card refund take?", "passage": "Eligible purchases can be refunded to the original payment method."},
+    "primitive": "score",
+    "instructions": "Rate how useful `passage` is for directly answering `query`.",
+    "criteria": [{"label": "irrelevant", "description": "Unrelated to the query"}, {"label": "context_only", "description": "Same broad topic but does not provide the requested information"}, {"label": "partial", "description": "Provides some requested information but misses an important part"}, {"label": "direct", "description": "Directly provides the information needed to answer the query"}],
+    "gold_label": "context_only",
+    "tags": ["boundary", "retrieval"]
+  },
+  {
+    "id": "passage-relevance-direct-refund",
+    "family": "passage_relevance",
+    "state": {"query": "How long does a card refund take?", "passage": "Refunds to credit and debit cards normally appear within five to ten business days."},
+    "primitive": "score",
+    "instructions": "Rate how useful `passage` is for directly answering `query`.",
+    "criteria": [{"label": "irrelevant", "description": "Unrelated to the query"}, {"label": "context_only", "description": "Same broad topic but does not provide the requested information"}, {"label": "partial", "description": "Provides some requested information but misses an important part"}, {"label": "direct", "description": "Directly provides the information needed to answer the query"}],
+    "gold_label": "direct",
+    "tags": ["clear", "retrieval"]
+  },
+  {
+    "id": "passage-relevance-partial-export",
+    "family": "passage_relevance",
+    "state": {"query": "Which export formats are supported, and where are exports saved?", "passage": "Reports can be exported as PDF or CSV."},
+    "primitive": "score",
+    "instructions": "Rate how useful `passage` is for directly answering `query`.",
+    "criteria": [{"label": "irrelevant", "description": "Unrelated to the query"}, {"label": "context_only", "description": "Same broad topic but does not provide the requested information"}, {"label": "partial", "description": "Provides some requested information but misses an important part"}, {"label": "direct", "description": "Directly provides the information needed to answer the query"}],
+    "gold_label": "partial",
+    "tags": ["boundary", "retrieval"]
+  },
+  {
+    "id": "tool-call-valid-stock",
+    "family": "tool_call_validation",
+    "state": {"request": "Check inventory for SKU A-17 in warehouse west.", "tool_schema": {"name": "check_inventory", "required": ["sku", "warehouse"], "warehouse_values": ["east", "west"]}, "call": {"name": "check_inventory", "arguments": {"sku": "A-17", "warehouse": "west"}}},
+    "primitive": "noul",
+    "instructions": "Is `call` relevant to `request`, complete under `tool_schema`, and consistent with the requested values?",
+    "criteria": [{"label": "false", "description": "The tool is irrelevant, a required argument is missing, or an argument conflicts with the request or schema"}, {"label": "true", "description": "The tool is relevant, all required arguments are present, and all arguments match the request and schema"}],
+    "gold_label": "true",
+    "tags": ["clear", "tooling"]
+  },
+  {
+    "id": "tool-call-wrong-warehouse",
+    "family": "tool_call_validation",
+    "state": {"request": "Check inventory for SKU A-17 in warehouse west.", "tool_schema": {"name": "check_inventory", "required": ["sku", "warehouse"], "warehouse_values": ["east", "west"]}, "call": {"name": "check_inventory", "arguments": {"sku": "A-17", "warehouse": "east"}}},
+    "primitive": "noul",
+    "instructions": "Is `call` relevant to `request`, complete under `tool_schema`, and consistent with the requested values?",
+    "criteria": [{"label": "false", "description": "The tool is irrelevant, a required argument is missing, or an argument conflicts with the request or schema"}, {"label": "true", "description": "The tool is relevant, all required arguments are present, and all arguments match the request and schema"}],
+    "gold_label": "false",
+    "tags": ["negative", "tooling"]
+  },
+  {
+    "id": "tool-call-missing-sku",
+    "family": "tool_call_validation",
+    "state": {"request": "Check inventory for SKU A-17 in warehouse west.", "tool_schema": {"name": "check_inventory", "required": ["sku", "warehouse"], "warehouse_values": ["east", "west"]}, "call": {"name": "check_inventory", "arguments": {"warehouse": "west"}}},
+    "primitive": "noul",
+    "instructions": "Is `call` relevant to `request`, complete under `tool_schema`, and consistent with the requested values?",
+    "criteria": [{"label": "false", "description": "The tool is irrelevant, a required argument is missing, or an argument conflicts with the request or schema"}, {"label": "true", "description": "The tool is relevant, all required arguments are present, and all arguments match the request and schema"}],
+    "gold_label": "false",
+    "tags": ["boundary", "tooling"]
+  },
+  {
+    "id": "tool-call-wrong-tool",
+    "family": "tool_call_validation",
+    "state": {"request": "Check inventory for SKU A-17 in warehouse west.", "tool_schema": {"name": "check_inventory", "required": ["sku", "warehouse"], "warehouse_values": ["east", "west"]}, "call": {"name": "send_email", "arguments": {"sku": "A-17", "warehouse": "west"}}},
+    "primitive": "noul",
+    "instructions": "Is `call` relevant to `request`, complete under `tool_schema`, and consistent with the requested values?",
+    "criteria": [{"label": "false", "description": "The tool is irrelevant, a required argument is missing, or an argument conflicts with the request or schema"}, {"label": "true", "description": "The tool is relevant, all required arguments are present, and all arguments match the request and schema"}],
+    "gold_label": "false",
+    "tags": ["negative", "tooling"]
+  },
+  {
+    "id": "tool-call-valid-email",
+    "family": "tool_call_validation",
+    "state": {"request": "Email the report to ana@example.com with subject Weekly status.", "tool_schema": {"name": "send_email", "required": ["to", "subject"]}, "call": {"name": "send_email", "arguments": {"to": "ana@example.com", "subject": "Weekly status"}}},
+    "primitive": "noul",
+    "instructions": "Is `call` relevant to `request`, complete under `tool_schema`, and consistent with the requested values?",
+    "criteria": [{"label": "false", "description": "The tool is irrelevant, a required argument is missing, or an argument conflicts with the request or schema"}, {"label": "true", "description": "The tool is relevant, all required arguments are present, and all arguments match the request and schema"}],
+    "gold_label": "true",
+    "tags": ["clear", "tooling"]
+  },
+  {
+    "id": "tool-call-wrong-recipient",
+    "family": "tool_call_validation",
+    "state": {"request": "Email the report to ana@example.com with subject Weekly status.", "tool_schema": {"name": "send_email", "required": ["to", "subject"]}, "call": {"name": "send_email", "arguments": {"to": "bob@example.com", "subject": "Weekly status"}}},
+    "primitive": "noul",
+    "instructions": "Is `call` relevant to `request`, complete under `tool_schema`, and consistent with the requested values?",
+    "criteria": [{"label": "false", "description": "The tool is irrelevant, a required argument is missing, or an argument conflicts with the request or schema"}, {"label": "true", "description": "The tool is relevant, all required arguments are present, and all arguments match the request and schema"}],
+    "gold_label": "false",
+    "tags": ["negative", "tooling"]
+  },
+  {
+    "id": "tool-call-missing-subject",
+    "family": "tool_call_validation",
+    "state": {"request": "Email the report to ana@example.com with subject Weekly status.", "tool_schema": {"name": "send_email", "required": ["to", "subject"]}, "call": {"name": "send_email", "arguments": {"to": "ana@example.com"}}},
+    "primitive": "noul",
+    "instructions": "Is `call` relevant to `request`, complete under `tool_schema`, and consistent with the requested values?",
+    "criteria": [{"label": "false", "description": "The tool is irrelevant, a required argument is missing, or an argument conflicts with the request or schema"}, {"label": "true", "description": "The tool is relevant, all required arguments are present, and all arguments match the request and schema"}],
+    "gold_label": "false",
+    "tags": ["boundary", "tooling"]
+  }
+]
