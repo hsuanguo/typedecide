@@ -11,7 +11,14 @@ from typedecide.backends.jev import JevBackend
 from typedecide.backends.laya import LayaBackend
 from typedecide.backends.semif import SemIfBackend
 from typedecide.backends.thisthat import ThisThatBackend
-from typedecide.server import App, backend_config, bind, model_name_for, playground_html
+from typedecide.server import (
+    App,
+    backend_config,
+    bind,
+    model_name_for,
+    playground_html,
+    playground_scoreboard,
+)
 from typedecide.wire import (
     WireError,
     decision_confidence,
@@ -275,6 +282,27 @@ def test_playground_is_served_with_the_api():
         assert payload["error"]["field"] == "questions"
     backend.close()
     assert backend.closed
+
+
+def test_scoreboard_snapshot_is_served():
+    snapshot = json.loads(playground_scoreboard())
+    assert snapshot["backends"]
+    assert all(
+        len(values) == len(snapshot["backends"])
+        for values in snapshot["families"].values()
+    )
+    with running(App(ScriptedBackend(), "local-model", None)) as server:
+        status, payload = request_json(server, "GET", "/playground/scoreboard.json")
+    assert status == 200
+    assert payload["fixture"]["cases"] == snapshot["fixture"]["cases"]
+
+
+def test_missing_scoreboard_snapshot_returns_404(monkeypatch):
+    monkeypatch.setattr("typedecide.server.playground_scoreboard", lambda: None)
+    with running(App(ScriptedBackend(), "local-model", None)) as server:
+        status, payload = request_json(server, "GET", "/playground/scoreboard.json")
+    assert status == 404
+    assert payload["error"]["message"] == "scoreboard snapshot is unavailable"
 
 
 def test_api_key_gates_v1_routes_only():

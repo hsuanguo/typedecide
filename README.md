@@ -172,7 +172,7 @@ uv run typedecide-benchmark report \
   --html results/jev-laya-r1.html
 ```
 
-The benchmark is exploratory. It does not establish broad model superiority, and hosted round-trip latency and local runtime are not hardware-equivalent.
+The benchmark is exploratory. It does not establish broad model superiority, and hosted round-trip latency and local runtime are not hardware-equivalent. The latest comparison is in [results/scores.png](results/scores.png). The playground Scoreboard view reads the same snapshot from JSON.
 
 ## Development
 

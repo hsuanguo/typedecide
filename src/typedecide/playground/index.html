@@ -360,12 +360,16 @@
 
     .scoreboard-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      border: 1px solid var(--line);
+      grid-template-columns: repeat(var(--score-cols, 1), minmax(0, 1fr));
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
     }
 
-    .score-card { padding: 14px; border-right: 1px solid var(--line); }
-    .score-card:last-child { border-right: 0; }
+    .score-card {
+      padding: 14px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
     .score-card strong { display: block; font-size: 26px; letter-spacing: -0.04em; margin-top: 6px; }
     .score-card p { margin: 0; }
     .score-note { color: var(--muted); font-size: 13px; margin: 16px 0; }
@@ -381,8 +385,6 @@
       .masthead .model { text-align: left; }
       .split { grid-template-columns: 1fr; }
       .scoreboard-grid { grid-template-columns: 1fr 1fr; }
-      .score-card:nth-child(2) { border-right: 0; }
-      .score-card:nth-child(-n + 2) { border-bottom: 1px solid var(--line); }
     }
   </style>
 </head>
@@ -456,7 +458,7 @@
     </div>
     <div id="scoreboard-view" class="scoreboard" hidden>
       <p class="eyebrow">Latest benchmark snapshot</p>
-      <h2>Four-backend scoreboard</h2>
+      <h2>Scoreboard</h2>
       <div id="scoreboard-content" class="response"><p class="placeholder">Loading benchmark results.</p></div>
     </div>
   </div>
@@ -947,10 +949,9 @@
       document.getElementById("decide-view").hidden = dino || scoreboard;
       document.getElementById("dino-view").hidden = !dino;
       document.getElementById("scoreboard-view").hidden = !scoreboard;
-      document.getElementById("show-decide").setAttribute("aria-pressed", String(!dino));
+      document.getElementById("show-decide").setAttribute("aria-pressed", String(!dino && !scoreboard));
       document.getElementById("show-dino").setAttribute("aria-pressed", String(dino));
       document.getElementById("show-scoreboard").setAttribute("aria-pressed", String(scoreboard));
-      document.getElementById("show-decide").setAttribute("aria-pressed", String(!dino && !scoreboard));
       document.getElementById("page-title").textContent = dino ? "Let the model run" : scoreboard ? "See how models compare" : "Let the model decide";
       if (!dino) stopRunner();
     }
@@ -958,6 +959,15 @@
     document.getElementById("show-decide").addEventListener("click", () => showView("decide"));
     document.getElementById("show-dino").addEventListener("click", () => showView("dino"));
     document.getElementById("show-scoreboard").addEventListener("click", () => showView("scoreboard"));
+
+    function scoreboardNote(data) {
+      const fixture = `${data.fixture.cases} cases · ${data.fixture.families} families · ${data.fixture.repeats} repeats.`;
+      const failures = data.backends.reduce((total, backend) => total + (backend.execution_failures || 0), 0);
+      const failureText = failures === 0
+        ? "Execution failures are 0 because every scheduled evaluation returned a normalized answer; incorrect predictions are reflected in accuracy, not failure count."
+        : `Execution failures: ${data.backends.map((backend) => `${backend.label} ${backend.execution_failures || 0}`).join(", ")}.`;
+      return `${fixture} ${failureText} Local and hosted latency are not directly comparable.`;
+    }
 
     function scoreCell(value) {
       const cell = document.createElement("td");
@@ -977,15 +987,24 @@
       root.replaceChildren();
       const cards = document.createElement("div");
       cards.className = "scoreboard-grid";
+      cards.style.setProperty("--score-cols", String(data.backends.length));
       for (const backend of data.backends) {
         const card = document.createElement("article");
         card.className = "score-card";
-        card.innerHTML = `<p class="eyebrow">${backend.label}</p><strong>${Math.round(backend.accuracy * 1000) / 10}%</strong><p class="meta">Brier ${backend.brier.toFixed(3)} · Score MAE ${backend.score_mae.toFixed(3)}</p>`;
+        const name = document.createElement("p");
+        name.className = "eyebrow";
+        name.textContent = backend.label;
+        const accuracy = document.createElement("strong");
+        accuracy.textContent = `${Math.round(backend.accuracy * 1000) / 10}%`;
+        const detail = document.createElement("p");
+        detail.className = "meta";
+        detail.textContent = `Brier ${backend.brier.toFixed(3)} · Score MAE ${backend.score_mae.toFixed(3)}`;
+        card.append(name, accuracy, detail);
         cards.appendChild(card);
       }
       const note = document.createElement("p");
       note.className = "score-note";
-      note.textContent = `${data.fixture.cases} cases · ${data.fixture.families} families · ${data.fixture.repeats} repeats. Execution failures are 0 because every scheduled evaluation returned a normalized answer; incorrect predictions are reflected in accuracy, not failure count. Local and hosted latency are not directly comparable.`;
+      note.textContent = scoreboardNote(data);
       const table = document.createElement("table");
       const head = document.createElement("thead");
       const header = document.createElement("tr");

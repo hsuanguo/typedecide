@@ -7,6 +7,8 @@ from collections import Counter
 from statistics import mean
 from typing import Any
 
+from .report import execution_failure_count
+
 
 def render_html(artifacts: list[dict[str, Any]], source_hash: str) -> str:
     """Render comparable artifacts as one self-contained HTML document.
@@ -104,6 +106,9 @@ def render_html(artifacts: list[dict[str, Any]], source_hash: str) -> str:
         }
 
     metrics = {artifact["backend"]: metric(artifact) for artifact in artifacts}
+    failures = {
+        artifact["backend"]: execution_failure_count(artifact) for artifact in artifacts
+    }
 
     def grouped_accuracy(
         artifact: dict[str, Any], key: str, group: str
@@ -123,7 +128,7 @@ def render_html(artifacts: list[dict[str, Any]], source_hash: str) -> str:
                 f'<tr><th><span class="dot" style="background:{color(backend)}"></span>{html.escape(label(backend))}</th>'
                 f'<td class="strong">{value["accuracy"]:.1%}</td><td>{value["brier"]:.3f}</td>'
                 f"<td>{value['nll']:.3f}</td><td>{value['score_mae']:.3f}</td>"
-                f"<td>{value['latency']:.1f} ms</td><td>0</td></tr>"
+                f"<td>{value['latency']:.1f} ms</td><td>{failures[backend]}</td></tr>"
             )
         return "".join(rows)
 

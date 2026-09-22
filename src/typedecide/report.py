@@ -7,9 +7,10 @@ import html
 import json
 import math
 from collections import Counter, defaultdict
+from collections.abc import Sequence
 from pathlib import Path
 from statistics import mean
-from typing import Any, Sequence
+from typing import Any
 
 
 def load_artifacts(paths: Sequence[Path]) -> list[dict[str, Any]]:
@@ -61,6 +62,34 @@ def _case_index(artifact: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return {case["id"]: case for case in artifact["cases"]}
 
 
+def execution_failure_count(artifact: dict[str, Any]) -> int:
+    """Count scheduled evaluations that did not return an answer.
+
+    Parameters
+    ----------
+    artifact : dict
+        One backend artifact. A complete artifact has ``cases`` times
+        ``repeats`` runs, each with an answer for its case.
+
+    Returns
+    -------
+    int
+        Expected runs minus runs that include an answer for their case.
+        ``0`` when the artifact does not record a case list.
+    """
+    cases = artifact.get("cases") or []
+    repeats = int(artifact.get("repeats") or 0)
+    expected = len(cases) * repeats
+    if not expected:
+        return 0
+    returned = sum(
+        1
+        for run in artifact.get("runs") or []
+        if run.get("case_id") in ((run.get("response") or {}).get("answers") or {})
+    )
+    return max(0, expected - returned)
+
+
 def _metrics(artifact: dict[str, Any]) -> dict[str, float | int | str]:
     brier_values, nll_values, score_errors, latencies, correct = [], [], [], [], 0
     for run in artifact["runs"]:
@@ -90,6 +119,7 @@ def _metrics(artifact: dict[str, Any]) -> dict[str, float | int | str]:
         "latency_ms": mean(latencies),
         "correct": correct,
         "total": total,
+        "execution_failures": execution_failure_count(artifact),
     }
 
 
@@ -141,7 +171,7 @@ def _markdown(artifacts: list[dict[str, Any]], source_hash: str) -> str:
         "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
     lines.extend(
-        f"| {metric['backend']} | {metric['accuracy']:.1%} | {metric['brier']:.4f} | {metric['nll']:.4f} | {metric['score_mae']:.4f} | {metric['latency_ms']:.1f} | 0 |"
+        f"| {metric['backend']} | {metric['accuracy']:.1%} | {metric['brier']:.4f} | {metric['nll']:.4f} | {metric['score_mae']:.4f} | {metric['latency_ms']:.1f} | {metric['execution_failures']} |"
         for metric in metrics
     )
     for dimension in ("family", "primitive"):

@@ -104,9 +104,22 @@ def playground_html() -> str:
         )
 
 
-def playground_scoreboard() -> bytes:
-    """Read the packaged benchmark scoreboard snapshot for the playground."""
-    return files("typedecide").joinpath("playground/scoreboard.json").read_bytes()
+def playground_scoreboard() -> bytes | None:
+    """Read the packaged benchmark scoreboard snapshot for the playground.
+
+    Returns
+    -------
+    bytes or None
+        Snapshot JSON, or ``None`` when the package does not include one.
+    """
+    resource = files("typedecide").joinpath("playground/scoreboard.json")
+    try:
+        return resource.read_bytes()
+    except (FileNotFoundError, OSError):
+        path = Path(__file__).resolve().parent.joinpath("playground/scoreboard.json")
+        if path.is_file():
+            return path.read_bytes()
+    return None
 
 
 def backend_config(backend: str, model: str | None, device: str) -> dict[str, Any]:
@@ -235,7 +248,13 @@ def _handler(app: App) -> type[BaseHTTPRequestHandler]:
                 self._send(200, body, "text/html; charset=utf-8")
                 return
             if path == "/playground/scoreboard.json":
-                self._send(200, playground_scoreboard(), "application/json")
+                body = playground_scoreboard()
+                if body is None:
+                    self._send_json(
+                        404, _error("scoreboard snapshot is unavailable", None)
+                    )
+                    return
+                self._send(200, body, "application/json")
                 return
             if path == "/v1/models":
                 if not self._authorized():
