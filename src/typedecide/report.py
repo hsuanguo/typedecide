@@ -137,7 +137,7 @@ def _markdown(artifacts: list[dict[str, Any]], source_hash: str) -> str:
         "",
         "## Overall",
         "",
-        "| Backend | Accuracy | Brier | NLL | Score MAE | Mean latency ms | Failures |",
+        "| Backend | Accuracy | Brier | NLL | Score MAE | Mean latency ms | Execution failures |",
         "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
     lines.extend(

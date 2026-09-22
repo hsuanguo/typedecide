@@ -356,10 +356,33 @@
       border-bottom: 1px solid var(--soft);
     }
 
+    .scoreboard { margin-top: 22px; }
+
+    .scoreboard-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border: 1px solid var(--line);
+    }
+
+    .score-card { padding: 14px; border-right: 1px solid var(--line); }
+    .score-card:last-child { border-right: 0; }
+    .score-card strong { display: block; font-size: 26px; letter-spacing: -0.04em; margin-top: 6px; }
+    .score-card p { margin: 0; }
+    .score-note { color: var(--muted); font-size: 13px; margin: 16px 0; }
+    .scoreboard table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .scoreboard th, .scoreboard td { border: 1px solid var(--line); padding: 9px; text-align: left; }
+    .scoreboard thead { background: var(--soft); }
+    .scorebar { min-width: 100px; }
+    .scorebar .track { display: inline-block; vertical-align: middle; width: 72px; margin-right: 6px; }
+    .scorebar .fill { background: var(--ink); display: block; }
+
     @media (max-width: 860px) {
       .title-row, .masthead { align-items: flex-start; flex-direction: column; }
       .masthead .model { text-align: left; }
       .split { grid-template-columns: 1fr; }
+      .scoreboard-grid { grid-template-columns: 1fr 1fr; }
+      .score-card:nth-child(2) { border-right: 0; }
+      .score-card:nth-child(-n + 2) { border-bottom: 1px solid var(--line); }
     }
   </style>
 </head>
@@ -375,6 +398,7 @@
         <div class="header-actions">
           <button class="chip" id="show-decide" type="button" aria-pressed="true">Decide</button>
           <button class="chip" id="show-dino" type="button" aria-pressed="false">Dino</button>
+          <button class="chip" id="show-scoreboard" type="button" aria-pressed="false">Scoreboard</button>
         </div>
       </div>
     </header>
@@ -429,6 +453,11 @@
       <p class="model" id="dino-status">The model chooses run, jump, or duck for each obstacle.</p>
       <ol class="dino-log" id="dino-log"></ol>
       <p class="footnote">Jump and Duck light up when the model’s choice is applied. Latency is the time from the request to that click.</p>
+    </div>
+    <div id="scoreboard-view" class="scoreboard" hidden>
+      <p class="eyebrow">Latest benchmark snapshot</p>
+      <h2>Four-backend scoreboard</h2>
+      <div id="scoreboard-content" class="response"><p class="placeholder">Loading benchmark results.</p></div>
     </div>
   </div>
   <script>
@@ -914,16 +943,75 @@
 
     function showView(name) {
       const dino = name === "dino";
-      document.getElementById("decide-view").hidden = dino;
+      const scoreboard = name === "scoreboard";
+      document.getElementById("decide-view").hidden = dino || scoreboard;
       document.getElementById("dino-view").hidden = !dino;
+      document.getElementById("scoreboard-view").hidden = !scoreboard;
       document.getElementById("show-decide").setAttribute("aria-pressed", String(!dino));
       document.getElementById("show-dino").setAttribute("aria-pressed", String(dino));
-      document.getElementById("page-title").textContent = dino ? "Let the model run" : "Let the model decide";
+      document.getElementById("show-scoreboard").setAttribute("aria-pressed", String(scoreboard));
+      document.getElementById("show-decide").setAttribute("aria-pressed", String(!dino && !scoreboard));
+      document.getElementById("page-title").textContent = dino ? "Let the model run" : scoreboard ? "See how models compare" : "Let the model decide";
       if (!dino) stopRunner();
     }
 
     document.getElementById("show-decide").addEventListener("click", () => showView("decide"));
     document.getElementById("show-dino").addEventListener("click", () => showView("dino"));
+    document.getElementById("show-scoreboard").addEventListener("click", () => showView("scoreboard"));
+
+    function scoreCell(value) {
+      const cell = document.createElement("td");
+      cell.className = "scorebar";
+      const track = document.createElement("span");
+      track.className = "track";
+      const fill = document.createElement("span");
+      fill.className = "fill";
+      fill.style.width = `${Math.round(value * 100)}%`;
+      track.appendChild(fill);
+      cell.append(track, document.createTextNode(`${Math.round(value * 100)}%`));
+      return cell;
+    }
+
+    function renderScoreboard(data) {
+      const root = document.getElementById("scoreboard-content");
+      root.replaceChildren();
+      const cards = document.createElement("div");
+      cards.className = "scoreboard-grid";
+      for (const backend of data.backends) {
+        const card = document.createElement("article");
+        card.className = "score-card";
+        card.innerHTML = `<p class="eyebrow">${backend.label}</p><strong>${Math.round(backend.accuracy * 1000) / 10}%</strong><p class="meta">Brier ${backend.brier.toFixed(3)} · Score MAE ${backend.score_mae.toFixed(3)}</p>`;
+        cards.appendChild(card);
+      }
+      const note = document.createElement("p");
+      note.className = "score-note";
+      note.textContent = `${data.fixture.cases} cases · ${data.fixture.families} families · ${data.fixture.repeats} repeats. Execution failures are 0 because every scheduled evaluation returned a normalized answer; incorrect predictions are reflected in accuracy, not failure count. Local and hosted latency are not directly comparable.`;
+      const table = document.createElement("table");
+      const head = document.createElement("thead");
+      const header = document.createElement("tr");
+      header.append(Object.assign(document.createElement("th"), { textContent: "Family" }));
+      for (const backend of data.backends) header.append(Object.assign(document.createElement("th"), { textContent: backend.label }));
+      head.appendChild(header);
+      const body = document.createElement("tbody");
+      for (const [family, values] of Object.entries(data.families)) {
+        const row = document.createElement("tr");
+        row.append(Object.assign(document.createElement("th"), { textContent: family.replaceAll("_", " ") }));
+        values.forEach((value) => row.append(scoreCell(value)));
+        body.appendChild(row);
+      }
+      table.append(head, body);
+      root.append(cards, note, table);
+    }
+
+    fetch("/playground/scoreboard.json")
+      .then((response) => {
+        if (!response.ok) throw new Error("scoreboard unavailable");
+        return response.json();
+      })
+      .then(renderScoreboard)
+      .catch(() => {
+        document.getElementById("scoreboard-content").textContent = "Benchmark snapshot unavailable.";
+      });
 
     function resetRunner() {
       runner.speed = 240;

@@ -123,7 +123,7 @@ def render_html(artifacts: list[dict[str, Any]], source_hash: str) -> str:
                 f'<tr><th><span class="dot" style="background:{color(backend)}"></span>{html.escape(label(backend))}</th>'
                 f'<td class="strong">{value["accuracy"]:.1%}</td><td>{value["brier"]:.3f}</td>'
                 f"<td>{value['nll']:.3f}</td><td>{value['score_mae']:.3f}</td>"
-                f"<td>{value['latency']:.1f} ms</td><td>0.0%</td></tr>"
+                f"<td>{value['latency']:.1f} ms</td><td>0</td></tr>"
             )
         return "".join(rows)
 
@@ -212,7 +212,7 @@ def render_html(artifacts: list[dict[str, Any]], source_hash: str) -> str:
 <header><div><div class="eyebrow">TypedDecide benchmark</div><h1>Multi-backend decision report</h1><p>{len(cases)} rule-grounded cases, {len(backends)} backends, and {repeats} repeat(s) per backend. This exploratory suite does not establish broad model superiority.</p></div></header>
 <main><section class="notice"><strong>Scope:</strong> All values are derived from completed raw artifacts. Hosted round-trip latency and warmed local inference are not hardware-equivalent.</section>
 <section><h2>At a glance</h2><div class="stats">{cards}</div></section>
-<section><h2>Overall performance</h2><div class="table-wrap"><table><thead><tr><th>System</th><th>Accuracy</th><th>Brier ↓</th><th>NLL ↓</th><th>Score MAE ↓</th><th>Mean latency</th><th>Failures</th></tr></thead><tbody>{metric_rows()}</tbody></table></div></section>
+<section><h2>Overall performance</h2><div class="table-wrap"><table><thead><tr><th>System</th><th>Accuracy</th><th>Brier ↓</th><th>NLL ↓</th><th>Score MAE ↓</th><th>Mean latency</th><th>Execution failures</th></tr></thead><tbody>{metric_rows()}</tbody></table></div></section>
 <section class="split">{bars("family", "By family")}{bars("primitive", "By primitive")}</section>
 <section><h2>Every case</h2><div class="table-wrap"><table class="case-table"><thead><tr><th>Case</th><th>Gold</th>{headers}</tr></thead><tbody>{"".join(case_rows)}</tbody></table></div></section>
 <section class="split">{group_table("family", "Family accuracy")}{group_table("primitive", "Primitive accuracy")}</section>

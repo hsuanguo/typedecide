@@ -104,6 +104,11 @@ def playground_html() -> str:
         )
 
 
+def playground_scoreboard() -> bytes:
+    """Read the packaged benchmark scoreboard snapshot for the playground."""
+    return files("typedecide").joinpath("playground/scoreboard.json").read_bytes()
+
+
 def backend_config(backend: str, model: str | None, device: str) -> dict[str, Any]:
     """Build ``load`` kwargs for a serve command.
 
@@ -228,6 +233,9 @@ def _handler(app: App) -> type[BaseHTTPRequestHandler]:
             if path == "/":
                 body = playground_html().encode()
                 self._send(200, body, "text/html; charset=utf-8")
+                return
+            if path == "/playground/scoreboard.json":
+                self._send(200, playground_scoreboard(), "application/json")
                 return
             if path == "/v1/models":
                 if not self._authorized():
