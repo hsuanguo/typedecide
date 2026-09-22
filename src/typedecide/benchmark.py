@@ -48,6 +48,6 @@ def validate_real_world_suite() -> list[BenchmarkCase]:
     families: dict[str, int] = {}
     for case in cases:
         families[case.family] = families.get(case.family, 0) + 1
-    if len(cases) != 100 or len(families) != 10 or set(families.values()) != {10}:
-        raise ValueError(f"expected 100 cases in 10 families of 10, got {families}")
+    if len(cases) != 120 or len(families) != 12 or set(families.values()) != {10}:
+        raise ValueError(f"expected 120 cases in 12 families of 10, got {families}")
     return cases
