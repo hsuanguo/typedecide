@@ -12,6 +12,14 @@ DEFAULT_SUBFOLDER = "typed-decisions"
 
 
 class LayaBackend(DecisionBackend):
+    """Laya adapter for the ``typed-decisions`` checkpoint. Requires the ``laya`` extra.
+
+    Noul has no native criteria field, so the true and false meanings are
+    written into the instructions. Returned probability maps are renormalized
+    before they become an :class:`~typedecide.Answer`. Native confidence is
+    kept and is not treated as a shared calibration.
+    """
+
     name = "laya"
 
     def __init__(self, agent: Any, model: str, subfolder: str) -> None:
@@ -24,11 +32,49 @@ class LayaBackend(DecisionBackend):
         cls, model: str = DEFAULT_MODEL, subfolder: str = DEFAULT_SUBFOLDER,
         device: str | None = None, **config: Any,
     ):
+        """Load a Laya checkpoint.
+
+        Parameters
+        ----------
+        model : str, optional
+            Hugging Face repo or local path. The default is
+            ``convaiinnovations/laya``.
+        subfolder : str, optional
+            Checkpoint subfolder. The default is ``typed-decisions``.
+        device : str or None, optional
+            Torch device. ``None`` lets Laya choose.
+        **config
+            Forwarded to ``laya.load``.
+
+        Returns
+        -------
+        LayaBackend
+        """
         import laya
 
         return cls(laya.load(model, subfolder=subfolder, device=device, **config), model, subfolder)
 
     def predict(self, state: str | dict[str, Any] | list[Any], questions: Sequence[Question]) -> Response:
+        """Evaluate questions with one Laya prediction.
+
+        Parameters
+        ----------
+        state : str or dict or list
+            Passed through to Laya.
+        questions : sequence of Question
+            Choice and Score criteria keep their descriptions. Noul meanings
+            are appended to the instructions.
+
+        Returns
+        -------
+        Response
+            Normalized answers. Rounded provider distributions are rescaled to sum to one.
+
+        Raises
+        ------
+        ValueError
+            If a returned distribution has a nonpositive total.
+        """
         native = {}
         for question in questions:
             if question.type == "choice":

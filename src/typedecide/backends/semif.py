@@ -11,6 +11,13 @@ DEFAULT_REVISION = "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
 
 
 class SemIfBackend(DecisionBackend):
+    """SemIf direct categorical scorer. Requires the ``semif`` extra.
+
+    Each question is scored separately against the pinned causal model.
+    Probabilities are conditional option scores. They are not calibrated
+    decision confidence, which is recorded on the response metadata.
+    """
+
     name = "semif"
 
     def __init__(self, model: Any, tokenizer: Any, metadata: dict[str, Any]) -> None:
@@ -23,12 +30,44 @@ class SemIfBackend(DecisionBackend):
         cls, model: str = DEFAULT_MODEL, revision: str = DEFAULT_REVISION,
         device: str = "auto", dtype: str = "bfloat16", **_: Any,
     ):
+        """Load the pinned causal model used by SemIf.
+
+        Parameters
+        ----------
+        model : str, optional
+            Hugging Face model ID. The default is ``Qwen/Qwen3.5-4B``.
+        revision : str, optional
+            Commit SHA of ``model``.
+        device : str, optional
+            Torch device. ``"auto"`` selects one.
+        dtype : str, optional
+            Weight dtype name. The default is ``"bfloat16"``.
+
+        Returns
+        -------
+        SemIfBackend
+        """
         from semif_phase1.core import load_causal_model
 
         loaded_model, tokenizer, metadata = load_causal_model(model, revision, device, dtype)
         return cls(loaded_model, tokenizer, metadata)
 
     def predict(self, state: str | dict[str, Any] | list[Any], questions: Sequence[Question]) -> Response:
+        """Score each question independently and sum the latency.
+
+        Parameters
+        ----------
+        state : str or dict or list
+            Passed through on each scoring row.
+        questions : sequence of Question
+            Options stay in submitted order.
+
+        Returns
+        -------
+        Response
+            Normalized answers. ``resolved_model`` is ``source@revision``.
+            ``latency_ms`` is the sum across questions.
+        """
         from semif_phase1.direct import score
 
         answers = {}

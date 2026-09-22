@@ -8,6 +8,21 @@ from typing import Any
 
 
 def render_html(artifacts: list[dict[str, Any]], source_hash: str) -> str:
+    """Render comparable artifacts as one self-contained HTML document.
+
+    Parameters
+    ----------
+    artifacts : list of dict
+        Completed artifacts that already share cases and repeat count.
+    source_hash : str
+        Provenance hash of the raw artifact bytes.
+
+    Returns
+    -------
+    str
+        HTML with inline CSS, summary tables, comparison bars, and one row
+        per case. The document has no external assets.
+    """
     cases = artifacts[0]["cases"]
     repeats = artifacts[0]["repeats"]
     backends = [artifact["backend"] for artifact in artifacts]

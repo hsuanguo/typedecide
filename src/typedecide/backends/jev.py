@@ -9,6 +9,14 @@ from ..types import Answer, Question, Response
 
 
 class JevBackend(DecisionBackend):
+    """TypeSafe Jev adapter. Requires the ``jev`` extra and ``TYPESAFE_API_KEY``.
+
+    Choice, Noul, and Score are sent as native TypeSafe questions. Noul
+    probabilities are ``(1 - noul, noul)`` so they stay in ``false``, ``true``
+    order. Score uses the ordered rubric descriptions, and ``Answer.score`` is
+    their probability-weighted index.
+    """
+
     name = "jev"
 
     def __init__(self, client: Any, model: str) -> None:
@@ -17,11 +25,40 @@ class JevBackend(DecisionBackend):
 
     @classmethod
     def from_config(cls, model: str = "jev-1.13.0", timeout: float = 30.0, **config: Any):
+        """Open a TypeSafe client for a pinned Jev model.
+
+        Parameters
+        ----------
+        model : str, optional
+            Versioned model ID. The default is ``"jev-1.13.0"``.
+        timeout : float, optional
+            Request timeout in seconds.
+        **config
+            Forwarded to ``TypeSafeClient``.
+
+        Returns
+        -------
+        JevBackend
+        """
         from typesafe_sdk import TypeSafeClient
 
         return cls(TypeSafeClient(model=model, timeout=timeout, **config), model)
 
     def predict(self, state: str | dict[str, Any] | list[Any], questions: Sequence[Question]) -> Response:
+        """Evaluate questions with one System One request.
+
+        Parameters
+        ----------
+        state : str or dict or list
+            Passed through as TypeSafe state.
+        questions : sequence of Question
+            Mapped to native Choice, Noul, and Score questions.
+
+        Returns
+        -------
+        Response
+            Normalized answers. ``resolved_model`` is the ID the service reports.
+        """
         from typesafe_sdk import Choice, Noul, NoulCriteria, Score
 
         native = {}
@@ -73,4 +110,5 @@ class JevBackend(DecisionBackend):
         )
 
     def close(self) -> None:
+        """Close the TypeSafe client."""
         self.client.close()

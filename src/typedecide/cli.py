@@ -13,6 +13,13 @@ from .report import merge_artifacts, write_report
 
 
 def parser() -> argparse.ArgumentParser:
+    """Build the ``typedecide-benchmark`` argument parser.
+
+    Returns
+    -------
+    argparse.ArgumentParser
+        Parser with ``validate``, ``run``, ``report``, and ``merge`` subcommands.
+    """
     command = argparse.ArgumentParser(description=__doc__)
     subcommands = command.add_subparsers(dest="command", required=True)
     subcommands.add_parser("validate", help="validate package-owned benchmark fixtures")
@@ -32,6 +39,20 @@ def parser() -> argparse.ArgumentParser:
 
 
 def main() -> int:
+    """Run the benchmark command selected on the command line.
+
+    Returns
+    -------
+    int
+        Process status code. ``0`` means the command finished.
+
+    Raises
+    ------
+    ValueError
+        If ``--repeats`` is not positive.
+    FileExistsError
+        If ``run`` would overwrite an existing artifact.
+    """
     args = parser().parse_args()
     cases = validate_real_world_suite()
     if args.command == "validate":

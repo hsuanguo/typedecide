@@ -128,6 +128,10 @@ QUESTIONS = (
 
 
 def main() -> None:
+    """Score one resume against the hiring-screen questions and print the answers.
+
+    The ``--backend`` flag selects any installed backend. The default is Jev.
+    """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--backend", choices=td.available_backends(), default="jev")
     args = parser.parse_args()

@@ -33,6 +33,10 @@ QUESTIONS = (
 
 
 def main() -> None:
+    """Score one policy-evading request and print the normalized answers.
+
+    The ``--backend`` flag selects any installed backend. The default is Jev.
+    """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--backend", choices=td.available_backends(), default="jev")
     args = parser.parse_args()

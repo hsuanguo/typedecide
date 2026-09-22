@@ -10,6 +10,13 @@ from ..types import Answer, Question, Response
 
 
 class ThisThatBackend(DecisionBackend):
+    """this-that adapter. Requires the ``thisthat`` extra.
+
+    The model accepts text, so structured state is serialized as deterministic
+    JSON with sorted keys. Each option is rendered as ``"{id}: {description}"``
+    and the returned index is mapped back onto the original option order.
+    """
+
     name = "thisthat"
 
     def __init__(self, decider: Any, model: str) -> None:
@@ -18,11 +25,40 @@ class ThisThatBackend(DecisionBackend):
 
     @classmethod
     def from_config(cls, model: str = "flock-io/this-that-model-1.0", device: str = "auto", **kwargs: Any):
+        """Load a this-that checkpoint.
+
+        Parameters
+        ----------
+        model : str, optional
+            Hugging Face repo or local path.
+        device : str, optional
+            ``"auto"``, ``"cuda"``, ``"mps"``, or ``"cpu"``.
+        **kwargs
+            Forwarded to ``TypedDecider.from_pretrained``.
+
+        Returns
+        -------
+        ThisThatBackend
+        """
         from thisthat import TypedDecider
 
         return cls(TypedDecider.from_pretrained(model, device=device, **kwargs), model)
 
     def predict(self, state: str | dict[str, Any] | list[Any], questions: Sequence[Question]) -> Response:
+        """Evaluate questions in one this-that forward pass.
+
+        Parameters
+        ----------
+        state : str or dict or list
+            Text is passed through. A dict or list is serialized as JSON.
+        questions : sequence of Question
+            Options stay in submitted order.
+
+        Returns
+        -------
+        Response
+            Normalized answers. ``native_confidence`` is left unset.
+        """
         rendered_state = state if isinstance(state, str) else json.dumps(
             state, sort_keys=True, separators=(",", ":"), ensure_ascii=True
         )

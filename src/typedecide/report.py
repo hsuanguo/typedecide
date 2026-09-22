@@ -12,6 +12,24 @@ from typing import Any, Sequence
 
 
 def load_artifacts(paths: Sequence[Path]) -> list[dict[str, Any]]:
+    """Load completed backend artifacts that can be compared.
+
+    Parameters
+    ----------
+    paths : sequence of Path
+        JSON artifacts from ``typedecide-benchmark run``.
+
+    Returns
+    -------
+    list of dict
+        Parsed artifacts in the given order.
+
+    Raises
+    ------
+    ValueError
+        If fewer than two artifacts are given, a backend is repeated, an
+        artifact is incomplete, or the case lists or repeat counts differ.
+    """
     if len(paths) < 2:
         raise ValueError("reporting requires artifacts from at least two backends")
     artifacts = [json.loads(path.read_text()) for path in paths]
@@ -119,6 +137,24 @@ def _html_report(markdown: str) -> str:
 
 
 def write_report(artifacts: Sequence[Path], markdown_path: Path, html_path: Path) -> None:
+    """Write a Markdown report and a self-contained HTML report.
+
+    Parameters
+    ----------
+    artifacts : sequence of Path
+        Compatible completed artifacts. Metrics are computed from these files.
+    markdown_path : Path
+        Destination for the Markdown report.
+    html_path : Path
+        Destination for the HTML report.
+
+    Raises
+    ------
+    FileExistsError
+        If either destination already exists.
+    ValueError
+        If the artifacts cannot be compared. See :func:`load_artifacts`.
+    """
     loaded = load_artifacts(artifacts)
     source_hash = hashlib.sha256(b"".join(path.read_bytes() for path in artifacts)).hexdigest()
     markdown = _markdown(loaded, source_hash)
@@ -132,7 +168,22 @@ def write_report(artifacts: Sequence[Path], markdown_path: Path, html_path: Path
 
 
 def merge_artifacts(artifacts: Sequence[Path], output: Path) -> None:
-    """Combine compatible single-backend artifacts without changing their raw runs."""
+    """Combine compatible single-backend artifacts without changing their raw runs.
+
+    Parameters
+    ----------
+    artifacts : sequence of Path
+        Completed artifacts with the same cases and repeat count.
+    output : Path
+        Destination for the merged manifest.
+
+    Raises
+    ------
+    FileExistsError
+        If ``output`` already exists.
+    ValueError
+        If the artifacts cannot be compared. See :func:`load_artifacts`.
+    """
     loaded = load_artifacts(artifacts)
     if output.exists():
         raise FileExistsError(f"refusing to overwrite existing output: {output}")
