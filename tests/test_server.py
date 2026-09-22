@@ -248,7 +248,7 @@ def test_playground_is_served_with_the_api():
     with running(App(backend, "convaiinnovations/laya", None)) as server:
         status, body = request(server, "GET", "/")
         assert status == 200
-        assert "01 / Playground" in body
+        assert "typedecide" in body
         status, payload = request_json(server, "GET", "/v1/models")
         assert status == 200
         assert payload["models"] == [
