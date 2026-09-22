@@ -16,7 +16,7 @@ def parser() -> argparse.ArgumentParser:
     command = argparse.ArgumentParser(description=__doc__)
     subcommands = command.add_subparsers(dest="command", required=True)
     subcommands.add_parser("validate", help="validate package-owned benchmark fixtures")
-    run = subcommands.add_parser("run", help="run one backend over the 120-case benchmark")
+    run = subcommands.add_parser("run", help="run one backend over the 190-case benchmark")
     run.add_argument("--backend", choices=available_backends(), required=True)
     run.add_argument("--repeats", type=int, default=1)
     run.add_argument("--device", default="auto")

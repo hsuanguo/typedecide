@@ -26,10 +26,10 @@ def test_canonical_question_builders_and_answer_validation():
         td.Question("bad", "noul", "Question", (td.Option("true", "yes"), td.Option("false", "no")))
 
 
-def test_package_owned_120_case_benchmark_has_valid_shape():
+def test_package_owned_190_case_benchmark_has_valid_shape():
     cases = td.validate_real_world_suite()
-    assert len(cases) == 120
-    assert len({case.family for case in cases}) == 12
+    assert len(cases) == 190
+    assert len({case.family for case in cases}) == 19
     assert all(case.gold in case.question.option_ids for case in cases)
 
 

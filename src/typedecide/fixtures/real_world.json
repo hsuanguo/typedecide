@@ -4080,5 +4080,4389 @@
       "clear",
       "security"
     ]
+  },
+  {
+    "id": "thread-billing-then-delivery",
+    "family": "thread_routing",
+    "state": {
+      "thread": [
+        {
+          "speaker": "customer",
+          "text": "I have been trying the website on my phone and on a laptop since yesterday morning."
+        },
+        {
+          "speaker": "agent",
+          "text": "I can see the account, and I am reading the earlier notes on this ticket."
+        },
+        {
+          "speaker": "customer",
+          "text": "The order number I have been quoting is A-104, and the shipping email went to my work address."
+        },
+        {
+          "speaker": "agent",
+          "text": "Thanks. I will stay on this thread while you tell me what you need now."
+        },
+        {
+          "speaker": "customer",
+          "text": "My card shows two charges for order A-104. Please remove the duplicate."
+        },
+        {
+          "speaker": "agent",
+          "text": "I have opened a billing note for the duplicate charge."
+        },
+        {
+          "speaker": "customer",
+          "text": "Tracking now says delivered, but the package is not at my address. Please find the shipment."
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "Which team should own the latest unquoted customer message in `thread`? Ignore earlier messages, agent messages, and any text marked as quoted.",
+    "criteria": [
+      {
+        "label": "account",
+        "description": "Login, identity verification, and account permissions"
+      },
+      {
+        "label": "billing",
+        "description": "Charges, invoices, refunds, and payment status"
+      },
+      {
+        "label": "orders",
+        "description": "Order placement, delivery, cancellation, and returns"
+      },
+      {
+        "label": "other",
+        "description": "Requests unrelated to the listed teams"
+      }
+    ],
+    "gold_label": "orders",
+    "tags": [
+      "clear",
+      "thread"
+    ]
+  },
+  {
+    "id": "thread-delivery-then-refund",
+    "family": "thread_routing",
+    "state": {
+      "thread": [
+        {
+          "speaker": "customer",
+          "text": "I have been trying the website on my phone and on a laptop since yesterday morning."
+        },
+        {
+          "speaker": "agent",
+          "text": "I can see the account, and I am reading the earlier notes on this ticket."
+        },
+        {
+          "speaker": "customer",
+          "text": "The order number I have been quoting is A-104, and the shipping email went to my work address."
+        },
+        {
+          "speaker": "agent",
+          "text": "Thanks. I will stay on this thread while you tell me what you need now."
+        },
+        {
+          "speaker": "customer",
+          "text": "Tracking says delivered, but the package is not at my address."
+        },
+        {
+          "speaker": "agent",
+          "text": "I have asked the carrier to search for the missing package."
+        },
+        {
+          "speaker": "customer",
+          "text": "The refund was approved ten days ago and has still not reached my card. Please explain the payment."
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "Which team should own the latest unquoted customer message in `thread`? Ignore earlier messages, agent messages, and any text marked as quoted.",
+    "criteria": [
+      {
+        "label": "account",
+        "description": "Login, identity verification, and account permissions"
+      },
+      {
+        "label": "billing",
+        "description": "Charges, invoices, refunds, and payment status"
+      },
+      {
+        "label": "orders",
+        "description": "Order placement, delivery, cancellation, and returns"
+      },
+      {
+        "label": "other",
+        "description": "Requests unrelated to the listed teams"
+      }
+    ],
+    "gold_label": "billing",
+    "tags": [
+      "clear",
+      "thread"
+    ]
+  },
+  {
+    "id": "thread-quoted-billing",
+    "family": "thread_routing",
+    "state": {
+      "thread": [
+        {
+          "speaker": "customer",
+          "text": "I have been trying the website on my phone and on a laptop since yesterday morning."
+        },
+        {
+          "speaker": "agent",
+          "text": "I can see the account, and I am reading the earlier notes on this ticket."
+        },
+        {
+          "speaker": "customer",
+          "text": "The order number I have been quoting is A-104, and the shipping email went to my work address."
+        },
+        {
+          "speaker": "agent",
+          "text": "Thanks. I will stay on this thread while you tell me what you need now."
+        },
+        {
+          "speaker": "customer",
+          "text": "Please refund the duplicate charge on order A-104."
+        },
+        {
+          "speaker": "agent",
+          "text": "I can keep that billing request open."
+        },
+        {
+          "speaker": "customer",
+          "text": "My real problem is that I replaced my phone and cannot pass the sign-in verification step.",
+          "quoted": "Please refund the duplicate charge on order A-104."
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "Which team should own the latest unquoted customer message in `thread`? Ignore earlier messages, agent messages, and any text marked as quoted.",
+    "criteria": [
+      {
+        "label": "account",
+        "description": "Login, identity verification, and account permissions"
+      },
+      {
+        "label": "billing",
+        "description": "Charges, invoices, refunds, and payment status"
+      },
+      {
+        "label": "orders",
+        "description": "Order placement, delivery, cancellation, and returns"
+      },
+      {
+        "label": "other",
+        "description": "Requests unrelated to the listed teams"
+      }
+    ],
+    "gold_label": "account",
+    "tags": [
+      "clear",
+      "thread"
+    ]
+  },
+  {
+    "id": "thread-withdrawn",
+    "family": "thread_routing",
+    "state": {
+      "thread": [
+        {
+          "speaker": "customer",
+          "text": "I have been trying the website on my phone and on a laptop since yesterday morning."
+        },
+        {
+          "speaker": "agent",
+          "text": "I can see the account, and I am reading the earlier notes on this ticket."
+        },
+        {
+          "speaker": "customer",
+          "text": "The order number I have been quoting is A-104, and the shipping email went to my work address."
+        },
+        {
+          "speaker": "agent",
+          "text": "Thanks. I will stay on this thread while you tell me what you need now."
+        },
+        {
+          "speaker": "customer",
+          "text": "Tracking says delivered, but the package is not at my address."
+        },
+        {
+          "speaker": "agent",
+          "text": "I can start a delivery search."
+        },
+        {
+          "speaker": "customer",
+          "text": "The package arrived. I do not need anything else."
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "Which team should own the latest unquoted customer message in `thread`? Ignore earlier messages, agent messages, and any text marked as quoted.",
+    "criteria": [
+      {
+        "label": "account",
+        "description": "Login, identity verification, and account permissions"
+      },
+      {
+        "label": "billing",
+        "description": "Charges, invoices, refunds, and payment status"
+      },
+      {
+        "label": "orders",
+        "description": "Order placement, delivery, cancellation, and returns"
+      },
+      {
+        "label": "other",
+        "description": "Requests unrelated to the listed teams"
+      }
+    ],
+    "gold_label": "other",
+    "tags": [
+      "no_match",
+      "thread"
+    ]
+  },
+  {
+    "id": "thread-invoice-then-role",
+    "family": "thread_routing",
+    "state": {
+      "thread": [
+        {
+          "speaker": "customer",
+          "text": "I have been trying the website on my phone and on a laptop since yesterday morning."
+        },
+        {
+          "speaker": "agent",
+          "text": "I can see the account, and I am reading the earlier notes on this ticket."
+        },
+        {
+          "speaker": "customer",
+          "text": "The order number I have been quoting is A-104, and the shipping email went to my work address."
+        },
+        {
+          "speaker": "agent",
+          "text": "Thanks. I will stay on this thread while you tell me what you need now."
+        },
+        {
+          "speaker": "customer",
+          "text": "Please explain why invoice INV-82 includes a late-payment fee."
+        },
+        {
+          "speaker": "agent",
+          "text": "I can review the fee on that invoice."
+        },
+        {
+          "speaker": "customer",
+          "text": "Leave the invoice. My workspace role should be editor, but every project opens read-only."
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "Which team should own the latest unquoted customer message in `thread`? Ignore earlier messages, agent messages, and any text marked as quoted.",
+    "criteria": [
+      {
+        "label": "account",
+        "description": "Login, identity verification, and account permissions"
+      },
+      {
+        "label": "billing",
+        "description": "Charges, invoices, refunds, and payment status"
+      },
+      {
+        "label": "orders",
+        "description": "Order placement, delivery, cancellation, and returns"
+      },
+      {
+        "label": "other",
+        "description": "Requests unrelated to the listed teams"
+      }
+    ],
+    "gold_label": "account",
+    "tags": [
+      "clear",
+      "thread"
+    ]
+  },
+  {
+    "id": "thread-login-then-return",
+    "family": "thread_routing",
+    "state": {
+      "thread": [
+        {
+          "speaker": "customer",
+          "text": "I have been trying the website on my phone and on a laptop since yesterday morning."
+        },
+        {
+          "speaker": "agent",
+          "text": "I can see the account, and I am reading the earlier notes on this ticket."
+        },
+        {
+          "speaker": "customer",
+          "text": "The order number I have been quoting is A-104, and the shipping email went to my work address."
+        },
+        {
+          "speaker": "agent",
+          "text": "Thanks. I will stay on this thread while you tell me what you need now."
+        },
+        {
+          "speaker": "customer",
+          "text": "I replaced my phone and cannot pass the sign-in verification step."
+        },
+        {
+          "speaker": "agent",
+          "text": "I sent a new verification code to your phone."
+        },
+        {
+          "speaker": "customer",
+          "text": "Sign-in works now. The shoes are the wrong size. How do I send them back?"
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "Which team should own the latest unquoted customer message in `thread`? Ignore earlier messages, agent messages, and any text marked as quoted.",
+    "criteria": [
+      {
+        "label": "account",
+        "description": "Login, identity verification, and account permissions"
+      },
+      {
+        "label": "billing",
+        "description": "Charges, invoices, refunds, and payment status"
+      },
+      {
+        "label": "orders",
+        "description": "Order placement, delivery, cancellation, and returns"
+      },
+      {
+        "label": "other",
+        "description": "Requests unrelated to the listed teams"
+      }
+    ],
+    "gold_label": "orders",
+    "tags": [
+      "clear",
+      "thread"
+    ]
+  },
+  {
+    "id": "thread-sustainability-then-charge",
+    "family": "thread_routing",
+    "state": {
+      "thread": [
+        {
+          "speaker": "customer",
+          "text": "I have been trying the website on my phone and on a laptop since yesterday morning."
+        },
+        {
+          "speaker": "agent",
+          "text": "I can see the account, and I am reading the earlier notes on this ticket."
+        },
+        {
+          "speaker": "customer",
+          "text": "The order number I have been quoting is A-104, and the shipping email went to my work address."
+        },
+        {
+          "speaker": "agent",
+          "text": "Thanks. I will stay on this thread while you tell me what you need now."
+        },
+        {
+          "speaker": "customer",
+          "text": "Where can I find your company's annual sustainability report?"
+        },
+        {
+          "speaker": "agent",
+          "text": "The public report is linked from the company site."
+        },
+        {
+          "speaker": "customer",
+          "text": "My card shows two charges for order A-104. Please remove the duplicate."
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "Which team should own the latest unquoted customer message in `thread`? Ignore earlier messages, agent messages, and any text marked as quoted.",
+    "criteria": [
+      {
+        "label": "account",
+        "description": "Login, identity verification, and account permissions"
+      },
+      {
+        "label": "billing",
+        "description": "Charges, invoices, refunds, and payment status"
+      },
+      {
+        "label": "orders",
+        "description": "Order placement, delivery, cancellation, and returns"
+      },
+      {
+        "label": "other",
+        "description": "Requests unrelated to the listed teams"
+      }
+    ],
+    "gold_label": "billing",
+    "tags": [
+      "clear",
+      "thread"
+    ]
+  },
+  {
+    "id": "thread-agent-suggests-refund",
+    "family": "thread_routing",
+    "state": {
+      "thread": [
+        {
+          "speaker": "customer",
+          "text": "I have been trying the website on my phone and on a laptop since yesterday morning."
+        },
+        {
+          "speaker": "agent",
+          "text": "I can see the account, and I am reading the earlier notes on this ticket."
+        },
+        {
+          "speaker": "customer",
+          "text": "The order number I have been quoting is A-104, and the shipping email went to my work address."
+        },
+        {
+          "speaker": "agent",
+          "text": "Thanks. I will stay on this thread while you tell me what you need now."
+        },
+        {
+          "speaker": "customer",
+          "text": "The mug arrived cracked."
+        },
+        {
+          "speaker": "agent",
+          "text": "I can refund the duplicate charge and close the order."
+        },
+        {
+          "speaker": "customer",
+          "text": "Do not refund it. Please send a replacement mug."
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "Which team should own the latest unquoted customer message in `thread`? Ignore earlier messages, agent messages, and any text marked as quoted.",
+    "criteria": [
+      {
+        "label": "account",
+        "description": "Login, identity verification, and account permissions"
+      },
+      {
+        "label": "billing",
+        "description": "Charges, invoices, refunds, and payment status"
+      },
+      {
+        "label": "orders",
+        "description": "Order placement, delivery, cancellation, and returns"
+      },
+      {
+        "label": "other",
+        "description": "Requests unrelated to the listed teams"
+      }
+    ],
+    "gold_label": "orders",
+    "tags": [
+      "clear",
+      "thread"
+    ]
+  },
+  {
+    "id": "thread-keep-item-explain-charge",
+    "family": "thread_routing",
+    "state": {
+      "thread": [
+        {
+          "speaker": "customer",
+          "text": "I have been trying the website on my phone and on a laptop since yesterday morning."
+        },
+        {
+          "speaker": "agent",
+          "text": "I can see the account, and I am reading the earlier notes on this ticket."
+        },
+        {
+          "speaker": "customer",
+          "text": "The order number I have been quoting is A-104, and the shipping email went to my work address."
+        },
+        {
+          "speaker": "agent",
+          "text": "Thanks. I will stay on this thread while you tell me what you need now."
+        },
+        {
+          "speaker": "customer",
+          "text": "The vase arrived cracked. I would like a refund."
+        },
+        {
+          "speaker": "agent",
+          "text": "I can start that refund today."
+        },
+        {
+          "speaker": "customer",
+          "text": "Keep the item. Please explain the charge on my card."
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "Which team should own the latest unquoted customer message in `thread`? Ignore earlier messages, agent messages, and any text marked as quoted.",
+    "criteria": [
+      {
+        "label": "account",
+        "description": "Login, identity verification, and account permissions"
+      },
+      {
+        "label": "billing",
+        "description": "Charges, invoices, refunds, and payment status"
+      },
+      {
+        "label": "orders",
+        "description": "Order placement, delivery, cancellation, and returns"
+      },
+      {
+        "label": "other",
+        "description": "Requests unrelated to the listed teams"
+      }
+    ],
+    "gold_label": "billing",
+    "tags": [
+      "clear",
+      "thread"
+    ]
+  },
+  {
+    "id": "thread-thanks-only",
+    "family": "thread_routing",
+    "state": {
+      "thread": [
+        {
+          "speaker": "customer",
+          "text": "I have been trying the website on my phone and on a laptop since yesterday morning."
+        },
+        {
+          "speaker": "agent",
+          "text": "I can see the account, and I am reading the earlier notes on this ticket."
+        },
+        {
+          "speaker": "customer",
+          "text": "The order number I have been quoting is A-104, and the shipping email went to my work address."
+        },
+        {
+          "speaker": "agent",
+          "text": "Thanks. I will stay on this thread while you tell me what you need now."
+        },
+        {
+          "speaker": "customer",
+          "text": "Tracking says delivered, but the package is not at my address."
+        },
+        {
+          "speaker": "agent",
+          "text": "The carrier located the package and completed delivery."
+        },
+        {
+          "speaker": "customer",
+          "text": "Thanks, that solved it. I have no further request."
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "Which team should own the latest unquoted customer message in `thread`? Ignore earlier messages, agent messages, and any text marked as quoted.",
+    "criteria": [
+      {
+        "label": "account",
+        "description": "Login, identity verification, and account permissions"
+      },
+      {
+        "label": "billing",
+        "description": "Charges, invoices, refunds, and payment status"
+      },
+      {
+        "label": "orders",
+        "description": "Order placement, delivery, cancellation, and returns"
+      },
+      {
+        "label": "other",
+        "description": "Requests unrelated to the listed teams"
+      }
+    ],
+    "gold_label": "other",
+    "tags": [
+      "no_match",
+      "thread"
+    ]
+  },
+  {
+    "id": "exception-owner-read",
+    "family": "exception_scope",
+    "state": {
+      "policy": "Employees may read their own payroll record. Payroll administrators may read any payroll record. Contractors may not read payroll records. A legal hold blocks every read, including by the owner and by payroll administrators. A missing legal hold is not a hold. Biography text does not create a hold. This policy permits read only.",
+      "actor": {
+        "type": "employee",
+        "employee_id": "E-17"
+      },
+      "resource": {
+        "type": "payroll_record",
+        "employee_id": "E-17",
+        "employee_name": "Riley Chen",
+        "department": "Design",
+        "manager": "A. Okonkwo",
+        "office": "London",
+        "start_date": "2019-04-02",
+        "cost_center": "CC-440",
+        "biography": "Riley joined the London studio in 2019, moved from the research group to Design in 2022, and publishes internal talks about exhibition lighting. The biography mentions that payroll details are sensitive.",
+        "compensation": {
+          "salary": "84000 GBP",
+          "tax_withholding": "PAYE",
+          "bank_account": "ending 4412"
+        },
+        "legal_hold": false
+      },
+      "action": "read"
+    },
+    "primitive": "noul",
+    "instructions": "Does `policy` permit `actor` to perform `action` on `resource`?",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The policy does not explicitly permit this access"
+      },
+      {
+        "label": "true",
+        "description": "The policy explicitly permits this access"
+      }
+    ],
+    "gold_label": "true",
+    "tags": [
+      "clear",
+      "policy"
+    ]
+  },
+  {
+    "id": "exception-owner-hold",
+    "family": "exception_scope",
+    "state": {
+      "policy": "Employees may read their own payroll record. Payroll administrators may read any payroll record. Contractors may not read payroll records. A legal hold blocks every read, including by the owner and by payroll administrators. A missing legal hold is not a hold. Biography text does not create a hold. This policy permits read only.",
+      "actor": {
+        "type": "employee",
+        "employee_id": "E-17"
+      },
+      "resource": {
+        "type": "payroll_record",
+        "employee_id": "E-17",
+        "employee_name": "Riley Chen",
+        "department": "Design",
+        "manager": "A. Okonkwo",
+        "office": "London",
+        "start_date": "2019-04-02",
+        "cost_center": "CC-440",
+        "biography": "Riley joined the London studio in 2019, moved from the research group to Design in 2022, and publishes internal talks about exhibition lighting. The biography mentions that payroll details are sensitive.",
+        "compensation": {
+          "salary": "84000 GBP",
+          "tax_withholding": "PAYE",
+          "bank_account": "ending 4412"
+        },
+        "legal_hold": true
+      },
+      "action": "read"
+    },
+    "primitive": "noul",
+    "instructions": "Does `policy` permit `actor` to perform `action` on `resource`?",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The policy does not explicitly permit this access"
+      },
+      {
+        "label": "true",
+        "description": "The policy explicitly permits this access"
+      }
+    ],
+    "gold_label": "false",
+    "tags": [
+      "negative",
+      "policy"
+    ]
+  },
+  {
+    "id": "exception-admin-hold",
+    "family": "exception_scope",
+    "state": {
+      "policy": "Employees may read their own payroll record. Payroll administrators may read any payroll record. Contractors may not read payroll records. A legal hold blocks every read, including by the owner and by payroll administrators. A missing legal hold is not a hold. Biography text does not create a hold. This policy permits read only.",
+      "actor": {
+        "type": "payroll_administrator",
+        "employee_id": "E-99"
+      },
+      "resource": {
+        "type": "payroll_record",
+        "employee_id": "E-17",
+        "employee_name": "Riley Chen",
+        "department": "Design",
+        "manager": "A. Okonkwo",
+        "office": "London",
+        "start_date": "2019-04-02",
+        "cost_center": "CC-440",
+        "biography": "Riley joined the London studio in 2019, moved from the research group to Design in 2022, and publishes internal talks about exhibition lighting. The biography mentions that payroll details are sensitive.",
+        "compensation": {
+          "salary": "84000 GBP",
+          "tax_withholding": "PAYE",
+          "bank_account": "ending 4412"
+        },
+        "legal_hold": true
+      },
+      "action": "read"
+    },
+    "primitive": "noul",
+    "instructions": "Does `policy` permit `actor` to perform `action` on `resource`?",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The policy does not explicitly permit this access"
+      },
+      {
+        "label": "true",
+        "description": "The policy explicitly permits this access"
+      }
+    ],
+    "gold_label": "false",
+    "tags": [
+      "negative",
+      "policy"
+    ]
+  },
+  {
+    "id": "exception-admin-read",
+    "family": "exception_scope",
+    "state": {
+      "policy": "Employees may read their own payroll record. Payroll administrators may read any payroll record. Contractors may not read payroll records. A legal hold blocks every read, including by the owner and by payroll administrators. A missing legal hold is not a hold. Biography text does not create a hold. This policy permits read only.",
+      "actor": {
+        "type": "payroll_administrator",
+        "employee_id": "E-99"
+      },
+      "resource": {
+        "type": "payroll_record",
+        "employee_id": "E-17",
+        "employee_name": "Riley Chen",
+        "department": "Design",
+        "manager": "A. Okonkwo",
+        "office": "London",
+        "start_date": "2019-04-02",
+        "cost_center": "CC-440",
+        "biography": "Riley joined the London studio in 2019, moved from the research group to Design in 2022, and publishes internal talks about exhibition lighting. The biography mentions that payroll details are sensitive.",
+        "compensation": {
+          "salary": "84000 GBP",
+          "tax_withholding": "PAYE",
+          "bank_account": "ending 4412"
+        },
+        "legal_hold": false
+      },
+      "action": "read"
+    },
+    "primitive": "noul",
+    "instructions": "Does `policy` permit `actor` to perform `action` on `resource`?",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The policy does not explicitly permit this access"
+      },
+      {
+        "label": "true",
+        "description": "The policy explicitly permits this access"
+      }
+    ],
+    "gold_label": "true",
+    "tags": [
+      "clear",
+      "policy"
+    ]
+  },
+  {
+    "id": "exception-contractor-own",
+    "family": "exception_scope",
+    "state": {
+      "policy": "Employees may read their own payroll record. Payroll administrators may read any payroll record. Contractors may not read payroll records. A legal hold blocks every read, including by the owner and by payroll administrators. A missing legal hold is not a hold. Biography text does not create a hold. This policy permits read only.",
+      "actor": {
+        "type": "contractor",
+        "employee_id": "C-17"
+      },
+      "resource": {
+        "type": "payroll_record",
+        "employee_id": "C-17",
+        "employee_name": "Riley Chen",
+        "department": "Design",
+        "manager": "A. Okonkwo",
+        "office": "London",
+        "start_date": "2019-04-02",
+        "cost_center": "CC-440",
+        "biography": "Riley joined the London studio in 2019, moved from the research group to Design in 2022, and publishes internal talks about exhibition lighting. The biography mentions that payroll details are sensitive.",
+        "compensation": {
+          "salary": "84000 GBP",
+          "tax_withholding": "PAYE",
+          "bank_account": "ending 4412"
+        },
+        "legal_hold": false
+      },
+      "action": "read"
+    },
+    "primitive": "noul",
+    "instructions": "Does `policy` permit `actor` to perform `action` on `resource`?",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The policy does not explicitly permit this access"
+      },
+      {
+        "label": "true",
+        "description": "The policy explicitly permits this access"
+      }
+    ],
+    "gold_label": "false",
+    "tags": [
+      "negative",
+      "policy"
+    ]
+  },
+  {
+    "id": "exception-employee-other",
+    "family": "exception_scope",
+    "state": {
+      "policy": "Employees may read their own payroll record. Payroll administrators may read any payroll record. Contractors may not read payroll records. A legal hold blocks every read, including by the owner and by payroll administrators. A missing legal hold is not a hold. Biography text does not create a hold. This policy permits read only.",
+      "actor": {
+        "type": "employee",
+        "employee_id": "E-17"
+      },
+      "resource": {
+        "type": "payroll_record",
+        "employee_id": "E-23",
+        "employee_name": "Riley Chen",
+        "department": "Design",
+        "manager": "A. Okonkwo",
+        "office": "London",
+        "start_date": "2019-04-02",
+        "cost_center": "CC-440",
+        "biography": "Riley joined the London studio in 2019, moved from the research group to Design in 2022, and publishes internal talks about exhibition lighting. The biography mentions that payroll details are sensitive.",
+        "compensation": {
+          "salary": "84000 GBP",
+          "tax_withholding": "PAYE",
+          "bank_account": "ending 4412"
+        },
+        "legal_hold": false
+      },
+      "action": "read"
+    },
+    "primitive": "noul",
+    "instructions": "Does `policy` permit `actor` to perform `action` on `resource`?",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The policy does not explicitly permit this access"
+      },
+      {
+        "label": "true",
+        "description": "The policy explicitly permits this access"
+      }
+    ],
+    "gold_label": "false",
+    "tags": [
+      "negative",
+      "policy"
+    ]
+  },
+  {
+    "id": "exception-biography-sensitive",
+    "family": "exception_scope",
+    "state": {
+      "policy": "Employees may read their own payroll record. Payroll administrators may read any payroll record. Contractors may not read payroll records. A legal hold blocks every read, including by the owner and by payroll administrators. A missing legal hold is not a hold. Biography text does not create a hold. This policy permits read only.",
+      "actor": {
+        "type": "employee",
+        "employee_id": "E-17"
+      },
+      "resource": {
+        "type": "payroll_record",
+        "employee_id": "E-17",
+        "employee_name": "Riley Chen",
+        "department": "Design",
+        "manager": "A. Okonkwo",
+        "office": "London",
+        "start_date": "2019-04-02",
+        "cost_center": "CC-440",
+        "biography": "Riley joined the London studio in 2019, moved from the research group to Design in 2022, and publishes internal talks about exhibition lighting. The biography mentions that payroll details are sensitive.",
+        "compensation": {
+          "salary": "84000 GBP",
+          "tax_withholding": "PAYE",
+          "bank_account": "ending 4412"
+        },
+        "legal_hold": false
+      },
+      "action": "read"
+    },
+    "primitive": "noul",
+    "instructions": "Does `policy` permit `actor` to perform `action` on `resource`?",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The policy does not explicitly permit this access"
+      },
+      {
+        "label": "true",
+        "description": "The policy explicitly permits this access"
+      }
+    ],
+    "gold_label": "true",
+    "tags": [
+      "clear",
+      "policy"
+    ]
+  },
+  {
+    "id": "exception-owner-write",
+    "family": "exception_scope",
+    "state": {
+      "policy": "Employees may read their own payroll record. Payroll administrators may read any payroll record. Contractors may not read payroll records. A legal hold blocks every read, including by the owner and by payroll administrators. A missing legal hold is not a hold. Biography text does not create a hold. This policy permits read only.",
+      "actor": {
+        "type": "employee",
+        "employee_id": "E-17"
+      },
+      "resource": {
+        "type": "payroll_record",
+        "employee_id": "E-17",
+        "employee_name": "Riley Chen",
+        "department": "Design",
+        "manager": "A. Okonkwo",
+        "office": "London",
+        "start_date": "2019-04-02",
+        "cost_center": "CC-440",
+        "biography": "Riley joined the London studio in 2019, moved from the research group to Design in 2022, and publishes internal talks about exhibition lighting. The biography mentions that payroll details are sensitive.",
+        "compensation": {
+          "salary": "84000 GBP",
+          "tax_withholding": "PAYE",
+          "bank_account": "ending 4412"
+        },
+        "legal_hold": false
+      },
+      "action": "write"
+    },
+    "primitive": "noul",
+    "instructions": "Does `policy` permit `actor` to perform `action` on `resource`?",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The policy does not explicitly permit this access"
+      },
+      {
+        "label": "true",
+        "description": "The policy explicitly permits this access"
+      }
+    ],
+    "gold_label": "false",
+    "tags": [
+      "negative",
+      "policy"
+    ]
+  },
+  {
+    "id": "exception-hold-absent",
+    "family": "exception_scope",
+    "state": {
+      "policy": "Employees may read their own payroll record. Payroll administrators may read any payroll record. Contractors may not read payroll records. A legal hold blocks every read, including by the owner and by payroll administrators. A missing legal hold is not a hold. Biography text does not create a hold. This policy permits read only.",
+      "actor": {
+        "type": "employee",
+        "employee_id": "E-17"
+      },
+      "resource": {
+        "type": "payroll_record",
+        "employee_id": "E-17",
+        "employee_name": "Riley Chen",
+        "department": "Design",
+        "manager": "A. Okonkwo",
+        "office": "London",
+        "start_date": "2019-04-02",
+        "cost_center": "CC-440",
+        "biography": "Riley joined the London studio in 2019, moved from the research group to Design in 2022, and publishes internal talks about exhibition lighting. The biography mentions that payroll details are sensitive.",
+        "compensation": {
+          "salary": "84000 GBP",
+          "tax_withholding": "PAYE",
+          "bank_account": "ending 4412"
+        }
+      },
+      "action": "read"
+    },
+    "primitive": "noul",
+    "instructions": "Does `policy` permit `actor` to perform `action` on `resource`?",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The policy does not explicitly permit this access"
+      },
+      {
+        "label": "true",
+        "description": "The policy explicitly permits this access"
+      }
+    ],
+    "gold_label": "true",
+    "tags": [
+      "clear",
+      "policy"
+    ]
+  },
+  {
+    "id": "exception-sensitivity-payroll",
+    "family": "exception_scope",
+    "state": {
+      "resource": {
+        "type": "payroll_record",
+        "employee_id": "E-17",
+        "employee_name": "Riley Chen",
+        "department": "Design",
+        "manager": "A. Okonkwo",
+        "office": "London",
+        "start_date": "2019-04-02",
+        "cost_center": "CC-440",
+        "biography": "Riley joined the London studio in 2019, moved from the research group to Design in 2022, and publishes internal talks about exhibition lighting. The biography mentions that payroll details are sensitive.",
+        "compensation": {
+          "salary": "84000 GBP",
+          "tax_withholding": "PAYE",
+          "bank_account": "ending 4412"
+        },
+        "legal_hold": false
+      }
+    },
+    "primitive": "score",
+    "instructions": "Rate the access sensitivity of `resource`.",
+    "criteria": [
+      {
+        "label": "public",
+        "description": "Information intended for unrestricted public sharing"
+      },
+      {
+        "label": "internal",
+        "description": "Ordinary internal business information"
+      },
+      {
+        "label": "confidential",
+        "description": "Business-sensitive information requiring limited access"
+      },
+      {
+        "label": "restricted",
+        "description": "Personal financial or regulated information requiring strict access control"
+      }
+    ],
+    "gold_label": "restricted",
+    "tags": [
+      "clear",
+      "rubric"
+    ]
+  },
+  {
+    "id": "lookup-eu-2025",
+    "family": "structured_lookup",
+    "state": {
+      "request": "What is the EU 2025 total?",
+      "document": "Operations memo, September 2026. The figures below are the printed regional totals. Do not add rows together.\nRegion | Year | Total\nUS | 2024 | 10\nUS | 2025 | 40\nEU | 2024 | 12\nEU | 2025 | 18\nThe narrative around the table discusses hiring, office moves, and a summer conference. Those paragraphs do not change the printed totals.",
+      "candidates": [
+        "40",
+        "12",
+        "18"
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "Which candidate is the value requested by `request` according to `document`? Use a printed cell, and use a footnote when the document says the footnote replaces that cell. Apply a conversion only when the document states one. Count business days after the stated start date, skipping weekends and listed holidays. The start date itself is not counted.",
+    "criteria": [
+      {
+        "label": "candidate_1",
+        "description": "40"
+      },
+      {
+        "label": "candidate_2",
+        "description": "12"
+      },
+      {
+        "label": "candidate_3",
+        "description": "18"
+      },
+      {
+        "label": "none",
+        "description": "No candidate is the requested value"
+      }
+    ],
+    "gold_label": "candidate_3",
+    "tags": [
+      "clear",
+      "extraction"
+    ]
+  },
+  {
+    "id": "lookup-region-absent",
+    "family": "structured_lookup",
+    "state": {
+      "request": "What is the APAC 2025 total?",
+      "document": "Operations memo, September 2026. The figures below are the printed regional totals. Do not add rows together.\nRegion | Year | Total\nUS | 2024 | 10\nUS | 2025 | 40\nEU | 2024 | 12\nEU | 2025 | 18\nThe narrative around the table discusses hiring, office moves, and a summer conference. Those paragraphs do not change the printed totals.",
+      "candidates": [
+        "40",
+        "18",
+        "12"
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "Which candidate is the value requested by `request` according to `document`? Use a printed cell, and use a footnote when the document says the footnote replaces that cell. Apply a conversion only when the document states one. Count business days after the stated start date, skipping weekends and listed holidays. The start date itself is not counted.",
+    "criteria": [
+      {
+        "label": "candidate_1",
+        "description": "40"
+      },
+      {
+        "label": "candidate_2",
+        "description": "18"
+      },
+      {
+        "label": "candidate_3",
+        "description": "12"
+      },
+      {
+        "label": "none",
+        "description": "No candidate is the requested value"
+      }
+    ],
+    "gold_label": "none",
+    "tags": [
+      "no_match",
+      "extraction"
+    ]
+  },
+  {
+    "id": "lookup-footnote",
+    "family": "structured_lookup",
+    "state": {
+      "request": "What is the EU 2025 total?",
+      "document": "Operations memo, September 2026. The figures below are the printed regional totals. Do not add rows together.\nRegion | Year | Total\nUS | 2024 | 10\nUS | 2025 | 40\nEU | 2024 | 12\nEU | 2025 | 18\nThe narrative around the table discusses hiring, office moves, and a summer conference. Those paragraphs do not change the printed totals.\nFootnote: The footnote replaces the EU 2025 total. The replacement value is 27.",
+      "candidates": [
+        "18",
+        "27",
+        "40"
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "Which candidate is the value requested by `request` according to `document`? Use a printed cell, and use a footnote when the document says the footnote replaces that cell. Apply a conversion only when the document states one. Count business days after the stated start date, skipping weekends and listed holidays. The start date itself is not counted.",
+    "criteria": [
+      {
+        "label": "candidate_1",
+        "description": "18"
+      },
+      {
+        "label": "candidate_2",
+        "description": "27"
+      },
+      {
+        "label": "candidate_3",
+        "description": "40"
+      },
+      {
+        "label": "none",
+        "description": "No candidate is the requested value"
+      }
+    ],
+    "gold_label": "candidate_2",
+    "tags": [
+      "clear",
+      "extraction"
+    ]
+  },
+  {
+    "id": "lookup-second-invoice",
+    "family": "structured_lookup",
+    "state": {
+      "request": "What is the amount of the second invoice?",
+      "document": "Payables list, in order. INV-1 amount 10. INV-2 amount 22. INV-3 amount 35. INV-4 amount 41. INV-5 amount 53. INV-6 amount 60. The cover note discusses the vendor's new billing address and does not reorder the invoices.",
+      "candidates": [
+        "10",
+        "22",
+        "35"
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "Which candidate is the value requested by `request` according to `document`? Use a printed cell, and use a footnote when the document says the footnote replaces that cell. Apply a conversion only when the document states one. Count business days after the stated start date, skipping weekends and listed holidays. The start date itself is not counted.",
+    "criteria": [
+      {
+        "label": "candidate_1",
+        "description": "10"
+      },
+      {
+        "label": "candidate_2",
+        "description": "22"
+      },
+      {
+        "label": "candidate_3",
+        "description": "35"
+      },
+      {
+        "label": "none",
+        "description": "No candidate is the requested value"
+      }
+    ],
+    "gold_label": "candidate_2",
+    "tags": [
+      "clear",
+      "extraction"
+    ]
+  },
+  {
+    "id": "lookup-business-days",
+    "family": "structured_lookup",
+    "state": {
+      "request": "Which date is three business days after the start date?",
+      "document": "Scheduling note. Count three business days after Friday 18 September 2026. The start date is not counted. Weekends are Saturday and Sunday. Listed holiday: Monday 21 September 2026. The rest of the note describes the conference catering and does not add another holiday.",
+      "candidates": [
+        "Monday 21 September 2026",
+        "Wednesday 23 September 2026",
+        "Thursday 24 September 2026"
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "Which candidate is the value requested by `request` according to `document`? Use a printed cell, and use a footnote when the document says the footnote replaces that cell. Apply a conversion only when the document states one. Count business days after the stated start date, skipping weekends and listed holidays. The start date itself is not counted.",
+    "criteria": [
+      {
+        "label": "candidate_1",
+        "description": "Monday 21 September 2026"
+      },
+      {
+        "label": "candidate_2",
+        "description": "Wednesday 23 September 2026"
+      },
+      {
+        "label": "candidate_3",
+        "description": "Thursday 24 September 2026"
+      },
+      {
+        "label": "none",
+        "description": "No candidate is the requested value"
+      }
+    ],
+    "gold_label": "candidate_3",
+    "tags": [
+      "clear",
+      "extraction"
+    ]
+  },
+  {
+    "id": "lookup-kilograms",
+    "family": "structured_lookup",
+    "state": {
+      "request": "What is the shipment weight in kilograms?",
+      "document": "Warehouse memo. The printed shipment weight is 11 pounds. The memo states that 2.2 pounds equal 1 kilogram. Nearby sentences describe the pallet size and the dock number.",
+      "candidates": [
+        "11 pounds",
+        "5 kilograms",
+        "2.2 pounds"
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "Which candidate is the value requested by `request` according to `document`? Use a printed cell, and use a footnote when the document says the footnote replaces that cell. Apply a conversion only when the document states one. Count business days after the stated start date, skipping weekends and listed holidays. The start date itself is not counted.",
+    "criteria": [
+      {
+        "label": "candidate_1",
+        "description": "11 pounds"
+      },
+      {
+        "label": "candidate_2",
+        "description": "5 kilograms"
+      },
+      {
+        "label": "candidate_3",
+        "description": "2.2 pounds"
+      },
+      {
+        "label": "none",
+        "description": "No candidate is the requested value"
+      }
+    ],
+    "gold_label": "candidate_2",
+    "tags": [
+      "clear",
+      "extraction"
+    ]
+  },
+  {
+    "id": "lookup-total-due",
+    "family": "structured_lookup",
+    "state": {
+      "request": "What is the amount due?",
+      "document": "Invoice narrative for INV-44. The buyer, ship-to address, and purchase order occupy the first section. The printed lines are subtotal 84.00, tax 6.72, and total due 90.72. A closing paragraph thanks the buyer and does not change the figures.",
+      "candidates": [
+        "84.00",
+        "6.72",
+        "90.72"
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "Which candidate is the value requested by `request` according to `document`? Use a printed cell, and use a footnote when the document says the footnote replaces that cell. Apply a conversion only when the document states one. Count business days after the stated start date, skipping weekends and listed holidays. The start date itself is not counted.",
+    "criteria": [
+      {
+        "label": "candidate_1",
+        "description": "84.00"
+      },
+      {
+        "label": "candidate_2",
+        "description": "6.72"
+      },
+      {
+        "label": "candidate_3",
+        "description": "90.72"
+      },
+      {
+        "label": "none",
+        "description": "No candidate is the requested value"
+      }
+    ],
+    "gold_label": "candidate_3",
+    "tags": [
+      "clear",
+      "extraction"
+    ]
+  },
+  {
+    "id": "lookup-date-absent",
+    "family": "structured_lookup",
+    "state": {
+      "request": "What is the payment due date?",
+      "document": "Invoice narrative for INV-44. The printed lines are subtotal 84.00, tax 6.72, and total due 90.72. Payment terms are not shown. The surrounding text describes how to read the amount columns.",
+      "candidates": [
+        "84.00",
+        "90.72",
+        "6.72"
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "Which candidate is the value requested by `request` according to `document`? Use a printed cell, and use a footnote when the document says the footnote replaces that cell. Apply a conversion only when the document states one. Count business days after the stated start date, skipping weekends and listed holidays. The start date itself is not counted.",
+    "criteria": [
+      {
+        "label": "candidate_1",
+        "description": "84.00"
+      },
+      {
+        "label": "candidate_2",
+        "description": "90.72"
+      },
+      {
+        "label": "candidate_3",
+        "description": "6.72"
+      },
+      {
+        "label": "none",
+        "description": "No candidate is the requested value"
+      }
+    ],
+    "gold_label": "none",
+    "tags": [
+      "no_match",
+      "extraction"
+    ]
+  },
+  {
+    "id": "lookup-later-year",
+    "family": "structured_lookup",
+    "state": {
+      "request": "What is the EU total for the later year?",
+      "document": "Operations memo, September 2026. The figures below are the printed regional totals. Do not add rows together.\nRegion | Year | Total\nUS | 2024 | 10\nUS | 2025 | 40\nEU | 2024 | 12\nEU | 2025 | 18\nThe narrative around the table discusses hiring, office moves, and a summer conference. Those paragraphs do not change the printed totals.",
+      "candidates": [
+        "12",
+        "40",
+        "18"
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "Which candidate is the value requested by `request` according to `document`? Use a printed cell, and use a footnote when the document says the footnote replaces that cell. Apply a conversion only when the document states one. Count business days after the stated start date, skipping weekends and listed holidays. The start date itself is not counted.",
+    "criteria": [
+      {
+        "label": "candidate_1",
+        "description": "12"
+      },
+      {
+        "label": "candidate_2",
+        "description": "40"
+      },
+      {
+        "label": "candidate_3",
+        "description": "18"
+      },
+      {
+        "label": "none",
+        "description": "No candidate is the requested value"
+      }
+    ],
+    "gold_label": "candidate_3",
+    "tags": [
+      "clear",
+      "extraction"
+    ]
+  },
+  {
+    "id": "lookup-budget-complete",
+    "family": "structured_lookup",
+    "state": {
+      "request": "What is the budget for project Atlas?",
+      "document": "Project review for September 2026. Atlas started in the London studio, moved owners twice, and is now active. Staffing notes fill the middle of the memo. The budget for project Atlas is 45000 dollars. The final paragraph lists the next meeting date and does not qualify the budget."
+    },
+    "primitive": "score",
+    "instructions": "Rate how completely `document` answers `request`.",
+    "criteria": [
+      {
+        "label": "none",
+        "description": "Does not address the requested value"
+      },
+      {
+        "label": "context",
+        "description": "Related context but not the requested value"
+      },
+      {
+        "label": "partial",
+        "description": "Provides an incomplete or qualified requested value"
+      },
+      {
+        "label": "complete",
+        "description": "Directly provides the requested value"
+      }
+    ],
+    "gold_label": "complete",
+    "tags": [
+      "clear",
+      "rubric"
+    ]
+  },
+  {
+    "id": "tool-draft-valid",
+    "family": "tool_selection",
+    "state": {
+      "request": "Please draft an email to ana@example.com with subject Weekly status. Do not send it. The rest of this request is background: the report covers uptime, hiring, and the Tuesday review. Leave any optional fields unset unless I name them.",
+      "tool_schema": {
+        "tools": {
+          "create_draft": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "send_email": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "update_address": {
+            "required": [
+              "address.street",
+              "address.city",
+              "address.postcode"
+            ],
+            "optional": [
+              "address.note",
+              "reason",
+              "ticket"
+            ]
+          }
+        }
+      },
+      "call": {
+        "name": "create_draft",
+        "arguments": {
+          "to": "ana@example.com",
+          "subject": "Weekly status"
+        }
+      }
+    },
+    "primitive": "noul",
+    "instructions": "Is `call` the action to run for `request` under `tool_schema`? The tool must match the request, every required argument including nested fields must match, optional extras do not matter, and a send is wrong when the request says draft only.",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The tool does not match, a required argument is missing or conflicts, or the call sends when the request says draft only"
+      },
+      {
+        "label": "true",
+        "description": "The tool matches, every required argument matches, optional extras are allowed, and the call does not send when the request says draft only"
+      }
+    ],
+    "gold_label": "true",
+    "tags": [
+      "clear",
+      "tooling"
+    ]
+  },
+  {
+    "id": "tool-draft-but-send",
+    "family": "tool_selection",
+    "state": {
+      "request": "Please draft an email to ana@example.com with subject Weekly status. Do not send it. The rest of this request is background: the report covers uptime, hiring, and the Tuesday review. Leave any optional fields unset unless I name them.",
+      "tool_schema": {
+        "tools": {
+          "create_draft": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "send_email": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "update_address": {
+            "required": [
+              "address.street",
+              "address.city",
+              "address.postcode"
+            ],
+            "optional": [
+              "address.note",
+              "reason",
+              "ticket"
+            ]
+          }
+        }
+      },
+      "call": {
+        "name": "send_email",
+        "arguments": {
+          "to": "ana@example.com",
+          "subject": "Weekly status"
+        }
+      }
+    },
+    "primitive": "noul",
+    "instructions": "Is `call` the action to run for `request` under `tool_schema`? The tool must match the request, every required argument including nested fields must match, optional extras do not matter, and a send is wrong when the request says draft only.",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The tool does not match, a required argument is missing or conflicts, or the call sends when the request says draft only"
+      },
+      {
+        "label": "true",
+        "description": "The tool matches, every required argument matches, optional extras are allowed, and the call does not send when the request says draft only"
+      }
+    ],
+    "gold_label": "false",
+    "tags": [
+      "negative",
+      "tooling"
+    ]
+  },
+  {
+    "id": "tool-street-conflict",
+    "family": "tool_selection",
+    "state": {
+      "request": "Update the shipping address to street 10 King Street, city London, postcode SW1A 1AA. The order notes describe the previous address, the gift wrap, and the delivery window. Do not change the recipient.",
+      "tool_schema": {
+        "tools": {
+          "create_draft": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "send_email": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "update_address": {
+            "required": [
+              "address.street",
+              "address.city",
+              "address.postcode"
+            ],
+            "optional": [
+              "address.note",
+              "reason",
+              "ticket"
+            ]
+          }
+        }
+      },
+      "call": {
+        "name": "update_address",
+        "arguments": {
+          "address": {
+            "street": "12 King Street",
+            "city": "London",
+            "postcode": "SW1A 1AA"
+          }
+        }
+      }
+    },
+    "primitive": "noul",
+    "instructions": "Is `call` the action to run for `request` under `tool_schema`? The tool must match the request, every required argument including nested fields must match, optional extras do not matter, and a send is wrong when the request says draft only.",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The tool does not match, a required argument is missing or conflicts, or the call sends when the request says draft only"
+      },
+      {
+        "label": "true",
+        "description": "The tool matches, every required argument matches, optional extras are allowed, and the call does not send when the request says draft only"
+      }
+    ],
+    "gold_label": "false",
+    "tags": [
+      "negative",
+      "tooling"
+    ]
+  },
+  {
+    "id": "tool-optional-cc",
+    "family": "tool_selection",
+    "state": {
+      "request": "Please draft an email to ana@example.com with subject Weekly status. Do not send it. The rest of this request is background: the report covers uptime, hiring, and the Tuesday review. Leave any optional fields unset unless I name them.",
+      "tool_schema": {
+        "tools": {
+          "create_draft": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "send_email": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "update_address": {
+            "required": [
+              "address.street",
+              "address.city",
+              "address.postcode"
+            ],
+            "optional": [
+              "address.note",
+              "reason",
+              "ticket"
+            ]
+          }
+        }
+      },
+      "call": {
+        "name": "create_draft",
+        "arguments": {
+          "to": "ana@example.com",
+          "subject": "Weekly status",
+          "cc": "bob@example.com"
+        }
+      }
+    },
+    "primitive": "noul",
+    "instructions": "Is `call` the action to run for `request` under `tool_schema`? The tool must match the request, every required argument including nested fields must match, optional extras do not matter, and a send is wrong when the request says draft only.",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The tool does not match, a required argument is missing or conflicts, or the call sends when the request says draft only"
+      },
+      {
+        "label": "true",
+        "description": "The tool matches, every required argument matches, optional extras are allowed, and the call does not send when the request says draft only"
+      }
+    ],
+    "gold_label": "true",
+    "tags": [
+      "clear",
+      "tooling"
+    ]
+  },
+  {
+    "id": "tool-city-missing",
+    "family": "tool_selection",
+    "state": {
+      "request": "Update the shipping address to street 10 King Street, city London, postcode SW1A 1AA. The order notes describe the previous address, the gift wrap, and the delivery window. Do not change the recipient.",
+      "tool_schema": {
+        "tools": {
+          "create_draft": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "send_email": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "update_address": {
+            "required": [
+              "address.street",
+              "address.city",
+              "address.postcode"
+            ],
+            "optional": [
+              "address.note",
+              "reason",
+              "ticket"
+            ]
+          }
+        }
+      },
+      "call": {
+        "name": "update_address",
+        "arguments": {
+          "address": {
+            "street": "10 King Street",
+            "postcode": "SW1A 1AA"
+          }
+        }
+      }
+    },
+    "primitive": "noul",
+    "instructions": "Is `call` the action to run for `request` under `tool_schema`? The tool must match the request, every required argument including nested fields must match, optional extras do not matter, and a send is wrong when the request says draft only.",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The tool does not match, a required argument is missing or conflicts, or the call sends when the request says draft only"
+      },
+      {
+        "label": "true",
+        "description": "The tool matches, every required argument matches, optional extras are allowed, and the call does not send when the request says draft only"
+      }
+    ],
+    "gold_label": "false",
+    "tags": [
+      "negative",
+      "tooling"
+    ]
+  },
+  {
+    "id": "tool-wrong-name",
+    "family": "tool_selection",
+    "state": {
+      "request": "Please draft an email to ana@example.com with subject Weekly status. Do not send it. The rest of this request is background: the report covers uptime, hiring, and the Tuesday review. Leave any optional fields unset unless I name them.",
+      "tool_schema": {
+        "tools": {
+          "create_draft": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "send_email": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "update_address": {
+            "required": [
+              "address.street",
+              "address.city",
+              "address.postcode"
+            ],
+            "optional": [
+              "address.note",
+              "reason",
+              "ticket"
+            ]
+          }
+        }
+      },
+      "call": {
+        "name": "get_weather",
+        "arguments": {
+          "to": "ana@example.com",
+          "subject": "Weekly status"
+        }
+      }
+    },
+    "primitive": "noul",
+    "instructions": "Is `call` the action to run for `request` under `tool_schema`? The tool must match the request, every required argument including nested fields must match, optional extras do not matter, and a send is wrong when the request says draft only.",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The tool does not match, a required argument is missing or conflicts, or the call sends when the request says draft only"
+      },
+      {
+        "label": "true",
+        "description": "The tool matches, every required argument matches, optional extras are allowed, and the call does not send when the request says draft only"
+      }
+    ],
+    "gold_label": "false",
+    "tags": [
+      "negative",
+      "tooling"
+    ]
+  },
+  {
+    "id": "tool-choose-draft",
+    "family": "tool_selection",
+    "state": {
+      "request": "Please draft an email to ana@example.com with subject Weekly status. Do not send it. The rest of this request is background: the report covers uptime, hiring, and the Tuesday review. Leave any optional fields unset unless I name them.",
+      "tool_schema": {
+        "tools": {
+          "create_draft": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "send_email": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "update_address": {
+            "required": [
+              "address.street",
+              "address.city",
+              "address.postcode"
+            ],
+            "optional": [
+              "address.note",
+              "reason",
+              "ticket"
+            ]
+          }
+        }
+      },
+      "calls": {
+        "call_1": {
+          "name": "send_email",
+          "arguments": {
+            "to": "ana@example.com",
+            "subject": "Weekly status"
+          }
+        },
+        "call_2": {
+          "name": "create_draft",
+          "arguments": {
+            "to": "ana@example.com",
+            "subject": "Weekly status"
+          }
+        },
+        "call_3": {
+          "name": "create_draft",
+          "arguments": {
+            "to": "ana@example.com",
+            "subject": "Old status"
+          }
+        }
+      }
+    },
+    "primitive": "choice",
+    "instructions": "Which call should run for `request`? Choose the single call whose tool matches and whose required arguments match. Optional extras are allowed. A send is wrong when the request says draft only. Choose none when zero calls match or more than one call matches.",
+    "criteria": [
+      {
+        "label": "call_1",
+        "description": "send_email to ana@example.com with subject Weekly status"
+      },
+      {
+        "label": "call_2",
+        "description": "create_draft to ana@example.com with subject Weekly status"
+      },
+      {
+        "label": "call_3",
+        "description": "create_draft to ana@example.com with subject Old status"
+      },
+      {
+        "label": "none",
+        "description": "No single listed call should run"
+      }
+    ],
+    "gold_label": "call_2",
+    "tags": [
+      "clear",
+      "tooling"
+    ]
+  },
+  {
+    "id": "tool-none-wrong-subject",
+    "family": "tool_selection",
+    "state": {
+      "request": "Please draft an email to ana@example.com with subject Weekly status. Do not send it. The rest of this request is background: the report covers uptime, hiring, and the Tuesday review. Leave any optional fields unset unless I name them.",
+      "tool_schema": {
+        "tools": {
+          "create_draft": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "send_email": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "update_address": {
+            "required": [
+              "address.street",
+              "address.city",
+              "address.postcode"
+            ],
+            "optional": [
+              "address.note",
+              "reason",
+              "ticket"
+            ]
+          }
+        }
+      },
+      "calls": {
+        "call_1": {
+          "name": "create_draft",
+          "arguments": {
+            "to": "ana@example.com",
+            "subject": "Old status"
+          }
+        },
+        "call_2": {
+          "name": "send_email",
+          "arguments": {
+            "to": "ana@example.com",
+            "subject": "Weekly status"
+          }
+        },
+        "call_3": {
+          "name": "send_email",
+          "arguments": {
+            "to": "bob@example.com",
+            "subject": "Weekly status"
+          }
+        }
+      }
+    },
+    "primitive": "choice",
+    "instructions": "Which call should run for `request`? Choose the single call whose tool matches and whose required arguments match. Optional extras are allowed. A send is wrong when the request says draft only. Choose none when zero calls match or more than one call matches.",
+    "criteria": [
+      {
+        "label": "call_1",
+        "description": "create_draft to ana@example.com with subject Old status"
+      },
+      {
+        "label": "call_2",
+        "description": "send_email to ana@example.com with subject Weekly status"
+      },
+      {
+        "label": "call_3",
+        "description": "send_email to bob@example.com with subject Weekly status"
+      },
+      {
+        "label": "none",
+        "description": "No single listed call should run"
+      }
+    ],
+    "gold_label": "none",
+    "tags": [
+      "no_match",
+      "tooling"
+    ]
+  },
+  {
+    "id": "tool-none-two-match",
+    "family": "tool_selection",
+    "state": {
+      "request": "Please draft an email to ana@example.com with subject Weekly status. Do not send it. The rest of this request is background: the report covers uptime, hiring, and the Tuesday review. Leave any optional fields unset unless I name them.",
+      "tool_schema": {
+        "tools": {
+          "create_draft": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "send_email": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "update_address": {
+            "required": [
+              "address.street",
+              "address.city",
+              "address.postcode"
+            ],
+            "optional": [
+              "address.note",
+              "reason",
+              "ticket"
+            ]
+          }
+        }
+      },
+      "calls": {
+        "call_1": {
+          "name": "create_draft",
+          "arguments": {
+            "to": "ana@example.com",
+            "subject": "Weekly status"
+          }
+        },
+        "call_2": {
+          "name": "create_draft",
+          "arguments": {
+            "to": "ana@example.com",
+            "subject": "Weekly status",
+            "header": "internal"
+          }
+        },
+        "call_3": {
+          "name": "send_email",
+          "arguments": {
+            "to": "ana@example.com",
+            "subject": "Weekly status"
+          }
+        }
+      }
+    },
+    "primitive": "choice",
+    "instructions": "Which call should run for `request`? Choose the single call whose tool matches and whose required arguments match. Optional extras are allowed. A send is wrong when the request says draft only. Choose none when zero calls match or more than one call matches.",
+    "criteria": [
+      {
+        "label": "call_1",
+        "description": "create_draft to ana@example.com with subject Weekly status"
+      },
+      {
+        "label": "call_2",
+        "description": "create_draft to ana@example.com with subject Weekly status and an optional header"
+      },
+      {
+        "label": "call_3",
+        "description": "send_email to ana@example.com with subject Weekly status"
+      },
+      {
+        "label": "none",
+        "description": "No single listed call should run"
+      }
+    ],
+    "gold_label": "none",
+    "tags": [
+      "no_match",
+      "tooling"
+    ]
+  },
+  {
+    "id": "tool-choose-with-header",
+    "family": "tool_selection",
+    "state": {
+      "request": "Please draft an email to ana@example.com with subject Weekly status. Do not send it. The rest of this request is background: the report covers uptime, hiring, and the Tuesday review. Leave any optional fields unset unless I name them.",
+      "tool_schema": {
+        "tools": {
+          "create_draft": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "send_email": {
+            "required": [
+              "to",
+              "subject"
+            ],
+            "optional": [
+              "cc",
+              "bcc",
+              "reply_to",
+              "header",
+              "priority",
+              "signature"
+            ]
+          },
+          "update_address": {
+            "required": [
+              "address.street",
+              "address.city",
+              "address.postcode"
+            ],
+            "optional": [
+              "address.note",
+              "reason",
+              "ticket"
+            ]
+          }
+        }
+      },
+      "calls": {
+        "call_1": {
+          "name": "send_email",
+          "arguments": {
+            "to": "ana@example.com",
+            "subject": "Weekly status"
+          }
+        },
+        "call_2": {
+          "name": "create_draft",
+          "arguments": {
+            "to": "ana@example.com",
+            "subject": "Old status"
+          }
+        },
+        "call_3": {
+          "name": "create_draft",
+          "arguments": {
+            "to": "ana@example.com",
+            "subject": "Weekly status",
+            "header": "internal"
+          }
+        }
+      }
+    },
+    "primitive": "choice",
+    "instructions": "Which call should run for `request`? Choose the single call whose tool matches and whose required arguments match. Optional extras are allowed. A send is wrong when the request says draft only. Choose none when zero calls match or more than one call matches.",
+    "criteria": [
+      {
+        "label": "call_1",
+        "description": "send_email to ana@example.com with subject Weekly status"
+      },
+      {
+        "label": "call_2",
+        "description": "create_draft to ana@example.com with subject Old status"
+      },
+      {
+        "label": "call_3",
+        "description": "create_draft to ana@example.com with subject Weekly status and an optional header"
+      },
+      {
+        "label": "none",
+        "description": "No single listed call should run"
+      }
+    ],
+    "gold_label": "call_3",
+    "tags": [
+      "clear",
+      "tooling"
+    ]
+  },
+  {
+    "id": "security-narrative-readme",
+    "family": "narrative_security",
+    "state": {
+      "report": "A public repository README lists the company's open-source dependencies and the licenses those projects use. The first paragraph names the documentation site and the support contact.\n\nThe second paragraph states that this finding includes no vulnerability and no secret. The names are already published by the upstream projects."
+    },
+    "primitive": "score",
+    "instructions": "Rate the severity of this security report.",
+    "criteria": [
+      {
+        "label": "informational",
+        "description": "The report states no weakness and no exposed secret"
+      },
+      {
+        "label": "low",
+        "description": "The report describes a secret or weakness that cannot reach production systems, customer data, another tenant, or disrupt a named service"
+      },
+      {
+        "label": "medium",
+        "description": "The report describes a known vulnerability that can disrupt a named non-production service, and that service cannot access production systems, customer data, or another tenant"
+      },
+      {
+        "label": "critical",
+        "description": "The report states that a production credential is exposed, or that an active compromise of customer data is underway"
+      }
+    ],
+    "gold_label": "informational",
+    "tags": [
+      "clear",
+      "security"
+    ]
+  },
+  {
+    "id": "security-narrative-sandbox",
+    "family": "narrative_security",
+    "state": {
+      "report": "A test API token was pasted into a private issue. The token still works. The issue is visible to the project team and to two contractors.\n\nThe token can reach only a disposable sandbox. It cannot reach production systems, customer data, or another tenant, and it cannot disrupt a named company service. The sandbox is rebuilt every night."
+    },
+    "primitive": "score",
+    "instructions": "Rate the severity of this security report.",
+    "criteria": [
+      {
+        "label": "informational",
+        "description": "The report states no weakness and no exposed secret"
+      },
+      {
+        "label": "low",
+        "description": "The report describes a secret or weakness that cannot reach production systems, customer data, another tenant, or disrupt a named service"
+      },
+      {
+        "label": "medium",
+        "description": "The report describes a known vulnerability that can disrupt a named non-production service, and that service cannot access production systems, customer data, or another tenant"
+      },
+      {
+        "label": "critical",
+        "description": "The report states that a production credential is exposed, or that an active compromise of customer data is underway"
+      }
+    ],
+    "gold_label": "low",
+    "tags": [
+      "clear",
+      "security"
+    ]
+  },
+  {
+    "id": "security-narrative-staging",
+    "family": "narrative_security",
+    "state": {
+      "report": "The staging billing service uses a library version with a known denial-of-service vulnerability. The service is not internet-facing, and only the staging network can reach it.\n\nThe vulnerability can crash that staging service. The service cannot access production systems, customer data, or another tenant. No production credential is exposed, and there is no active compromise."
+    },
+    "primitive": "score",
+    "instructions": "Rate the severity of this security report.",
+    "criteria": [
+      {
+        "label": "informational",
+        "description": "The report states no weakness and no exposed secret"
+      },
+      {
+        "label": "low",
+        "description": "The report describes a secret or weakness that cannot reach production systems, customer data, another tenant, or disrupt a named service"
+      },
+      {
+        "label": "medium",
+        "description": "The report describes a known vulnerability that can disrupt a named non-production service, and that service cannot access production systems, customer data, or another tenant"
+      },
+      {
+        "label": "critical",
+        "description": "The report states that a production credential is exposed, or that an active compromise of customer data is underway"
+      }
+    ],
+    "gold_label": "medium",
+    "tags": [
+      "clear",
+      "security"
+    ]
+  },
+  {
+    "id": "security-narrative-production-key",
+    "family": "narrative_security",
+    "state": {
+      "report": "A valid production cloud access key was committed to a public repository two hours ago. The commit also includes a README and a sample configuration file.\n\nThe second paragraph states that use of the key has not been confirmed. The key is a production credential."
+    },
+    "primitive": "score",
+    "instructions": "Rate the severity of this security report.",
+    "criteria": [
+      {
+        "label": "informational",
+        "description": "The report states no weakness and no exposed secret"
+      },
+      {
+        "label": "low",
+        "description": "The report describes a secret or weakness that cannot reach production systems, customer data, another tenant, or disrupt a named service"
+      },
+      {
+        "label": "medium",
+        "description": "The report describes a known vulnerability that can disrupt a named non-production service, and that service cannot access production systems, customer data, or another tenant"
+      },
+      {
+        "label": "critical",
+        "description": "The report states that a production credential is exposed, or that an active compromise of customer data is underway"
+      }
+    ],
+    "gold_label": "critical",
+    "tags": [
+      "clear",
+      "security"
+    ]
+  },
+  {
+    "id": "security-narrative-vpn-denied",
+    "family": "narrative_security",
+    "state": {
+      "report": "A user signed in from New York, then twelve minutes later from London. The first paragraph says the London address is the company's VPN.\n\nThe next paragraph says the VPN log has no session for that user at that time. No customer records were copied."
+    },
+    "primitive": "choice",
+    "instructions": "What is the most appropriate immediate response to this report?",
+    "criteria": [
+      {
+        "label": "dismiss",
+        "description": "The report confirms a company VPN session on a managed device"
+      },
+      {
+        "label": "review",
+        "description": "The sign-in is unusual, it is not impossible travel, and the report does not describe customer data copied to an unmanaged device"
+      },
+      {
+        "label": "contain",
+        "description": "The report describes impossible travel and does not confirm a company VPN session for that user"
+      },
+      {
+        "label": "incident",
+        "description": "The report states that customer records above the stated threshold were copied to an unmanaged device"
+      }
+    ],
+    "gold_label": "contain",
+    "tags": [
+      "clear",
+      "security"
+    ]
+  },
+  {
+    "id": "security-narrative-vpn-confirmed",
+    "family": "narrative_security",
+    "state": {
+      "report": "A user signed in from New York, then fifteen minutes later from London. That gap is impossible for ordinary travel.\n\nThe VPN log confirms a session from the managed device at the company VPN egress. No customer records were copied."
+    },
+    "primitive": "choice",
+    "instructions": "What is the most appropriate immediate response to this report?",
+    "criteria": [
+      {
+        "label": "dismiss",
+        "description": "The report confirms a company VPN session on a managed device"
+      },
+      {
+        "label": "review",
+        "description": "The sign-in is unusual, it is not impossible travel, and the report does not describe customer data copied to an unmanaged device"
+      },
+      {
+        "label": "contain",
+        "description": "The report describes impossible travel and does not confirm a company VPN session for that user"
+      },
+      {
+        "label": "incident",
+        "description": "The report states that customer records above the stated threshold were copied to an unmanaged device"
+      }
+    ],
+    "gold_label": "dismiss",
+    "tags": [
+      "clear",
+      "security"
+    ]
+  },
+  {
+    "id": "security-narrative-same-country",
+    "family": "narrative_security",
+    "state": {
+      "report": "A managed-device user signed in from Chicago, then six hours later from Denver. The sign-in is unusual. The report states that this is a possible same-country trip, not impossible travel.\n\nNo customer data was copied to an unmanaged device. The report does not confirm a company VPN session."
+    },
+    "primitive": "choice",
+    "instructions": "What is the most appropriate immediate response to this report?",
+    "criteria": [
+      {
+        "label": "dismiss",
+        "description": "The report confirms a company VPN session on a managed device"
+      },
+      {
+        "label": "review",
+        "description": "The sign-in is unusual, it is not impossible travel, and the report does not describe customer data copied to an unmanaged device"
+      },
+      {
+        "label": "contain",
+        "description": "The report describes impossible travel and does not confirm a company VPN session for that user"
+      },
+      {
+        "label": "incident",
+        "description": "The report states that customer records above the stated threshold were copied to an unmanaged device"
+      }
+    ],
+    "gold_label": "review",
+    "tags": [
+      "clear",
+      "security"
+    ]
+  },
+  {
+    "id": "security-narrative-copy",
+    "family": "narrative_security",
+    "state": {
+      "report": "A contractor account copied customer records to a personal laptop at 02:00. The activity was far above the account's usual daily use.\n\nThe report states that forty thousand customer records were copied, and that the stated threshold is one thousand records. The laptop is an unmanaged device."
+    },
+    "primitive": "choice",
+    "instructions": "What is the most appropriate immediate response to this report?",
+    "criteria": [
+      {
+        "label": "dismiss",
+        "description": "The report confirms a company VPN session on a managed device"
+      },
+      {
+        "label": "review",
+        "description": "The sign-in is unusual, it is not impossible travel, and the report does not describe customer data copied to an unmanaged device"
+      },
+      {
+        "label": "contain",
+        "description": "The report describes impossible travel and does not confirm a company VPN session for that user"
+      },
+      {
+        "label": "incident",
+        "description": "The report states that customer records above the stated threshold were copied to an unmanaged device"
+      }
+    ],
+    "gold_label": "incident",
+    "tags": [
+      "clear",
+      "security"
+    ]
+  },
+  {
+    "id": "security-narrative-phishing",
+    "family": "narrative_security",
+    "state": {
+      "report": "An employee forwarded an email that asks them to reset a password. The message discusses an overdue invoice before the link.\n\nThe link host is login-company.example.net. Later, the report states the known-good host list: accounts.example.com."
+    },
+    "primitive": "noul",
+    "instructions": "Does this report indicate a likely phishing attempt?",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The link host appears in the known-good host list stated in the report"
+      },
+      {
+        "label": "true",
+        "description": "The link host does not appear in the known-good host list stated in the report"
+      }
+    ],
+    "gold_label": "true",
+    "tags": [
+      "clear",
+      "security"
+    ]
+  },
+  {
+    "id": "security-narrative-benign-reset",
+    "family": "narrative_security",
+    "state": {
+      "report": "An employee requested a password reset and then forwarded the message that arrived. The message includes the usual account-notice wording.\n\nThe link host is accounts.example.com. Later, the report states the known-good host list: accounts.example.com."
+    },
+    "primitive": "noul",
+    "instructions": "Does this report indicate a likely phishing attempt?",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The link host appears in the known-good host list stated in the report"
+      },
+      {
+        "label": "true",
+        "description": "The link host does not appear in the known-good host list stated in the report"
+      }
+    ],
+    "gold_label": "false",
+    "tags": [
+      "negative",
+      "security"
+    ]
+  },
+  {
+    "id": "linkage-id-update",
+    "family": "record_linkage",
+    "state": {
+      "records": {
+        "A": {
+          "customer_id": "C-104",
+          "name": "Priya Shah",
+          "email": "priya@old.example",
+          "note": "Account opened in 2018. Correspondence address: Flat 2, 18 Harbour Lane, London. The building notes mention a concierge desk, a bike store, and deliveries left at the side entrance."
+        },
+        "B": {
+          "customer_id": "C-104",
+          "name": "Priya Shah",
+          "email": "priya@new.example",
+          "note": "The narrative says priya@new.example replaced priya@old.example on customer C-104. Correspondence address: Flat 2, 18 Harbour Lane, London. The building notes mention a concierge desk, a bike store, and deliveries left at the side entrance."
+        }
+      },
+      "compare": [
+        "A",
+        "B"
+      ]
+    },
+    "primitive": "noul",
+    "instructions": "Do the two records named by `compare` describe the same person? They match if they share a customer_id or employee_id, or if they share an email or phone and their names do not conflict. A shared email does not override a name conflict. A match through another record does not count.",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The compared records do not share a customer_id or employee_id, and they do not share an email or phone without a name conflict"
+      },
+      {
+        "label": "true",
+        "description": "The compared records share a customer_id or employee_id, or they share an email or phone and their names do not conflict"
+      }
+    ],
+    "gold_label": "true",
+    "tags": [
+      "clear",
+      "identity"
+    ]
+  },
+  {
+    "id": "linkage-email-case",
+    "family": "record_linkage",
+    "state": {
+      "records": {
+        "A": {
+          "name": "Mina Patel",
+          "email": "Mina.Patel@Example.com",
+          "note": "Correspondence address: Flat 2, 18 Harbour Lane, London. The building notes mention a concierge desk, a bike store, and deliveries left at the side entrance."
+        },
+        "B": {
+          "name": "Mina Patel",
+          "email": "mina.patel@example.com",
+          "note": "Correspondence address: Flat 2, 18 Harbour Lane, London. The building notes mention a concierge desk, a bike store, and deliveries left at the side entrance."
+        }
+      },
+      "compare": [
+        "A",
+        "B"
+      ]
+    },
+    "primitive": "noul",
+    "instructions": "Do the two records named by `compare` describe the same person? They match if they share a customer_id or employee_id, or if they share an email or phone and their names do not conflict. A shared email does not override a name conflict. A match through another record does not count.",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The compared records do not share a customer_id or employee_id, and they do not share an email or phone without a name conflict"
+      },
+      {
+        "label": "true",
+        "description": "The compared records share a customer_id or employee_id, or they share an email or phone and their names do not conflict"
+      }
+    ],
+    "gold_label": "true",
+    "tags": [
+      "clear",
+      "identity"
+    ]
+  },
+  {
+    "id": "linkage-email-name-conflict",
+    "family": "record_linkage",
+    "state": {
+      "records": {
+        "A": {
+          "name": "Mina Patel",
+          "email": "shared@example.com",
+          "note": "Correspondence address: Flat 2, 18 Harbour Lane, London. The building notes mention a concierge desk, a bike store, and deliveries left at the side entrance."
+        },
+        "B": {
+          "name": "Owen Brooks",
+          "email": "shared@example.com",
+          "note": "Correspondence address: Flat 2, 18 Harbour Lane, London. The building notes mention a concierge desk, a bike store, and deliveries left at the side entrance."
+        }
+      },
+      "compare": [
+        "A",
+        "B"
+      ]
+    },
+    "primitive": "noul",
+    "instructions": "Do the two records named by `compare` describe the same person? They match if they share a customer_id or employee_id, or if they share an email or phone and their names do not conflict. A shared email does not override a name conflict. A match through another record does not count.",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The compared records do not share a customer_id or employee_id, and they do not share an email or phone without a name conflict"
+      },
+      {
+        "label": "true",
+        "description": "The compared records share a customer_id or employee_id, or they share an email or phone and their names do not conflict"
+      }
+    ],
+    "gold_label": "false",
+    "tags": [
+      "negative",
+      "identity"
+    ]
+  },
+  {
+    "id": "linkage-not-transitive",
+    "family": "record_linkage",
+    "state": {
+      "records": {
+        "A": {
+          "name": "Alice Chen",
+          "email": "alice@old.example",
+          "note": "Mailing file from 2022. Correspondence address: Flat 2, 18 Harbour Lane, London. The building notes mention a concierge desk, a bike store, and deliveries left at the side entrance."
+        },
+        "B": {
+          "name": "Alice Chen",
+          "email": "alice@old.example",
+          "customer_id": "C-9",
+          "note": "Merged export. Correspondence address: Flat 2, 18 Harbour Lane, London. The building notes mention a concierge desk, a bike store, and deliveries left at the side entrance."
+        },
+        "C": {
+          "name": "Bob Kim",
+          "customer_id": "C-9",
+          "note": "Payroll card. Correspondence address: Flat 2, 18 Harbour Lane, London. The building notes mention a concierge desk, a bike store, and deliveries left at the side entrance."
+        }
+      },
+      "compare": [
+        "A",
+        "C"
+      ]
+    },
+    "primitive": "noul",
+    "instructions": "Do the two records named by `compare` describe the same person? They match if they share a customer_id or employee_id, or if they share an email or phone and their names do not conflict. A shared email does not override a name conflict. A match through another record does not count.",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The compared records do not share a customer_id or employee_id, and they do not share an email or phone without a name conflict"
+      },
+      {
+        "label": "true",
+        "description": "The compared records share a customer_id or employee_id, or they share an email or phone and their names do not conflict"
+      }
+    ],
+    "gold_label": "false",
+    "tags": [
+      "negative",
+      "identity"
+    ]
+  },
+  {
+    "id": "linkage-shared-id-chain",
+    "family": "record_linkage",
+    "state": {
+      "records": {
+        "A": {
+          "employee_id": "E-771",
+          "name": "Robert King",
+          "department": "Sales",
+          "note": "HR export page 1. Correspondence address: Flat 2, 18 Harbour Lane, London. The building notes mention a concierge desk, a bike store, and deliveries left at the side entrance."
+        },
+        "B": {
+          "employee_id": "E-771",
+          "name": "Robert King",
+          "department": "Sales",
+          "note": "Badge record. Correspondence address: Flat 2, 18 Harbour Lane, London. The building notes mention a concierge desk, a bike store, and deliveries left at the side entrance."
+        },
+        "C": {
+          "employee_id": "E-771",
+          "name": "Bob King",
+          "department": "Revenue",
+          "note": "HR export page 4. Correspondence address: Flat 2, 18 Harbour Lane, London. The building notes mention a concierge desk, a bike store, and deliveries left at the side entrance."
+        }
+      },
+      "compare": [
+        "A",
+        "C"
+      ]
+    },
+    "primitive": "noul",
+    "instructions": "Do the two records named by `compare` describe the same person? They match if they share a customer_id or employee_id, or if they share an email or phone and their names do not conflict. A shared email does not override a name conflict. A match through another record does not count.",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The compared records do not share a customer_id or employee_id, and they do not share an email or phone without a name conflict"
+      },
+      {
+        "label": "true",
+        "description": "The compared records share a customer_id or employee_id, or they share an email or phone and their names do not conflict"
+      }
+    ],
+    "gold_label": "true",
+    "tags": [
+      "clear",
+      "identity"
+    ]
+  },
+  {
+    "id": "linkage-phone-format",
+    "family": "record_linkage",
+    "state": {
+      "records": {
+        "A": {
+          "name": "Elena Rossi",
+          "phone": "+44 20 7946 0958",
+          "note": "Correspondence address: Flat 2, 18 Harbour Lane, London. The building notes mention a concierge desk, a bike store, and deliveries left at the side entrance."
+        },
+        "B": {
+          "name": "Elena Rossi",
+          "phone": "+442079460958",
+          "note": "Correspondence address: Flat 2, 18 Harbour Lane, London. The building notes mention a concierge desk, a bike store, and deliveries left at the side entrance."
+        }
+      },
+      "compare": [
+        "A",
+        "B"
+      ]
+    },
+    "primitive": "noul",
+    "instructions": "Do the two records named by `compare` describe the same person? They match if they share a customer_id or employee_id, or if they share an email or phone and their names do not conflict. A shared email does not override a name conflict. A match through another record does not count.",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The compared records do not share a customer_id or employee_id, and they do not share an email or phone without a name conflict"
+      },
+      {
+        "label": "true",
+        "description": "The compared records share a customer_id or employee_id, or they share an email or phone and their names do not conflict"
+      }
+    ],
+    "gold_label": "true",
+    "tags": [
+      "clear",
+      "identity"
+    ]
+  },
+  {
+    "id": "linkage-name-city-only",
+    "family": "record_linkage",
+    "state": {
+      "records": {
+        "A": {
+          "name": "Maria Garcia",
+          "city": "Chicago",
+          "employer": "Cedar School",
+          "email": "maria.garcia@cedar.example",
+          "note": "Staff directory biography covering ten years of teaching. Correspondence address: Flat 2, 18 Harbour Lane, London. The building notes mention a concierge desk, a bike store, and deliveries left at the side entrance."
+        },
+        "B": {
+          "name": "Maria Garcia",
+          "city": "Chicago",
+          "employer": "Harbor Clinic",
+          "email": "maria.garcia@harbor.example",
+          "note": "Clinic biography covering a different career. Correspondence address: Flat 2, 18 Harbour Lane, London. The building notes mention a concierge desk, a bike store, and deliveries left at the side entrance."
+        }
+      },
+      "compare": [
+        "A",
+        "B"
+      ]
+    },
+    "primitive": "noul",
+    "instructions": "Do the two records named by `compare` describe the same person? They match if they share a customer_id or employee_id, or if they share an email or phone and their names do not conflict. A shared email does not override a name conflict. A match through another record does not count.",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The compared records do not share a customer_id or employee_id, and they do not share an email or phone without a name conflict"
+      },
+      {
+        "label": "true",
+        "description": "The compared records share a customer_id or employee_id, or they share an email or phone and their names do not conflict"
+      }
+    ],
+    "gold_label": "false",
+    "tags": [
+      "negative",
+      "identity"
+    ]
+  },
+  {
+    "id": "linkage-department-rename",
+    "family": "record_linkage",
+    "state": {
+      "records": {
+        "A": {
+          "employee_id": "E-771",
+          "name": "Robert King",
+          "department": "Sales",
+          "note": "The long HR export lists teams, managers, and cost centers before the identifier."
+        },
+        "B": {
+          "employee_id": "E-771",
+          "name": "Robert King",
+          "department": "Revenue",
+          "note": "A later page of the same export says the Sales team was renamed Revenue."
+        }
+      },
+      "compare": [
+        "A",
+        "B"
+      ]
+    },
+    "primitive": "noul",
+    "instructions": "Do the two records named by `compare` describe the same person? They match if they share a customer_id or employee_id, or if they share an email or phone and their names do not conflict. A shared email does not override a name conflict. A match through another record does not count.",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The compared records do not share a customer_id or employee_id, and they do not share an email or phone without a name conflict"
+      },
+      {
+        "label": "true",
+        "description": "The compared records share a customer_id or employee_id, or they share an email or phone and their names do not conflict"
+      }
+    ],
+    "gold_label": "true",
+    "tags": [
+      "clear",
+      "identity"
+    ]
+  },
+  {
+    "id": "linkage-quoted-former-name",
+    "family": "record_linkage",
+    "state": {
+      "records": {
+        "A": {
+          "employee_id": "E-771",
+          "name": "Robert King",
+          "note": "Current HR card. A quoted line says the former name was Bobby."
+        },
+        "B": {
+          "employee_id": "E-771",
+          "name": "Robert King",
+          "note": "Badge record printed after the rename. Correspondence address: Flat 2, 18 Harbour Lane, London. The building notes mention a concierge desk, a bike store, and deliveries left at the side entrance."
+        }
+      },
+      "compare": [
+        "A",
+        "B"
+      ]
+    },
+    "primitive": "noul",
+    "instructions": "Do the two records named by `compare` describe the same person? They match if they share a customer_id or employee_id, or if they share an email or phone and their names do not conflict. A shared email does not override a name conflict. A match through another record does not count.",
+    "criteria": [
+      {
+        "label": "false",
+        "description": "The compared records do not share a customer_id or employee_id, and they do not share an email or phone without a name conflict"
+      },
+      {
+        "label": "true",
+        "description": "The compared records share a customer_id or employee_id, or they share an email or phone and their names do not conflict"
+      }
+    ],
+    "gold_label": "true",
+    "tags": [
+      "clear",
+      "identity"
+    ]
+  },
+  {
+    "id": "linkage-confidence-shared-id",
+    "family": "record_linkage",
+    "state": {
+      "records": {
+        "A": {
+          "customer_id": "C-104",
+          "name": "Priya Shah",
+          "email": "priya@old.example",
+          "note": "Correspondence address: Flat 2, 18 Harbour Lane, London. The building notes mention a concierge desk, a bike store, and deliveries left at the side entrance."
+        },
+        "B": {
+          "customer_id": "C-104",
+          "name": "Priya Shah",
+          "email": "priya@new.example",
+          "note": "The narrative says priya@new.example replaced priya@old.example on customer C-104."
+        }
+      },
+      "compare": [
+        "A",
+        "B"
+      ]
+    },
+    "primitive": "score",
+    "instructions": "Rate confidence that the two records named by `compare` describe the same person.",
+    "criteria": [
+      {
+        "label": "none",
+        "description": "The compared records contain a conflicting customer_id or employee_id"
+      },
+      {
+        "label": "low",
+        "description": "Only the name matches, and no customer_id or employee_id is present"
+      },
+      {
+        "label": "moderate",
+        "description": "The name and at least one other field match, and no customer_id or employee_id is present"
+      },
+      {
+        "label": "high",
+        "description": "The same customer_id or employee_id is present, and every other difference is described as an update"
+      }
+    ],
+    "gold_label": "high",
+    "tags": [
+      "clear",
+      "rubric"
+    ]
+  },
+  {
+    "id": "orchestrate-respond-weather",
+    "family": "agent_orchestration",
+    "state": {
+      "goal": "Tell the user tomorrow's weather in Seattle in Fahrenheit.",
+      "current_agent": "weather",
+      "facts": {
+        "city": "Seattle",
+        "day": "tomorrow",
+        "unit": "fahrenheit"
+      },
+      "roster": [
+        {
+          "agent": "weather",
+          "tools": [
+            "get_weather"
+          ]
+        },
+        {
+          "agent": "mailer",
+          "tools": [
+            "send_email",
+            "create_draft"
+          ]
+        },
+        {
+          "agent": "support",
+          "tools": [
+            "lookup_order",
+            "classify_ticket"
+          ]
+        },
+        {
+          "agent": "billing",
+          "tools": [
+            "submit_refund",
+            "create_invoice",
+            "charge_card"
+          ]
+        },
+        {
+          "agent": "research",
+          "tools": [
+            "collect_notes"
+          ]
+        },
+        {
+          "agent": "writer",
+          "tools": [
+            "draft_apology"
+          ]
+        },
+        {
+          "agent": "orders",
+          "tools": [
+            "get_order",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "scheduler",
+          "tools": [
+            "confirm_guest_list",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "travel",
+          "tools": [
+            "search_flights"
+          ]
+        }
+      ],
+      "plan": [
+        {
+          "id": "fetch",
+          "required": true,
+          "owner": "weather",
+          "tool": "get_weather",
+          "status": "succeeded",
+          "depends_on": [],
+          "needs": [
+            "city",
+            "day",
+            "unit"
+          ],
+          "detail": "Fetch the forecast the user asked for."
+        },
+        {
+          "id": "analytics",
+          "required": false,
+          "owner": "weather",
+          "tool": "log_analytics",
+          "status": "pending",
+          "depends_on": [
+            "fetch"
+          ],
+          "needs": [],
+          "detail": "Optional analytics ping after the answer is known. Not required for the goal."
+        }
+      ],
+      "trace": [
+        {
+          "step": "fetch",
+          "status": "succeeded",
+          "result": "Seattle tomorrow will be 62 F. Earlier notes in this run mention the customer's account age, the browser they used, and a failed login yesterday. Those notes are not the goal result."
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "What is the single next orchestration step for `goal`? The next required step is the first entry in `plan` with required true and status other than succeeded. Respond when `trace` already states the result `goal` asks for, even if an optional step is still pending. Wait when the goal result is absent and the next required step has status running or failed, or it depends on a step whose status is running or failed. Ask when the goal result is absent, the next required step is pending, and it needs a fact missing from `facts` that no roster tool can supply or that the step says the user must supply. Hand off when the goal result is absent, that step is pending, its needs are all in `facts`, its dependencies have succeeded, and its owner is not `current_agent`. Act when the goal result is absent, that step is pending, it is owned by `current_agent`, its needs are all in `facts`, and every dependency has succeeded.",
+    "criteria": [
+      {
+        "label": "respond",
+        "description": "The trace already states the result the goal asks for"
+      },
+      {
+        "label": "ask",
+        "description": "The goal result is absent, the next required step is pending, and it needs a fact missing from the facts that no roster tool can supply or that the step says the user must supply"
+      },
+      {
+        "label": "handoff",
+        "description": "The goal result is absent, the next required step is pending, its needs and dependencies are satisfied, and its owner is not the current agent"
+      },
+      {
+        "label": "wait",
+        "description": "The goal result is absent, and the next required step is running or failed, or it depends on a step that is running or failed"
+      },
+      {
+        "label": "act",
+        "description": "The goal result is absent, the next required step is pending, it is owned by the current agent, its needs are present, and every dependency has succeeded"
+      }
+    ],
+    "gold_label": "respond",
+    "tags": [
+      "clear",
+      "orchestration"
+    ]
+  },
+  {
+    "id": "orchestrate-respond-refund",
+    "family": "agent_orchestration",
+    "state": {
+      "goal": "Confirm that the refund for order A-104 was submitted.",
+      "current_agent": "billing",
+      "facts": {
+        "order_id": "A-104"
+      },
+      "roster": [
+        {
+          "agent": "weather",
+          "tools": [
+            "get_weather"
+          ]
+        },
+        {
+          "agent": "mailer",
+          "tools": [
+            "send_email",
+            "create_draft"
+          ]
+        },
+        {
+          "agent": "support",
+          "tools": [
+            "lookup_order",
+            "classify_ticket"
+          ]
+        },
+        {
+          "agent": "billing",
+          "tools": [
+            "submit_refund",
+            "create_invoice",
+            "charge_card"
+          ]
+        },
+        {
+          "agent": "research",
+          "tools": [
+            "collect_notes"
+          ]
+        },
+        {
+          "agent": "writer",
+          "tools": [
+            "draft_apology"
+          ]
+        },
+        {
+          "agent": "orders",
+          "tools": [
+            "get_order",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "scheduler",
+          "tools": [
+            "confirm_guest_list",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "travel",
+          "tools": [
+            "search_flights"
+          ]
+        }
+      ],
+      "plan": [
+        {
+          "id": "submit",
+          "required": true,
+          "owner": "billing",
+          "tool": "submit_refund",
+          "status": "succeeded",
+          "depends_on": [],
+          "needs": [
+            "order_id"
+          ],
+          "detail": "Submit the approved refund."
+        },
+        {
+          "id": "survey",
+          "required": false,
+          "owner": "mailer",
+          "tool": "send_survey",
+          "status": "pending",
+          "depends_on": [
+            "submit"
+          ],
+          "needs": [],
+          "detail": "Optional satisfaction survey. The goal does not require it."
+        }
+      ],
+      "trace": [
+        {
+          "step": "submit",
+          "status": "succeeded",
+          "result": "submit_refund succeeded. Confirmation R-19 was submitted for order A-104. Earlier notes in this run mention the customer's account age, the browser they used, and a failed login yesterday. Those notes are not the goal result."
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "What is the single next orchestration step for `goal`? The next required step is the first entry in `plan` with required true and status other than succeeded. Respond when `trace` already states the result `goal` asks for, even if an optional step is still pending. Wait when the goal result is absent and the next required step has status running or failed, or it depends on a step whose status is running or failed. Ask when the goal result is absent, the next required step is pending, and it needs a fact missing from `facts` that no roster tool can supply or that the step says the user must supply. Hand off when the goal result is absent, that step is pending, its needs are all in `facts`, its dependencies have succeeded, and its owner is not `current_agent`. Act when the goal result is absent, that step is pending, it is owned by `current_agent`, its needs are all in `facts`, and every dependency has succeeded.",
+    "criteria": [
+      {
+        "label": "respond",
+        "description": "The trace already states the result the goal asks for"
+      },
+      {
+        "label": "ask",
+        "description": "The goal result is absent, the next required step is pending, and it needs a fact missing from the facts that no roster tool can supply or that the step says the user must supply"
+      },
+      {
+        "label": "handoff",
+        "description": "The goal result is absent, the next required step is pending, its needs and dependencies are satisfied, and its owner is not the current agent"
+      },
+      {
+        "label": "wait",
+        "description": "The goal result is absent, and the next required step is running or failed, or it depends on a step that is running or failed"
+      },
+      {
+        "label": "act",
+        "description": "The goal result is absent, the next required step is pending, it is owned by the current agent, its needs are present, and every dependency has succeeded"
+      }
+    ],
+    "gold_label": "respond",
+    "tags": [
+      "clear",
+      "orchestration"
+    ]
+  },
+  {
+    "id": "orchestrate-ask-recipient",
+    "family": "agent_orchestration",
+    "state": {
+      "goal": "Email the weekly status report.",
+      "current_agent": "mailer",
+      "facts": {
+        "subject": "Weekly status",
+        "body": "Uptime was 99.9 percent. Hiring is on track."
+      },
+      "roster": [
+        {
+          "agent": "weather",
+          "tools": [
+            "get_weather"
+          ]
+        },
+        {
+          "agent": "mailer",
+          "tools": [
+            "send_email",
+            "create_draft"
+          ]
+        },
+        {
+          "agent": "support",
+          "tools": [
+            "lookup_order",
+            "classify_ticket"
+          ]
+        },
+        {
+          "agent": "billing",
+          "tools": [
+            "submit_refund",
+            "create_invoice",
+            "charge_card"
+          ]
+        },
+        {
+          "agent": "research",
+          "tools": [
+            "collect_notes"
+          ]
+        },
+        {
+          "agent": "writer",
+          "tools": [
+            "draft_apology"
+          ]
+        },
+        {
+          "agent": "orders",
+          "tools": [
+            "get_order",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "scheduler",
+          "tools": [
+            "confirm_guest_list",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "travel",
+          "tools": [
+            "search_flights"
+          ]
+        }
+      ],
+      "plan": [
+        {
+          "id": "draft",
+          "required": true,
+          "owner": "mailer",
+          "tool": "create_draft",
+          "status": "pending",
+          "depends_on": [],
+          "needs": [
+            "recipient",
+            "subject"
+          ],
+          "detail": "Create the draft. The recipient must be supplied by the user. No roster tool can look up a recipient."
+        }
+      ],
+      "trace": [
+        {
+          "step": "intake",
+          "status": "succeeded",
+          "result": "The report body is ready. No recipient was provided. Earlier notes in this run mention the customer's account age, the browser they used, and a failed login yesterday. Those notes are not the goal result."
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "What is the single next orchestration step for `goal`? The next required step is the first entry in `plan` with required true and status other than succeeded. Respond when `trace` already states the result `goal` asks for, even if an optional step is still pending. Wait when the goal result is absent and the next required step has status running or failed, or it depends on a step whose status is running or failed. Ask when the goal result is absent, the next required step is pending, and it needs a fact missing from `facts` that no roster tool can supply or that the step says the user must supply. Hand off when the goal result is absent, that step is pending, its needs are all in `facts`, its dependencies have succeeded, and its owner is not `current_agent`. Act when the goal result is absent, that step is pending, it is owned by `current_agent`, its needs are all in `facts`, and every dependency has succeeded.",
+    "criteria": [
+      {
+        "label": "respond",
+        "description": "The trace already states the result the goal asks for"
+      },
+      {
+        "label": "ask",
+        "description": "The goal result is absent, the next required step is pending, and it needs a fact missing from the facts that no roster tool can supply or that the step says the user must supply"
+      },
+      {
+        "label": "handoff",
+        "description": "The goal result is absent, the next required step is pending, its needs and dependencies are satisfied, and its owner is not the current agent"
+      },
+      {
+        "label": "wait",
+        "description": "The goal result is absent, and the next required step is running or failed, or it depends on a step that is running or failed"
+      },
+      {
+        "label": "act",
+        "description": "The goal result is absent, the next required step is pending, it is owned by the current agent, its needs are present, and every dependency has succeeded"
+      }
+    ],
+    "gold_label": "ask",
+    "tags": [
+      "clear",
+      "orchestration"
+    ]
+  },
+  {
+    "id": "orchestrate-ask-destination",
+    "family": "agent_orchestration",
+    "state": {
+      "goal": "Book a flight for the user next Friday.",
+      "current_agent": "travel",
+      "facts": {
+        "day": "next Friday"
+      },
+      "roster": [
+        {
+          "agent": "weather",
+          "tools": [
+            "get_weather"
+          ]
+        },
+        {
+          "agent": "mailer",
+          "tools": [
+            "send_email",
+            "create_draft"
+          ]
+        },
+        {
+          "agent": "support",
+          "tools": [
+            "lookup_order",
+            "classify_ticket"
+          ]
+        },
+        {
+          "agent": "billing",
+          "tools": [
+            "submit_refund",
+            "create_invoice",
+            "charge_card"
+          ]
+        },
+        {
+          "agent": "research",
+          "tools": [
+            "collect_notes"
+          ]
+        },
+        {
+          "agent": "writer",
+          "tools": [
+            "draft_apology"
+          ]
+        },
+        {
+          "agent": "orders",
+          "tools": [
+            "get_order",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "scheduler",
+          "tools": [
+            "confirm_guest_list",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "travel",
+          "tools": [
+            "search_flights"
+          ]
+        }
+      ],
+      "plan": [
+        {
+          "id": "search",
+          "required": true,
+          "owner": "travel",
+          "tool": "search_flights",
+          "status": "pending",
+          "depends_on": [],
+          "needs": [
+            "destination",
+            "day"
+          ],
+          "detail": "Search flights. The destination must be supplied by the user. Do not infer it with a tool."
+        }
+      ],
+      "trace": [
+        {
+          "step": "intake",
+          "status": "succeeded",
+          "result": "The user named the day and did not name a city. Earlier notes in this run mention the customer's account age, the browser they used, and a failed login yesterday. Those notes are not the goal result."
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "What is the single next orchestration step for `goal`? The next required step is the first entry in `plan` with required true and status other than succeeded. Respond when `trace` already states the result `goal` asks for, even if an optional step is still pending. Wait when the goal result is absent and the next required step has status running or failed, or it depends on a step whose status is running or failed. Ask when the goal result is absent, the next required step is pending, and it needs a fact missing from `facts` that no roster tool can supply or that the step says the user must supply. Hand off when the goal result is absent, that step is pending, its needs are all in `facts`, its dependencies have succeeded, and its owner is not `current_agent`. Act when the goal result is absent, that step is pending, it is owned by `current_agent`, its needs are all in `facts`, and every dependency has succeeded.",
+    "criteria": [
+      {
+        "label": "respond",
+        "description": "The trace already states the result the goal asks for"
+      },
+      {
+        "label": "ask",
+        "description": "The goal result is absent, the next required step is pending, and it needs a fact missing from the facts that no roster tool can supply or that the step says the user must supply"
+      },
+      {
+        "label": "handoff",
+        "description": "The goal result is absent, the next required step is pending, its needs and dependencies are satisfied, and its owner is not the current agent"
+      },
+      {
+        "label": "wait",
+        "description": "The goal result is absent, and the next required step is running or failed, or it depends on a step that is running or failed"
+      },
+      {
+        "label": "act",
+        "description": "The goal result is absent, the next required step is pending, it is owned by the current agent, its needs are present, and every dependency has succeeded"
+      }
+    ],
+    "gold_label": "ask",
+    "tags": [
+      "clear",
+      "orchestration"
+    ]
+  },
+  {
+    "id": "orchestrate-handoff-billing",
+    "family": "agent_orchestration",
+    "state": {
+      "goal": "Refund order A-104.",
+      "current_agent": "support",
+      "facts": {
+        "order_id": "A-104",
+        "amount": "90.72"
+      },
+      "roster": [
+        {
+          "agent": "weather",
+          "tools": [
+            "get_weather"
+          ]
+        },
+        {
+          "agent": "mailer",
+          "tools": [
+            "send_email",
+            "create_draft"
+          ]
+        },
+        {
+          "agent": "support",
+          "tools": [
+            "lookup_order",
+            "classify_ticket"
+          ]
+        },
+        {
+          "agent": "billing",
+          "tools": [
+            "submit_refund",
+            "create_invoice",
+            "charge_card"
+          ]
+        },
+        {
+          "agent": "research",
+          "tools": [
+            "collect_notes"
+          ]
+        },
+        {
+          "agent": "writer",
+          "tools": [
+            "draft_apology"
+          ]
+        },
+        {
+          "agent": "orders",
+          "tools": [
+            "get_order",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "scheduler",
+          "tools": [
+            "confirm_guest_list",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "travel",
+          "tools": [
+            "search_flights"
+          ]
+        }
+      ],
+      "plan": [
+        {
+          "id": "classify",
+          "required": true,
+          "owner": "support",
+          "tool": "classify_ticket",
+          "status": "succeeded",
+          "depends_on": [],
+          "needs": [
+            "order_id"
+          ],
+          "detail": "Support classified the ticket as a refund."
+        },
+        {
+          "id": "submit",
+          "required": true,
+          "owner": "billing",
+          "tool": "submit_refund",
+          "status": "pending",
+          "depends_on": [
+            "classify"
+          ],
+          "needs": [
+            "order_id",
+            "amount"
+          ],
+          "detail": "Billing must submit the refund. Support does not own this step."
+        }
+      ],
+      "trace": [
+        {
+          "step": "classify",
+          "status": "succeeded",
+          "result": "The ticket is a refund request. The refund has not been submitted. Earlier notes in this run mention the customer's account age, the browser they used, and a failed login yesterday. Those notes are not the goal result."
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "What is the single next orchestration step for `goal`? The next required step is the first entry in `plan` with required true and status other than succeeded. Respond when `trace` already states the result `goal` asks for, even if an optional step is still pending. Wait when the goal result is absent and the next required step has status running or failed, or it depends on a step whose status is running or failed. Ask when the goal result is absent, the next required step is pending, and it needs a fact missing from `facts` that no roster tool can supply or that the step says the user must supply. Hand off when the goal result is absent, that step is pending, its needs are all in `facts`, its dependencies have succeeded, and its owner is not `current_agent`. Act when the goal result is absent, that step is pending, it is owned by `current_agent`, its needs are all in `facts`, and every dependency has succeeded.",
+    "criteria": [
+      {
+        "label": "respond",
+        "description": "The trace already states the result the goal asks for"
+      },
+      {
+        "label": "ask",
+        "description": "The goal result is absent, the next required step is pending, and it needs a fact missing from the facts that no roster tool can supply or that the step says the user must supply"
+      },
+      {
+        "label": "handoff",
+        "description": "The goal result is absent, the next required step is pending, its needs and dependencies are satisfied, and its owner is not the current agent"
+      },
+      {
+        "label": "wait",
+        "description": "The goal result is absent, and the next required step is running or failed, or it depends on a step that is running or failed"
+      },
+      {
+        "label": "act",
+        "description": "The goal result is absent, the next required step is pending, it is owned by the current agent, its needs are present, and every dependency has succeeded"
+      }
+    ],
+    "gold_label": "handoff",
+    "tags": [
+      "clear",
+      "orchestration"
+    ]
+  },
+  {
+    "id": "orchestrate-handoff-writer",
+    "family": "agent_orchestration",
+    "state": {
+      "goal": "Send the customer a written apology after the notes are collected.",
+      "current_agent": "research",
+      "facts": {
+        "customer": "Ana",
+        "incident": "late refund"
+      },
+      "roster": [
+        {
+          "agent": "weather",
+          "tools": [
+            "get_weather"
+          ]
+        },
+        {
+          "agent": "mailer",
+          "tools": [
+            "send_email",
+            "create_draft"
+          ]
+        },
+        {
+          "agent": "support",
+          "tools": [
+            "lookup_order",
+            "classify_ticket"
+          ]
+        },
+        {
+          "agent": "billing",
+          "tools": [
+            "submit_refund",
+            "create_invoice",
+            "charge_card"
+          ]
+        },
+        {
+          "agent": "research",
+          "tools": [
+            "collect_notes"
+          ]
+        },
+        {
+          "agent": "writer",
+          "tools": [
+            "draft_apology"
+          ]
+        },
+        {
+          "agent": "orders",
+          "tools": [
+            "get_order",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "scheduler",
+          "tools": [
+            "confirm_guest_list",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "travel",
+          "tools": [
+            "search_flights"
+          ]
+        }
+      ],
+      "plan": [
+        {
+          "id": "notes",
+          "required": true,
+          "owner": "research",
+          "tool": "collect_notes",
+          "status": "succeeded",
+          "depends_on": [],
+          "needs": [
+            "incident"
+          ],
+          "detail": "Research collected the incident notes."
+        },
+        {
+          "id": "draft",
+          "required": true,
+          "owner": "writer",
+          "tool": "draft_apology",
+          "status": "pending",
+          "depends_on": [
+            "notes"
+          ],
+          "needs": [
+            "customer",
+            "incident"
+          ],
+          "detail": "The writer owns the apology. Research does not draft customer text."
+        }
+      ],
+      "trace": [
+        {
+          "step": "notes",
+          "status": "succeeded",
+          "result": "Notes are collected. The apology has not been drafted. Earlier notes in this run mention the customer's account age, the browser they used, and a failed login yesterday. Those notes are not the goal result."
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "What is the single next orchestration step for `goal`? The next required step is the first entry in `plan` with required true and status other than succeeded. Respond when `trace` already states the result `goal` asks for, even if an optional step is still pending. Wait when the goal result is absent and the next required step has status running or failed, or it depends on a step whose status is running or failed. Ask when the goal result is absent, the next required step is pending, and it needs a fact missing from `facts` that no roster tool can supply or that the step says the user must supply. Hand off when the goal result is absent, that step is pending, its needs are all in `facts`, its dependencies have succeeded, and its owner is not `current_agent`. Act when the goal result is absent, that step is pending, it is owned by `current_agent`, its needs are all in `facts`, and every dependency has succeeded.",
+    "criteria": [
+      {
+        "label": "respond",
+        "description": "The trace already states the result the goal asks for"
+      },
+      {
+        "label": "ask",
+        "description": "The goal result is absent, the next required step is pending, and it needs a fact missing from the facts that no roster tool can supply or that the step says the user must supply"
+      },
+      {
+        "label": "handoff",
+        "description": "The goal result is absent, the next required step is pending, its needs and dependencies are satisfied, and its owner is not the current agent"
+      },
+      {
+        "label": "wait",
+        "description": "The goal result is absent, and the next required step is running or failed, or it depends on a step that is running or failed"
+      },
+      {
+        "label": "act",
+        "description": "The goal result is absent, the next required step is pending, it is owned by the current agent, its needs are present, and every dependency has succeeded"
+      }
+    ],
+    "gold_label": "handoff",
+    "tags": [
+      "clear",
+      "orchestration"
+    ]
+  },
+  {
+    "id": "orchestrate-wait-running",
+    "family": "agent_orchestration",
+    "state": {
+      "goal": "Charge the card for invoice INV-44.",
+      "current_agent": "billing",
+      "facts": {
+        "invoice_id": "INV-44",
+        "amount": "90.72"
+      },
+      "roster": [
+        {
+          "agent": "weather",
+          "tools": [
+            "get_weather"
+          ]
+        },
+        {
+          "agent": "mailer",
+          "tools": [
+            "send_email",
+            "create_draft"
+          ]
+        },
+        {
+          "agent": "support",
+          "tools": [
+            "lookup_order",
+            "classify_ticket"
+          ]
+        },
+        {
+          "agent": "billing",
+          "tools": [
+            "submit_refund",
+            "create_invoice",
+            "charge_card"
+          ]
+        },
+        {
+          "agent": "research",
+          "tools": [
+            "collect_notes"
+          ]
+        },
+        {
+          "agent": "writer",
+          "tools": [
+            "draft_apology"
+          ]
+        },
+        {
+          "agent": "orders",
+          "tools": [
+            "get_order",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "scheduler",
+          "tools": [
+            "confirm_guest_list",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "travel",
+          "tools": [
+            "search_flights"
+          ]
+        }
+      ],
+      "plan": [
+        {
+          "id": "invoice",
+          "required": true,
+          "owner": "billing",
+          "tool": "create_invoice",
+          "status": "running",
+          "depends_on": [],
+          "needs": [
+            "invoice_id"
+          ],
+          "detail": "Create the invoice before any charge."
+        },
+        {
+          "id": "charge",
+          "required": true,
+          "owner": "billing",
+          "tool": "charge_card",
+          "status": "pending",
+          "depends_on": [
+            "invoice"
+          ],
+          "needs": [
+            "invoice_id",
+            "amount"
+          ],
+          "detail": "Charge the card only after the invoice exists."
+        }
+      ],
+      "trace": [
+        {
+          "step": "invoice",
+          "status": "running",
+          "result": "create_invoice is still running. No charge has been made. Earlier notes in this run mention the customer's account age, the browser they used, and a failed login yesterday. Those notes are not the goal result."
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "What is the single next orchestration step for `goal`? The next required step is the first entry in `plan` with required true and status other than succeeded. Respond when `trace` already states the result `goal` asks for, even if an optional step is still pending. Wait when the goal result is absent and the next required step has status running or failed, or it depends on a step whose status is running or failed. Ask when the goal result is absent, the next required step is pending, and it needs a fact missing from `facts` that no roster tool can supply or that the step says the user must supply. Hand off when the goal result is absent, that step is pending, its needs are all in `facts`, its dependencies have succeeded, and its owner is not `current_agent`. Act when the goal result is absent, that step is pending, it is owned by `current_agent`, its needs are all in `facts`, and every dependency has succeeded.",
+    "criteria": [
+      {
+        "label": "respond",
+        "description": "The trace already states the result the goal asks for"
+      },
+      {
+        "label": "ask",
+        "description": "The goal result is absent, the next required step is pending, and it needs a fact missing from the facts that no roster tool can supply or that the step says the user must supply"
+      },
+      {
+        "label": "handoff",
+        "description": "The goal result is absent, the next required step is pending, its needs and dependencies are satisfied, and its owner is not the current agent"
+      },
+      {
+        "label": "wait",
+        "description": "The goal result is absent, and the next required step is running or failed, or it depends on a step that is running or failed"
+      },
+      {
+        "label": "act",
+        "description": "The goal result is absent, the next required step is pending, it is owned by the current agent, its needs are present, and every dependency has succeeded"
+      }
+    ],
+    "gold_label": "wait",
+    "tags": [
+      "clear",
+      "orchestration"
+    ]
+  },
+  {
+    "id": "orchestrate-wait-failed",
+    "family": "agent_orchestration",
+    "state": {
+      "goal": "Charge the card for invoice INV-44.",
+      "current_agent": "billing",
+      "facts": {
+        "invoice_id": "INV-44",
+        "amount": "90.72"
+      },
+      "roster": [
+        {
+          "agent": "weather",
+          "tools": [
+            "get_weather"
+          ]
+        },
+        {
+          "agent": "mailer",
+          "tools": [
+            "send_email",
+            "create_draft"
+          ]
+        },
+        {
+          "agent": "support",
+          "tools": [
+            "lookup_order",
+            "classify_ticket"
+          ]
+        },
+        {
+          "agent": "billing",
+          "tools": [
+            "submit_refund",
+            "create_invoice",
+            "charge_card"
+          ]
+        },
+        {
+          "agent": "research",
+          "tools": [
+            "collect_notes"
+          ]
+        },
+        {
+          "agent": "writer",
+          "tools": [
+            "draft_apology"
+          ]
+        },
+        {
+          "agent": "orders",
+          "tools": [
+            "get_order",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "scheduler",
+          "tools": [
+            "confirm_guest_list",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "travel",
+          "tools": [
+            "search_flights"
+          ]
+        }
+      ],
+      "plan": [
+        {
+          "id": "invoice",
+          "required": true,
+          "owner": "billing",
+          "tool": "create_invoice",
+          "status": "failed",
+          "depends_on": [],
+          "needs": [
+            "invoice_id"
+          ],
+          "detail": "Create the invoice before any charge."
+        },
+        {
+          "id": "charge",
+          "required": true,
+          "owner": "billing",
+          "tool": "charge_card",
+          "status": "pending",
+          "depends_on": [
+            "invoice"
+          ],
+          "needs": [
+            "invoice_id",
+            "amount"
+          ],
+          "detail": "Charge the card only after the invoice exists."
+        }
+      ],
+      "trace": [
+        {
+          "step": "invoice",
+          "status": "failed",
+          "result": "create_invoice failed with a validation error. No charge has been made. Earlier notes in this run mention the customer's account age, the browser they used, and a failed login yesterday. Those notes are not the goal result."
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "What is the single next orchestration step for `goal`? The next required step is the first entry in `plan` with required true and status other than succeeded. Respond when `trace` already states the result `goal` asks for, even if an optional step is still pending. Wait when the goal result is absent and the next required step has status running or failed, or it depends on a step whose status is running or failed. Ask when the goal result is absent, the next required step is pending, and it needs a fact missing from `facts` that no roster tool can supply or that the step says the user must supply. Hand off when the goal result is absent, that step is pending, its needs are all in `facts`, its dependencies have succeeded, and its owner is not `current_agent`. Act when the goal result is absent, that step is pending, it is owned by `current_agent`, its needs are all in `facts`, and every dependency has succeeded.",
+    "criteria": [
+      {
+        "label": "respond",
+        "description": "The trace already states the result the goal asks for"
+      },
+      {
+        "label": "ask",
+        "description": "The goal result is absent, the next required step is pending, and it needs a fact missing from the facts that no roster tool can supply or that the step says the user must supply"
+      },
+      {
+        "label": "handoff",
+        "description": "The goal result is absent, the next required step is pending, its needs and dependencies are satisfied, and its owner is not the current agent"
+      },
+      {
+        "label": "wait",
+        "description": "The goal result is absent, and the next required step is running or failed, or it depends on a step that is running or failed"
+      },
+      {
+        "label": "act",
+        "description": "The goal result is absent, the next required step is pending, it is owned by the current agent, its needs are present, and every dependency has succeeded"
+      }
+    ],
+    "gold_label": "wait",
+    "tags": [
+      "clear",
+      "orchestration"
+    ]
+  },
+  {
+    "id": "orchestrate-act-lookup",
+    "family": "agent_orchestration",
+    "state": {
+      "goal": "Find the delivery status of order A-104.",
+      "current_agent": "orders",
+      "facts": {
+        "order_id": "A-104"
+      },
+      "roster": [
+        {
+          "agent": "weather",
+          "tools": [
+            "get_weather"
+          ]
+        },
+        {
+          "agent": "mailer",
+          "tools": [
+            "send_email",
+            "create_draft"
+          ]
+        },
+        {
+          "agent": "support",
+          "tools": [
+            "lookup_order",
+            "classify_ticket"
+          ]
+        },
+        {
+          "agent": "billing",
+          "tools": [
+            "submit_refund",
+            "create_invoice",
+            "charge_card"
+          ]
+        },
+        {
+          "agent": "research",
+          "tools": [
+            "collect_notes"
+          ]
+        },
+        {
+          "agent": "writer",
+          "tools": [
+            "draft_apology"
+          ]
+        },
+        {
+          "agent": "orders",
+          "tools": [
+            "get_order",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "scheduler",
+          "tools": [
+            "confirm_guest_list",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "travel",
+          "tools": [
+            "search_flights"
+          ]
+        }
+      ],
+      "plan": [
+        {
+          "id": "lookup",
+          "required": true,
+          "owner": "orders",
+          "tool": "get_order",
+          "status": "pending",
+          "depends_on": [],
+          "needs": [
+            "order_id"
+          ],
+          "detail": "Read the order record. The delivery status is not known yet."
+        }
+      ],
+      "trace": [
+        {
+          "step": "intake",
+          "status": "succeeded",
+          "result": "The user asked for the delivery status. No order record has been read. Earlier notes in this run mention the customer's account age, the browser they used, and a failed login yesterday. Those notes are not the goal result."
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "What is the single next orchestration step for `goal`? The next required step is the first entry in `plan` with required true and status other than succeeded. Respond when `trace` already states the result `goal` asks for, even if an optional step is still pending. Wait when the goal result is absent and the next required step has status running or failed, or it depends on a step whose status is running or failed. Ask when the goal result is absent, the next required step is pending, and it needs a fact missing from `facts` that no roster tool can supply or that the step says the user must supply. Hand off when the goal result is absent, that step is pending, its needs are all in `facts`, its dependencies have succeeded, and its owner is not `current_agent`. Act when the goal result is absent, that step is pending, it is owned by `current_agent`, its needs are all in `facts`, and every dependency has succeeded.",
+    "criteria": [
+      {
+        "label": "respond",
+        "description": "The trace already states the result the goal asks for"
+      },
+      {
+        "label": "ask",
+        "description": "The goal result is absent, the next required step is pending, and it needs a fact missing from the facts that no roster tool can supply or that the step says the user must supply"
+      },
+      {
+        "label": "handoff",
+        "description": "The goal result is absent, the next required step is pending, its needs and dependencies are satisfied, and its owner is not the current agent"
+      },
+      {
+        "label": "wait",
+        "description": "The goal result is absent, and the next required step is running or failed, or it depends on a step that is running or failed"
+      },
+      {
+        "label": "act",
+        "description": "The goal result is absent, the next required step is pending, it is owned by the current agent, its needs are present, and every dependency has succeeded"
+      }
+    ],
+    "gold_label": "act",
+    "tags": [
+      "clear",
+      "orchestration"
+    ]
+  },
+  {
+    "id": "orchestrate-act-after-failure",
+    "family": "agent_orchestration",
+    "state": {
+      "goal": "Reserve the meeting room after the guest list is confirmed.",
+      "current_agent": "scheduler",
+      "facts": {
+        "room": "Birch",
+        "time": "Thursday 15:00",
+        "guest_list": "confirmed"
+      },
+      "roster": [
+        {
+          "agent": "weather",
+          "tools": [
+            "get_weather"
+          ]
+        },
+        {
+          "agent": "mailer",
+          "tools": [
+            "send_email",
+            "create_draft"
+          ]
+        },
+        {
+          "agent": "support",
+          "tools": [
+            "lookup_order",
+            "classify_ticket"
+          ]
+        },
+        {
+          "agent": "billing",
+          "tools": [
+            "submit_refund",
+            "create_invoice",
+            "charge_card"
+          ]
+        },
+        {
+          "agent": "research",
+          "tools": [
+            "collect_notes"
+          ]
+        },
+        {
+          "agent": "writer",
+          "tools": [
+            "draft_apology"
+          ]
+        },
+        {
+          "agent": "orders",
+          "tools": [
+            "get_order",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "scheduler",
+          "tools": [
+            "confirm_guest_list",
+            "reserve_room"
+          ]
+        },
+        {
+          "agent": "travel",
+          "tools": [
+            "search_flights"
+          ]
+        }
+      ],
+      "plan": [
+        {
+          "id": "metrics",
+          "required": false,
+          "owner": "research",
+          "tool": "collect_notes",
+          "status": "failed",
+          "depends_on": [],
+          "needs": [],
+          "detail": "Optional usage report. It is not required and nothing depends on it."
+        },
+        {
+          "id": "confirm",
+          "required": true,
+          "owner": "scheduler",
+          "tool": "confirm_guest_list",
+          "status": "succeeded",
+          "depends_on": [],
+          "needs": [
+            "guest_list"
+          ],
+          "detail": "Confirm the guest list before reserving the room."
+        },
+        {
+          "id": "reserve",
+          "required": true,
+          "owner": "scheduler",
+          "tool": "reserve_room",
+          "status": "pending",
+          "depends_on": [
+            "confirm"
+          ],
+          "needs": [
+            "room",
+            "time"
+          ],
+          "detail": "Reserve Birch once the guest list step has succeeded."
+        }
+      ],
+      "trace": [
+        {
+          "step": "metrics",
+          "status": "failed",
+          "result": "The optional usage report failed. It is unrelated to the room."
+        },
+        {
+          "step": "confirm",
+          "status": "succeeded",
+          "result": "The guest list is confirmed. The room has not been reserved. Earlier notes in this run mention the customer's account age, the browser they used, and a failed login yesterday. Those notes are not the goal result."
+        }
+      ]
+    },
+    "primitive": "choice",
+    "instructions": "What is the single next orchestration step for `goal`? The next required step is the first entry in `plan` with required true and status other than succeeded. Respond when `trace` already states the result `goal` asks for, even if an optional step is still pending. Wait when the goal result is absent and the next required step has status running or failed, or it depends on a step whose status is running or failed. Ask when the goal result is absent, the next required step is pending, and it needs a fact missing from `facts` that no roster tool can supply or that the step says the user must supply. Hand off when the goal result is absent, that step is pending, its needs are all in `facts`, its dependencies have succeeded, and its owner is not `current_agent`. Act when the goal result is absent, that step is pending, it is owned by `current_agent`, its needs are all in `facts`, and every dependency has succeeded.",
+    "criteria": [
+      {
+        "label": "respond",
+        "description": "The trace already states the result the goal asks for"
+      },
+      {
+        "label": "ask",
+        "description": "The goal result is absent, the next required step is pending, and it needs a fact missing from the facts that no roster tool can supply or that the step says the user must supply"
+      },
+      {
+        "label": "handoff",
+        "description": "The goal result is absent, the next required step is pending, its needs and dependencies are satisfied, and its owner is not the current agent"
+      },
+      {
+        "label": "wait",
+        "description": "The goal result is absent, and the next required step is running or failed, or it depends on a step that is running or failed"
+      },
+      {
+        "label": "act",
+        "description": "The goal result is absent, the next required step is pending, it is owned by the current agent, its needs are present, and every dependency has succeeded"
+      }
+    ],
+    "gold_label": "act",
+    "tags": [
+      "clear",
+      "orchestration"
+    ]
   }
 ]
