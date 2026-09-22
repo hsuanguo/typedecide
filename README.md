@@ -18,12 +18,12 @@ uv sync --extra all
 
 ### Backend prerequisites
 
-| Backend | Loader | Install extra | Notes |
-| --- | --- | --- | --- |
-| this-that | `td.load("thisthat")` | `thisthat` | Loads a local model; accepts `device`, defaulting to `"auto"`. |
-| Jev | `td.load("jev")` | `jev` | Hosted TypeSafe API; requires `TYPESAFE_API_KEY` in the environment. |
-| SemIf | `td.load("semif")` | `semif` | Loads a local model and accepts `device`; its pinned Torch and Transformers stack is best kept in a dedicated environment when it conflicts with another backend. |
-| Laya | `td.load("laya")` | `laya` | Loads a local model. Omit `device` to use Laya's automatic device selection, or pass an explicit device. |
+| Backend   | Loader                | Install extra | Notes                                                                                                                                                             |
+| --------- | --------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| this-that | `td.load("thisthat")` | `thisthat`    | Loads a local model; accepts `device`, defaulting to `"auto"`.                                                                                                    |
+| Jev       | `td.load("jev")`      | `jev`         | Hosted TypeSafe API; requires `TYPESAFE_API_KEY` in the environment.                                                                                              |
+| SemIf     | `td.load("semif")`    | `semif`       | Loads a local model and accepts `device`; its pinned Torch and Transformers stack is best kept in a dedicated environment when it conflicts with another backend. |
+| Laya      | `td.load("laya")`     | `laya`        | Loads a local model. Omit `device` to use Laya's automatic device selection, or pass an explicit device.                                                          |
 
 For Jev, set the API key in your shell before running code:
 
@@ -161,4 +161,4 @@ Because SemIf pins a specific ML stack, use a dedicated contributor environment 
 
 ## License
 
-Licensed under the [MIT License](LICENSE). 
+Licensed under the [MIT License](LICENSE).

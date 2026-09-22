@@ -1,4 +1,5 @@
 """Protocol implemented by every typedecide backend."""
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
@@ -19,7 +20,9 @@ class DecisionBackend(ABC):
     name: str
 
     @abstractmethod
-    def predict(self, state: str | dict[str, Any] | list[Any], questions: Sequence[Question]) -> Response:
+    def predict(
+        self, state: str | dict[str, Any] | list[Any], questions: Sequence[Question]
+    ) -> Response:
         """Evaluate every question against one state.
 
         Parameters

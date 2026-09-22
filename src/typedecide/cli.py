@@ -1,4 +1,5 @@
 """Run package-owned typedecide benchmark fixtures through one unified backend."""
+
 from __future__ import annotations
 
 import argparse
@@ -23,16 +24,22 @@ def parser() -> argparse.ArgumentParser:
     command = argparse.ArgumentParser(description=__doc__)
     subcommands = command.add_subparsers(dest="command", required=True)
     subcommands.add_parser("validate", help="validate package-owned benchmark fixtures")
-    run = subcommands.add_parser("run", help="run one backend over the package benchmark")
+    run = subcommands.add_parser(
+        "run", help="run one backend over the package benchmark"
+    )
     run.add_argument("--backend", choices=available_backends(), required=True)
     run.add_argument("--repeats", type=int, default=1)
     run.add_argument("--device", default="auto")
     run.add_argument("--output", type=Path, required=True)
-    report = subcommands.add_parser("report", help="generate Markdown and HTML from backend artifacts")
+    report = subcommands.add_parser(
+        "report", help="generate Markdown and HTML from backend artifacts"
+    )
     report.add_argument("--artifacts", type=Path, nargs="+", required=True)
     report.add_argument("--markdown", type=Path, required=True)
     report.add_argument("--html", type=Path, required=True)
-    merge = subcommands.add_parser("merge", help="merge compatible backend artifacts into a manifest")
+    merge = subcommands.add_parser(
+        "merge", help="merge compatible backend artifacts into a manifest"
+    )
     merge.add_argument("--artifacts", type=Path, nargs="+", required=True)
     merge.add_argument("--output", type=Path, required=True)
     return command
@@ -56,7 +63,9 @@ def main() -> int:
     args = parser().parse_args()
     cases = validate_real_world_suite()
     if args.command == "validate":
-        print(f"valid: {len(cases)} cases across {len({case.family for case in cases})} families")
+        print(
+            f"valid: {len(cases)} cases across {len({case.family for case in cases})} families"
+        )
         return 0
     if args.command == "report":
         write_report(args.artifacts, args.markdown, args.html)
@@ -83,15 +92,16 @@ def main() -> int:
         for repeat in range(args.repeats):
             for case in cases:
                 response = backend.predict(case.state, (case.question,))
-                answer = response.answers[case.question.id]
-                runs.append({
-                    "case_id": case.id,
-                    "family": case.family,
-                    "primitive": case.question.type,
-                    "gold": case.gold,
-                    "repeat": repeat,
-                    "response": asdict(response),
-                })
+                runs.append(
+                    {
+                        "case_id": case.id,
+                        "family": case.family,
+                        "primitive": case.question.type,
+                        "gold": case.gold,
+                        "repeat": repeat,
+                        "response": asdict(response),
+                    }
+                )
     finally:
         backend.close()
     artifact = {
@@ -99,13 +109,18 @@ def main() -> int:
         "created_at": datetime.now(timezone.utc).isoformat(),
         "backend": args.backend,
         "repeats": args.repeats,
-        "cases": [{"id": case.id, "family": case.family, "gold": case.gold} for case in cases],
+        "cases": [
+            {"id": case.id, "family": case.family, "gold": case.gold} for case in cases
+        ],
         "runs": runs,
         "typedecide": importlib.metadata.version("typedecide"),
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(artifact, indent=2) + "\n")
-    correct = sum(run["response"]["answers"][run["case_id"]]["selected"] == run["gold"] for run in runs)
+    correct = sum(
+        run["response"]["answers"][run["case_id"]]["selected"] == run["gold"]
+        for run in runs
+    )
     print(f"wrote {args.output}: {correct}/{len(runs)} correct")
     return 0
 

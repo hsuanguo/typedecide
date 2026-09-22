@@ -1,4 +1,5 @@
 """Backend-neutral typed-decision request and response values."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -63,7 +64,9 @@ class Question:
         if not self.id or not self.instructions:
             raise ValueError("question id and instructions must be non-empty")
         if len(option_ids) < 2 or len(option_ids) != len(set(option_ids)):
-            raise ValueError("questions require at least two uniquely identified options")
+            raise ValueError(
+                "questions require at least two uniquely identified options"
+            )
         if self.type == "noul" and option_ids != ("false", "true"):
             raise ValueError("noul options must be ordered as false, true")
 
@@ -96,7 +99,12 @@ def choice(id: str, instructions: str, criteria: Mapping[str, str]) -> Question:
     Question
         A question whose ``type`` is ``"choice"``.
     """
-    return Question(id, "choice", instructions, tuple(Choice(key, value) for key, value in criteria.items()))
+    return Question(
+        id,
+        "choice",
+        instructions,
+        tuple(Choice(key, value) for key, value in criteria.items()),
+    )
 
 
 def noul(id: str, instructions: str, *, true: str, false: str) -> Question:
@@ -118,7 +126,9 @@ def noul(id: str, instructions: str, *, true: str, false: str) -> Question:
     Question
         A question whose options are ordered ``false``, then ``true``.
     """
-    return Question(id, "noul", instructions, (Choice("false", false), Choice("true", true)))
+    return Question(
+        id, "noul", instructions, (Choice("false", false), Choice("true", true))
+    )
 
 
 def score(id: str, instructions: str, criteria: Sequence[str]) -> Question:
@@ -143,7 +153,10 @@ def score(id: str, instructions: str, criteria: Sequence[str]) -> Question:
         id,
         "score",
         instructions,
-        tuple(Choice(str(index), description) for index, description in enumerate(criteria)),
+        tuple(
+            Choice(str(index), description)
+            for index, description in enumerate(criteria)
+        ),
     )
 
 
@@ -191,7 +204,9 @@ class Answer:
             raise ValueError("option IDs and probabilities must have matching lengths")
         if self.selected not in self.option_ids:
             raise ValueError("selected option must exist in option IDs")
-        if any(probability < 0 or probability > 1 for probability in self.probabilities):
+        if any(
+            probability < 0 or probability > 1 for probability in self.probabilities
+        ):
             raise ValueError("probabilities must be between zero and one")
         if abs(sum(self.probabilities) - 1) > 1e-6:
             raise ValueError("probabilities must sum to one")

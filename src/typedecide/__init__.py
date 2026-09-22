@@ -6,7 +6,12 @@ evaluate them through :func:`load`. Every backend returns the same
 """
 
 from .base import DecisionBackend
-from .benchmark import BenchmarkCase, fixture_path, load_cases, validate_real_world_suite
+from .benchmark import (
+    BenchmarkCase,
+    fixture_path,
+    load_cases,
+    validate_real_world_suite,
+)
 from .registry import available_backends, load
 from .types import Answer, Option, Question, Response, choice, noul, score
 

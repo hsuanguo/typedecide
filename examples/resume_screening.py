@@ -1,4 +1,5 @@
 """Evaluate a resume against several structured hiring-screen questions."""
+
 from __future__ import annotations
 
 import argparse
@@ -143,19 +144,24 @@ def main() -> None:
         backend.close()
 
     questions_by_id = {question.id: question for question in QUESTIONS}
-    print(json.dumps({
-        question_id: {
-            "selected": answer.selected,
-            "selected_criterion": next(
-                option.description
-                for option in questions_by_id[question_id].criteria
-                if option.id == answer.selected
-            ),
-            "probabilities": dict(zip(answer.option_ids, answer.probabilities)),
-            "score": answer.score,
-        }
-        for question_id, answer in response.answers.items()
-    }, indent=2))
+    print(
+        json.dumps(
+            {
+                question_id: {
+                    "selected": answer.selected,
+                    "selected_criterion": next(
+                        option.description
+                        for option in questions_by_id[question_id].criteria
+                        if option.id == answer.selected
+                    ),
+                    "probabilities": dict(zip(answer.option_ids, answer.probabilities)),
+                    "score": answer.score,
+                }
+                for question_id, answer in response.answers.items()
+            },
+            indent=2,
+        )
+    )
 
 
 if __name__ == "__main__":

@@ -1,8 +1,9 @@
 """Standalone visual renderer for typedecide benchmark artifacts."""
+
 from __future__ import annotations
 
 import html
-from collections import Counter, defaultdict
+from collections import Counter
 from statistics import mean
 from typing import Any
 
@@ -27,11 +28,15 @@ def render_html(artifacts: list[dict[str, Any]], source_hash: str) -> str:
     repeats = artifacts[0]["repeats"]
     backends = [artifact["backend"] for artifact in artifacts]
     primitive_by_case = {
-        run["case_id"]: run["primitive"]
-        for run in artifacts[0]["runs"]
+        run["case_id"]: run["primitive"] for run in artifacts[0]["runs"]
     }
     names = {"jev": "Jev", "thisthat": "this-that", "semif": "SemIf", "laya": "Laya"}
-    colors = {"jev": "#0f766e", "thisthat": "#c2410c", "semif": "#6d4c9a", "laya": "#1d4ed8"}
+    colors = {
+        "jev": "#0f766e",
+        "thisthat": "#c2410c",
+        "semif": "#6d4c9a",
+        "laya": "#1d4ed8",
+    }
 
     def label(backend: str) -> str:
         return names.get(backend, backend.replace("_", " ").title())
@@ -50,12 +55,22 @@ def render_html(artifacts: list[dict[str, Any]], source_hash: str) -> str:
             mean(answer["probabilities"][index] for answer in answers)
             for index in range(len(option_ids))
         )
-        selected = option_ids[max(range(len(probabilities)), key=probabilities.__getitem__)]
-        agreement = Counter(answer["selected"] for answer in answers).most_common(1)[0][1] / len(answers)
-        return {"selected": selected, "probabilities": probabilities, "agreement": agreement}
+        selected = option_ids[
+            max(range(len(probabilities)), key=probabilities.__getitem__)
+        ]
+        agreement = Counter(answer["selected"] for answer in answers).most_common(1)[0][
+            1
+        ] / len(answers)
+        return {
+            "selected": selected,
+            "probabilities": probabilities,
+            "agreement": agreement,
+        }
 
     all_summaries = {
-        artifact["backend"]: {case["id"]: summary(artifact, case["id"]) for case in cases}
+        artifact["backend"]: {
+            case["id"]: summary(artifact, case["id"]) for case in cases
+        }
         for artifact in artifacts
     }
 
@@ -67,7 +82,12 @@ def render_html(artifacts: list[dict[str, Any]], source_hash: str) -> str:
             gold_index = answer["option_ids"].index(run["gold"])
             probabilities = answer["probabilities"]
             correct += answer["selected"] == run["gold"]
-            brier.append(sum((probability - float(index == gold_index)) ** 2 for index, probability in enumerate(probabilities)))
+            brier.append(
+                sum(
+                    (probability - float(index == gold_index)) ** 2
+                    for index, probability in enumerate(probabilities)
+                )
+            )
             nll.append(-__import__("math").log(max(probabilities[gold_index], 1e-12)))
             if run["primitive"] == "score":
                 score_error.append(abs(float(answer["score"]) - gold_index))
@@ -78,15 +98,20 @@ def render_html(artifacts: list[dict[str, Any]], source_hash: str) -> str:
             "nll": mean(nll),
             "score_mae": mean(score_error) if score_error else 0.0,
             "latency": mean(latency),
-            "tokens": sum(run["response"].get("input_tokens") or 0 for run in artifact["runs"]),
+            "tokens": sum(
+                run["response"].get("input_tokens") or 0 for run in artifact["runs"]
+            ),
         }
 
     metrics = {artifact["backend"]: metric(artifact) for artifact in artifacts}
 
-    def grouped_accuracy(artifact: dict[str, Any], key: str, group: str) -> float | None:
+    def grouped_accuracy(
+        artifact: dict[str, Any], key: str, group: str
+    ) -> float | None:
         values = [
             run["response"]["answers"][run["case_id"]]["selected"] == run["gold"]
-            for run in artifact["runs"] if run[key] == group
+            for run in artifact["runs"]
+            if run[key] == group
         ]
         return mean(values) if values else None
 
@@ -97,13 +122,15 @@ def render_html(artifacts: list[dict[str, Any]], source_hash: str) -> str:
             rows.append(
                 f'<tr><th><span class="dot" style="background:{color(backend)}"></span>{html.escape(label(backend))}</th>'
                 f'<td class="strong">{value["accuracy"]:.1%}</td><td>{value["brier"]:.3f}</td>'
-                f'<td>{value["nll"]:.3f}</td><td>{value["score_mae"]:.3f}</td>'
-                f'<td>{value["latency"]:.1f} ms</td><td>0.0%</td></tr>'
+                f"<td>{value['nll']:.3f}</td><td>{value['score_mae']:.3f}</td>"
+                f"<td>{value['latency']:.1f} ms</td><td>0.0%</td></tr>"
             )
         return "".join(rows)
 
     def bars(key: str, title: str) -> str:
-        groups = sorted({run[key] for artifact in artifacts for run in artifact["runs"]})
+        groups = sorted(
+            {run[key] for artifact in artifacts for run in artifact["runs"]}
+        )
         content = []
         for group in groups:
             items = []
@@ -114,21 +141,31 @@ def render_html(artifacts: list[dict[str, Any]], source_hash: str) -> str:
                     items.append(
                         f'<div class="bar"><span>{html.escape(label(backend))}</span>'
                         f'<div class="track"><i style="width:{value * 100:.1f}%;background:{color(backend)}"></i></div>'
-                        f'<b>{value:.0%}</b></div>'
+                        f"<b>{value:.0%}</b></div>"
                     )
-            content.append(f'<div class="group"><h3>{html.escape(group.replace("_", " ").title())}</h3>{"".join(items)}</div>')
+            content.append(
+                f'<div class="group"><h3>{html.escape(group.replace("_", " ").title())}</h3>{"".join(items)}</div>'
+            )
         return f'<section class="panel"><h2>{html.escape(title)}</h2>{"".join(content)}</section>'
 
     def group_table(key: str, title: str) -> str:
-        groups = sorted({run[key] for artifact in artifacts for run in artifact["runs"]})
-        header = "".join(f"<th>{html.escape(label(backend))}</th>" for backend in backends)
+        groups = sorted(
+            {run[key] for artifact in artifacts for run in artifact["runs"]}
+        )
+        header = "".join(
+            f"<th>{html.escape(label(backend))}</th>" for backend in backends
+        )
         rows = []
         for group in groups:
             values = []
             for artifact in artifacts:
                 value = grouped_accuracy(artifact, key, group)
-                values.append(f"<td>{value:.1%}</td>" if value is not None else "<td>--</td>")
-            rows.append(f'<tr><th>{html.escape(group.replace("_", " "))}</th>{"".join(values)}</tr>')
+                values.append(
+                    f"<td>{value:.1%}</td>" if value is not None else "<td>--</td>"
+                )
+            rows.append(
+                f"<tr><th>{html.escape(group.replace('_', ' '))}</th>{''.join(values)}</tr>"
+            )
         return f'<section class="panel"><h2>{html.escape(title)}</h2><div class="table-wrap"><table><thead><tr><th>Group</th>{header}</tr></thead><tbody>{"".join(rows)}</tbody></table></div></section>'
 
     case_rows = []
@@ -147,8 +184,8 @@ def render_html(artifacts: list[dict[str, Any]], source_hash: str) -> str:
         row_class = "" if all_correct else ' class="has-miss"'
         case_rows.append(
             f"<tr{row_class}>"
-            f'<th><span>{html.escape(case["id"])}</span><small>{html.escape(case["family"].replace("_", " "))} · {html.escape(primitive_by_case[case["id"]])}</small></th>'
-            f'<td><code>{html.escape(case["gold"])}</code></td>{"".join(cells)}</tr>'
+            f"<th><span>{html.escape(case['id'])}</span><small>{html.escape(case['family'].replace('_', ' '))} · {html.escape(primitive_by_case[case['id']])}</small></th>"
+            f"<td><code>{html.escape(case['gold'])}</code></td>{''.join(cells)}</tr>"
         )
 
     cards = "".join(
@@ -158,10 +195,14 @@ def render_html(artifacts: list[dict[str, Any]], source_hash: str) -> str:
     cards += f'<div class="stat"><span>Unique cases</span><strong>{len(cases)}</strong></div>'
     cards += f'<div class="stat"><span>Model evaluations</span><strong>{len(cases) * len(backends) * repeats}</strong></div>'
     headers = "".join(f"<th>{html.escape(label(backend))}</th>" for backend in backends)
-    usage = "".join(
-        f'<p><strong>{html.escape(label(backend))}</strong>: {metrics[backend]["tokens"]:,} reported input tokens</p>'
-        for backend in backends if metrics[backend]["tokens"]
-    ) or "<p>No backend reported input token usage.</p>"
+    usage = (
+        "".join(
+            f"<p><strong>{html.escape(label(backend))}</strong>: {metrics[backend]['tokens']:,} reported input tokens</p>"
+            for backend in backends
+            if metrics[backend]["tokens"]
+        )
+        or "<p>No backend reported input token usage.</p>"
+    )
 
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">

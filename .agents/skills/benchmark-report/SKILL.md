@@ -20,12 +20,12 @@ Run reproducible, fair typed-decision benchmarks for `typedecide` backends and p
 ## Before Running
 
 1. Read `README.md`, `pyproject.toml`, `src/typedecide/cli.py`, and the relevant backend adapter.
-2. Identify which backend extras are needed:
+1. Identify which backend extras are needed:
    - Jev: `uv sync --extra jev`; requires `TYPESAFE_API_KEY`.
    - this-that: `uv sync --extra thisthat`.
    - Laya: `uv sync --extra laya`.
    - SemIf: `uv sync --extra semif`; prefer a dedicated environment if its pinned ML stack conflicts with other backends.
-3. Validate fixtures and offline behavior before any paid or model-loading run:
+1. Validate fixtures and offline behavior before any paid or model-loading run:
 
 ```bash
 uv sync
@@ -33,7 +33,7 @@ uv run pytest -q
 uv run typedecide-benchmark validate
 ```
 
-4. Confirm all cases have deterministic gold labels derived from embedded state, policy, candidates, evidence, or rubric. Do not silently repair ambiguous cases after results are known.
+1. Confirm all cases have deterministic gold labels derived from embedded state, policy, candidates, evidence, or rubric. Do not silently repair ambiguous cases after results are known.
 
 ## Fixture Design
 
@@ -65,10 +65,10 @@ Do not compare native confidence values across providers as though they share a 
 ## Run Strategy
 
 1. Start with one smoke case per backend after offline validation.
-2. Run each backend into a separate immutable artifact. Never overwrite an existing artifact.
-3. Use a fixed repeat count for every backend. Five repeats are suitable for the project’s current 100-case exploratory suite.
-4. Checkpoint after every case/backend/repeat so runs can resume without repeating paid API calls.
-5. Record requested and resolved model versions, package versions, device, dtype, timestamps, token usage, latency, and failures.
+1. Run each backend into a separate immutable artifact. Never overwrite an existing artifact.
+1. Use a fixed repeat count for every backend. Five repeats are suitable for the project’s current 100-case exploratory suite.
+1. Checkpoint after every case/backend/repeat so runs can resume without repeating paid API calls.
+1. Record requested and resolved model versions, package versions, device, dtype, timestamps, token usage, latency, and failures.
 
 Current single-backend command:
 
@@ -116,12 +116,12 @@ Merge only compatible completed artifacts. Reject merge inputs that differ in fi
 A complete report has:
 
 1. Scope and caveats: authored fixture size, repeats, and non-generalization warning.
-2. Overall metrics table for every backend.
-3. Backend model/version/device metadata.
-4. Per-family and per-primitive results.
-5. Case-level mean probabilities, predicted option, gold option, and error marker.
-6. Repeatability, coverage, latency, token usage, and cost.
-7. Method notes explaining canonical mapping and backend-specific limitations.
+1. Overall metrics table for every backend.
+1. Backend model/version/device metadata.
+1. Per-family and per-primitive results.
+1. Case-level mean probabilities, predicted option, gold option, and error marker.
+1. Repeatability, coverage, latency, token usage, and cost.
+1. Method notes explaining canonical mapping and backend-specific limitations.
 
 Generate both:
 
