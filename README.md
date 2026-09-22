@@ -35,6 +35,25 @@ Local backends may download model weights on first use and need sufficient disk,
 
 ## Quickstart
 
+One process loads one backend. The page at [http://127.0.0.1:8000](http://127.0.0.1:8000) and the Python call below both ask that backend the same kind of typed question.
+
+### Web UI
+
+```bash
+uv sync --extra semif
+uv run typedecide-serve --backend semif --device cuda --port 8000
+```
+
+Open [http://127.0.0.1:8000](http://127.0.0.1:8000). The header names the loaded model. Three views share that process:
+
+- **Decide** is the default. Edit a state and one or more Choice, Noul, or Score questions, or start from Plant clinic, Trail window, or Patch review. **Run** sends them to `POST /v1/systemone` and shows the selected option with its probability distribution.
+- **Dino** asks the loaded model to clear each obstacle. **Jump** and **Duck** light up when that choice is applied, next to the decision latency.
+- **Scoreboard** shows a saved benchmark snapshot: overall accuracy, Brier, and score error, then accuracy by case family. It does not call the model you just started. Local and hosted latency in that snapshot are not hardware-equivalent.
+
+Swap `--backend` for `laya`, `thisthat`, or `jev` when that extra is installed. The [Server](#server) section covers the model flag, device forwarding, and pointing another System One client at this process. Note that you will need to set `TYPESAFE_API_KEY` for `jev` backend.
+
+### Python API
+
 ```python
 import typedecide as td
 
@@ -127,7 +146,7 @@ uv run python examples/resume_screening.py --backend jev
 `typedecide-serve` loads one backend and serves it on the [System One HTTP API](https://docs.typesafe.ai/api). The process also serves a playground at its root. Opening that URL is the server UI: the page posts to the same `POST /v1/systemone` route as any other client. The Dino view on that page sends each obstacle to the loaded model; Jump and Duck light up when the choice is applied, next to the decision latency.
 
 ```bash
-uv run typedecide-serve --backend laya --device cuda --port 8000
+uv run typedecide-serve --backend semif --device cuda --port 8000
 uv run typedecide-serve --backend jev --model jev-1.13.0
 ```
 
