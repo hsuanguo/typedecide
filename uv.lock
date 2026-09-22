@@ -1231,7 +1231,7 @@ wheels = [
 [[package]]
 name = "thisthat"
 version = "1.0.0"
-source = { git = "https://github.com/hsuanguo/this-that-model.git#f00d3abf8e1783737f9858cfd5f7972047a14967" }
+source = { git = "https://github.com/FLock-io/this-that-model.git#f00d3abf8e1783737f9858cfd5f7972047a14967" }
 dependencies = [
     { name = "torch" },
     { name = "transformers" },
@@ -1453,6 +1453,12 @@ version = "0.1.0"
 source = { editable = "." }
 
 [package.optional-dependencies]
+all = [
+    { name = "laya" },
+    { name = "semif-phase1" },
+    { name = "thisthat" },
+    { name = "typesafe-sdk" },
+]
 all-backends = [
     { name = "laya" },
     { name = "semif-phase1" },
@@ -1477,17 +1483,21 @@ thisthat = [
 
 [package.metadata]
 requires-dist = [
+    { name = "laya", marker = "extra == 'all'", specifier = "==0.3.5" },
     { name = "laya", marker = "extra == 'all-backends'", specifier = "==0.3.5" },
     { name = "laya", marker = "extra == 'laya'", specifier = "==0.3.5" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0" },
+    { name = "semif-phase1", marker = "extra == 'all'", git = "https://github.com/TheoLeeCJ/SemIf?rev=1f2dea3e25379f9dfc98cb83c324f00ab5deda37" },
     { name = "semif-phase1", marker = "extra == 'all-backends'", git = "https://github.com/TheoLeeCJ/SemIf?rev=1f2dea3e25379f9dfc98cb83c324f00ab5deda37" },
     { name = "semif-phase1", marker = "extra == 'semif'", git = "https://github.com/TheoLeeCJ/SemIf?rev=1f2dea3e25379f9dfc98cb83c324f00ab5deda37" },
-    { name = "thisthat", marker = "extra == 'all-backends'", git = "https://github.com/hsuanguo/this-that-model.git" },
-    { name = "thisthat", marker = "extra == 'thisthat'", git = "https://github.com/hsuanguo/this-that-model.git" },
+    { name = "thisthat", marker = "extra == 'all'", git = "https://github.com/FLock-io/this-that-model.git" },
+    { name = "thisthat", marker = "extra == 'all-backends'", git = "https://github.com/FLock-io/this-that-model.git" },
+    { name = "thisthat", marker = "extra == 'thisthat'", git = "https://github.com/FLock-io/this-that-model.git" },
+    { name = "typesafe-sdk", marker = "extra == 'all'", specifier = ">=0.5.7" },
     { name = "typesafe-sdk", marker = "extra == 'all-backends'", specifier = ">=0.5.7" },
     { name = "typesafe-sdk", marker = "extra == 'jev'", specifier = ">=0.5.7" },
 ]
-provides-extras = ["jev", "laya", "semif", "thisthat", "all-backends", "dev"]
+provides-extras = ["jev", "laya", "semif", "thisthat", "all", "all-backends", "dev"]
 
 [[package]]
 name = "typer"

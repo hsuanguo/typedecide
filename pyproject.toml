@@ -24,6 +24,7 @@ jev = ["typesafe-sdk>=0.5.7"]
 laya = ["laya==0.3.5"]
 semif = ["semif-phase1"]
 thisthat = ["thisthat"]
+all = ["typesafe-sdk>=0.5.7", "laya==0.3.5", "semif-phase1", "thisthat"]
 all-backends = ["typesafe-sdk>=0.5.7", "laya==0.3.5", "semif-phase1", "thisthat"]
 dev = ["pytest>=8.0"]
 
@@ -46,4 +47,4 @@ testpaths = ["tests"]
 
 [tool.uv.sources]
 semif-phase1 = { git = "https://github.com/TheoLeeCJ/SemIf", rev = "1f2dea3e25379f9dfc98cb83c324f00ab5deda37" }
-thisthat = { git = "https://github.com/hsuanguo/this-that-model.git" }
+thisthat = { git = "https://github.com/FLock-io/this-that-model.git" }
