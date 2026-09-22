@@ -11,7 +11,7 @@ Run reproducible, fair typed-decision benchmarks for `typedecide` backends and p
 
 ## Scope
 
-- Treat `src/typedecide/fixtures/real_world.json` as package-owned benchmark data.
+- Treat `src/typedecide/fixtures/test_cases.json` as package-owned benchmark data.
 - Preserve existing artifacts. Every new live run uses a new output path.
 - Use `uv` for all installation, tests, benchmark commands, and report generation.
 - Keep API keys in environment variables. Never print, store, commit, or request them in chat.

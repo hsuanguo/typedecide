@@ -104,7 +104,7 @@ uv run python examples/resume_screening.py --backend jev
 
 ## Benchmark
 
-The project includes a 190-case, 19-family rule-grounded benchmark fixture. It is part of the package and can be run through any backend:
+The project includes a rule-grounded benchmark fixture. It is part of the package and can be run through any backend:
 
 ```bash
 uv run typedecide-benchmark validate

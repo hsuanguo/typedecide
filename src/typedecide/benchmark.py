@@ -19,11 +19,11 @@ class BenchmarkCase:
     tags: tuple[str, ...]
 
 
-def fixture_path(name: str = "real_world.json"):
+def fixture_path(name: str = "test_cases.json"):
     return files("typedecide").joinpath("fixtures", name)
 
 
-def load_cases(name: str = "real_world.json") -> list[BenchmarkCase]:
+def load_cases(name: str = "test_cases.json") -> list[BenchmarkCase]:
     records = json.loads(fixture_path(name).read_text())
     cases = []
     for record in records:
@@ -45,9 +45,13 @@ def load_cases(name: str = "real_world.json") -> list[BenchmarkCase]:
 
 def validate_real_world_suite() -> list[BenchmarkCase]:
     cases = load_cases()
-    families: dict[str, int] = {}
+    if not cases:
+        raise ValueError("benchmark fixture must contain cases")
     for case in cases:
-        families[case.family] = families.get(case.family, 0) + 1
-    if len(cases) != 190 or len(families) != 19 or set(families.values()) != {10}:
-        raise ValueError(f"expected 190 cases in 19 families of 10, got {families}")
+        if not case.family:
+            raise ValueError(f"{case.id} is missing a family")
+        if case.question.type not in {"choice", "noul", "score"}:
+            raise ValueError(f"{case.id} has unsupported primitive {case.question.type}")
+        if case.gold not in case.question.option_ids:
+            raise ValueError(f"{case.id} gold {case.gold!r} is not an option")
     return cases
