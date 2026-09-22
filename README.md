@@ -1,6 +1,6 @@
 # typedecide
 
-`typedecide` provides one Python API for typed decisions across interchangeable model backends, plus an exploratory benchmark that sends the same package-owned cases to each backend.
+`typedecide` provides one Python API/System One HTTP API for typed decisions across interchangeable model backends, plus an exploratory benchmark that sends the same package-owned cases to each backend.
 
 ## Requirements and installation
 
