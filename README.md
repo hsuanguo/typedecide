@@ -51,7 +51,7 @@ questions = [
     ),
 ]
 
-backend = td.load("thisthat")
+backend = td.load("semif")
 try:
     response = backend.predict(state, questions)
 finally:
