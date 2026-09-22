@@ -1,0 +1,42 @@
+{
+  "status": "complete",
+  "repeats": 1,
+  "fixtures": [
+    {"id": "route-billing", "family": "support_routing", "primitive": "choice", "gold_label": "billing", "fixture_hash": "example-route-hash"},
+    {"id": "policy-denied", "family": "access_policy", "primitive": "noul", "gold_label": "false", "fixture_hash": "example-policy-hash"}
+  ],
+  "runs": [
+    {
+      "system": "jev",
+      "case_id": "route-billing",
+      "repeat": 0,
+      "error": null,
+      "result": {"labels": ["billing", "other"], "probabilities": [0.91, 0.09], "selected_label": "billing", "top_probability": 0.91, "latency_ms": 244.0, "input_tokens": 81, "output_tokens": 10}
+    },
+    {
+      "system": "thisthat",
+      "case_id": "route-billing",
+      "repeat": 0,
+      "error": null,
+      "result": {"labels": ["billing", "other"], "probabilities": [0.71, 0.29], "selected_label": "billing", "top_probability": 0.71, "latency_ms": 38.0, "input_tokens": null, "output_tokens": null}
+    },
+    {
+      "system": "jev",
+      "case_id": "policy-denied",
+      "repeat": 0,
+      "error": null,
+      "result": {"labels": ["false", "true"], "probabilities": [0.94, 0.06], "selected_label": "false", "top_probability": 0.94, "latency_ms": 260.0, "input_tokens": 90, "output_tokens": 8}
+    },
+    {
+      "system": "thisthat",
+      "case_id": "policy-denied",
+      "repeat": 0,
+      "error": null,
+      "result": {"labels": ["false", "true"], "probabilities": [0.34, 0.66], "selected_label": "true", "top_probability": 0.66, "latency_ms": 41.0, "input_tokens": null, "output_tokens": null}
+    }
+  ],
+  "summaries": {
+    "jev": {"accuracy": 1.0, "multiclass_brier": 0.024, "nll": 0.078, "failure_rate": 0.0, "latency_ms": {"mean": 252.0, "median": 252.0, "p90": 258.4}, "input_tokens": 171, "estimated_jev_input_cost_usd": 0.000007182},
+    "thisthat": {"accuracy": 0.5, "multiclass_brier": 0.316, "nll": 0.698, "failure_rate": 0.0, "latency_ms": {"mean": 39.5, "median": 39.5, "p90": 40.7}, "input_tokens": 0, "estimated_jev_input_cost_usd": 0.0}
+  }
+}

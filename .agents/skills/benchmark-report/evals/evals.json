@@ -1,0 +1,40 @@
+{
+  "skill_name": "benchmark-report",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We added a new typedecide backend called acme-local. It returns a probability per option but its SDK rounds each probability to four decimals. Add 12 new rule-grounded cases across the existing benchmark families, run a one-case smoke test first, then benchmark acme-local against Laya for five repeats. Produce raw artifacts plus Markdown and self-contained HTML reports. Do not overwrite the existing 100-case artifacts.",
+      "expected_output": "A plan and implementation that validates new fixtures, treats rounded distribution normalization separately from model failures, uses new immutable artifact paths, performs a smoke test before the full run, and generates reproducible Markdown and self-contained HTML reports from raw data.",
+      "files": [],
+      "expectations": [
+        "Uses uv and validates fixtures and offline tests before model execution.",
+        "Preserves existing benchmark artifacts and creates new output paths.",
+        "Separates rounded-probability normalization from model failure accounting.",
+        "Plans or implements raw JSON, Markdown, and self-contained HTML reports derived from the artifact."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Review the supplied completed typedecide benchmark artifact. Generate a report for engineers deciding which backend to use. The report must show overall and per-family results, identify confident wrong cases, distinguish hosted versus local latency, include Jev token cost separately, and prove that every case is present in a self-contained HTML report with no API keys or external assets.",
+      "expected_output": "A reproducible report-generation and validation workflow, with concise conclusions grounded in the raw artifact and explicit caveats about authored cases and non-equivalent latency environments.",
+      "files": ["evals/files/tiny-artifact.json"],
+      "expectations": [
+        "Does not manually invent or copy aggregate metrics; derives them from the raw artifact.",
+        "Includes per-family and case-level analysis, including wrong predictions and probability evidence.",
+        "Separates Jev hosted token cost from local backend cost claims.",
+        "Validates that HTML contains all fixture IDs and no external resources or secret values.",
+        "Generates structured HTML with cards, real tables, comparison bars, and case-level error markers rather than escaped Markdown in a preformatted block."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I only changed a README example and want to run uv run pytest. Do not create a benchmark, call a model, or generate a report.",
+      "expected_output": "The benchmark-report skill should not take over this ordinary documentation/test task; the response should stay focused on the requested test run.",
+      "files": [],
+      "expectations": [
+        "Does not propose live backend benchmarking or report generation.",
+        "Recognizes that no benchmark workflow is needed for this request."
+      ]
+    }
+  ]
+}
