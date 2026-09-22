@@ -30,6 +30,7 @@ dev = ["pytest>=8.0"]
 
 [project.scripts]
 typedecide-benchmark = "typedecide.cli:main"
+typedecide-serve = "typedecide.server:main"
 
 [project.urls]
 Homepage = "https://github.com/hsuanguo/typedecide"
@@ -40,7 +41,7 @@ Issues = "https://github.com/hsuanguo/typedecide/issues"
 where = ["src"]
 
 [tool.setuptools.package-data]
-typedecide = ["fixtures/*.json"]
+typedecide = ["fixtures/*.json", "playground/*.html", "playground/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

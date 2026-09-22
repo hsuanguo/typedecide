@@ -1,0 +1,31 @@
+{
+  "source": "results/results-r1-190x5.md",
+  "fixture": {"cases": 190, "families": 19, "repeats": 5},
+  "backends": [
+    {"id": "jev", "label": "Jev", "accuracy": 0.979, "brier": 0.0347, "nll": 0.0684, "score_mae": 0.0053, "latency_ms": 275.9, "execution_failures": 0},
+    {"id": "thisthat", "label": "this-that", "accuracy": 0.800, "brier": 0.3308, "nll": 0.8319, "score_mae": 0.2021, "latency_ms": 136.5, "execution_failures": 0},
+    {"id": "laya", "label": "Laya", "accuracy": 0.547, "brier": 0.5424, "nll": 0.9349, "score_mae": 0.7417, "latency_ms": 58.7, "execution_failures": 0},
+    {"id": "semif", "label": "SemIf", "accuracy": 0.889, "brier": 0.1581, "nll": 0.2705, "score_mae": 0.1236, "latency_ms": 179.6, "execution_failures": 0}
+  ],
+  "families": {
+    "access_policy": [1, 0.5, 0.5, 0.9],
+    "agent_orchestration": [1, 0.9, 0.6, 0.5],
+    "command_risk": [1, 1, 0.7, 1],
+    "entity_matching": [1, 0.8, 0.9, 0.7],
+    "evidence_support": [1, 1, 0.8, 1],
+    "exception_scope": [1, 0.8, 0.5, 0.9],
+    "incident_severity": [1, 1, 0.8, 1],
+    "narrative_security": [0.8, 0.7, 0.6, 1],
+    "passage_relevance": [1, 0.7, 0.6, 1],
+    "record_linkage": [1, 0.7, 0.4, 0.9],
+    "refund_eligibility": [1, 0.8, 0.7, 1],
+    "security_triage": [1, 0.9, 0.4, 1],
+    "spatial_anomaly": [1, 0.9, 0.4, 1],
+    "structured_lookup": [1, 0.9, 0.2, 0.9],
+    "support_routing": [1, 0.8, 0.9, 1],
+    "thread_routing": [0.9, 0.7, 0.2, 0.8],
+    "tool_call_validation": [1, 0.7, 0.7, 0.8],
+    "tool_selection": [0.9, 0.4, 0.3, 0.5],
+    "value_selection": [1, 1, 0.2, 1]
+  }
+}

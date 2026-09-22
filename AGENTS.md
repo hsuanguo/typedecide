@@ -5,6 +5,7 @@
 - Public API and question invariants: [src/typedecide/types.py](src/typedecide/types.py).
 - Lazy backend registry: [src/typedecide/registry.py](src/typedecide/registry.py); adapters live in [src/typedecide/backends](src/typedecide/backends).
 - Package-owned benchmark fixture and validation: [src/typedecide/fixtures/test_cases.json](src/typedecide/fixtures/test_cases.json) and [src/typedecide/benchmark.py](src/typedecide/benchmark.py).
+- System One server and its playground UI: [src/typedecide/server.py](src/typedecide/server.py), [src/typedecide/wire.py](src/typedecide/wire.py), and [src/typedecide/playground/index.html](src/typedecide/playground/index.html).
 
 ## Working Conventions
 
@@ -23,4 +24,5 @@
 
 - Jev requires `TYPESAFE_API_KEY` in the environment. Never place credentials in source, fixtures, or result artifacts.
 - SemIf has a pinned ML stack; prefer a dedicated environment when it conflicts with other extras.
-- CLI device forwarding is backend-specific: Jev does not accept `device`; automatic Laya selection is represented by omitting `device`.
+- CLI device forwarding is backend-specific: Jev does not accept `device`; automatic Laya selection is represented by omitting `device`. The server uses the same rule.
+- `typedecide-serve` loads one backend for the life of the process. The request `model` field is accepted for System One clients and is not used to select a backend.

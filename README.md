@@ -1,6 +1,6 @@
 # typedecide
 
-`typedecide` provides one Python API for typed decisions across interchangeable model backends, plus an exploratory benchmark that sends the same package-owned cases to each backend.
+`typedecide` provides one Python API/System One HTTP API for typed decisions across interchangeable model backends, plus an exploratory benchmark that sends the same package-owned cases to each backend.
 
 ## Requirements and installation
 
@@ -34,6 +34,25 @@ export TYPESAFE_API_KEY="..."
 Local backends may download model weights on first use and need sufficient disk, memory, and—when configured for it—GPU capacity.
 
 ## Quickstart
+
+One process loads one backend. The page at [http://127.0.0.1:8000](http://127.0.0.1:8000) and the Python call below both ask that backend the same kind of typed question.
+
+### Web UI
+
+```bash
+uv sync --extra semif
+uv run typedecide-serve --backend semif --device cuda --port 8000
+```
+
+Open [http://127.0.0.1:8000](http://127.0.0.1:8000). The header names the loaded model. Three views share that process:
+
+- **Decide** is the default. Edit a state and one or more Choice, Noul, or Score questions, or start from Plant clinic, Trail window, or Patch review. **Run** sends them to `POST /v1/systemone` and shows the selected option with its probability distribution.
+- **Dino** asks the loaded model to clear each obstacle. **Jump** and **Duck** light up when that choice is applied, next to the decision latency.
+- **Scoreboard** shows a saved benchmark snapshot: overall accuracy, Brier, and score error, then accuracy by case family. It does not call the model you just started. Local and hosted latency in that snapshot are not hardware-equivalent.
+
+Swap `--backend` for `laya`, `thisthat`, or `jev` when that extra is installed. The [Server](#server) section covers the model flag, device forwarding, and pointing another System One client at this process. Note that you will need to set `TYPESAFE_API_KEY` for `jev` backend.
+
+### Python API
 
 ```python
 import typedecide as td
@@ -122,6 +141,32 @@ uv run python examples/policy_screening.py --backend jev
 uv run python examples/resume_screening.py --backend jev
 ```
 
+## Server
+
+`typedecide-serve` loads one backend and serves it on the [System One HTTP API](https://docs.typesafe.ai/api). The process also serves a playground at its root. Opening that URL is the server UI: the page posts to the same `POST /v1/systemone` route as any other client. The Dino view on that page sends each obstacle to the loaded model; Jump and Duck light up when the choice is applied, next to the decision latency.
+
+```bash
+uv run typedecide-serve --backend semif --device cuda --port 8000
+uv run typedecide-serve --backend jev --model jev-1.13.0
+```
+
+`--backend` is required. `--model` is forwarded to that backend; omit it to use the backend default. Device forwarding matches the benchmark CLI: `thisthat` and `semif` take `--device`, Laya receives `device` only when it is not `auto`, and Jev does not take a device.
+
+The loaded backend answers every request. A client may still send `model`, because the official clients always do, and the server does not use that field to switch models. The response `model` is the id the backend resolved. `GET /v1/models` lists that single model.
+
+Clients that speak the official API can point their base URL at the server:
+
+```bash
+export TYPESAFE_BASE_URL=http://127.0.0.1:8000
+export TYPESAFE_API_KEY=local
+```
+
+`TYPESAFE_API_KEY=local` in that snippet is a client placeholder. The SDK refuses to call without some key, and this server accepts whatever the client sends unless you pass `--api-key`. It is a different setting from the real TypeSafe credential the Jev backend reads under the same variable name. Put the real key in the environment that starts `typedecide-serve --backend jev`. Keep `local` in the client environment that points at this server.
+
+`@typesafe-ai/sdk`, which [pi-jev](https://github.com/TheoOliveira/pi-jev) uses, reads `TYPESAFE_BASE_URL` when the client is constructed with only an API key. The server accepts that key and does not check it unless you pass `--api-key`. With `--api-key`, `/v1` routes require `Authorization: Bearer`. The playground page at `/` stays open either way; its evaluation calls then need the same token, so leave the key unset when you are using the page.
+
+Object and array instructions or criteria are sent to the backend as compact JSON text. The Python question objects still store instructions as strings.
+
 ## Benchmark
 
 The benchmark is separate from any one backend. Its rule-grounded fixture ships with the package, and each run evaluates the same cases with one installed backend.
@@ -146,7 +191,7 @@ uv run typedecide-benchmark report \
   --html results/jev-laya-r1.html
 ```
 
-The benchmark is exploratory. It does not establish broad model superiority, and hosted round-trip latency and local runtime are not hardware-equivalent.
+The benchmark is exploratory. It does not establish broad model superiority, and hosted round-trip latency and local runtime are not hardware-equivalent. The latest comparison is in [results/scores.png](results/scores.png). The playground Scoreboard view reads the same snapshot from JSON.
 
 ## Development
 
