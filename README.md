@@ -122,6 +122,32 @@ uv run python examples/policy_screening.py --backend jev
 uv run python examples/resume_screening.py --backend jev
 ```
 
+## Server
+
+`typedecide-serve` loads one backend and serves it on the [System One HTTP API](https://docs.typesafe.ai/api). The process also serves a playground at its root. Opening that URL is the server UI: the page posts to the same `POST /v1/systemone` route as any other client. The Dino view on that page sends each obstacle to the loaded model; Jump and Duck light up when the choice is applied, next to the decision latency.
+
+```bash
+uv run typedecide-serve --backend laya --device cuda --port 8000
+uv run typedecide-serve --backend jev --model jev-1.13.0
+```
+
+`--backend` is required. `--model` is forwarded to that backend; omit it to use the backend default. Device forwarding matches the benchmark CLI: `thisthat` and `semif` take `--device`, Laya receives `device` only when it is not `auto`, and Jev does not take a device.
+
+The loaded backend answers every request. A client may still send `model`, because the official clients always do, and the server does not use that field to switch models. The response `model` is the id the backend resolved. `GET /v1/models` lists that single model.
+
+Clients that speak the official API can point their base URL at the server:
+
+```bash
+export TYPESAFE_BASE_URL=http://127.0.0.1:8000
+export TYPESAFE_API_KEY=local
+```
+
+`TYPESAFE_API_KEY=local` in that snippet is a client placeholder. The SDK refuses to call without some key, and this server accepts whatever the client sends unless you pass `--api-key`. It is a different setting from the real TypeSafe credential the Jev backend reads under the same variable name. Put the real key in the environment that starts `typedecide-serve --backend jev`. Keep `local` in the client environment that points at this server.
+
+`@typesafe-ai/sdk`, which [pi-jev](https://github.com/TheoOliveira/pi-jev) uses, reads `TYPESAFE_BASE_URL` when the client is constructed with only an API key. The server accepts that key and does not check it unless you pass `--api-key`. With `--api-key`, `/v1` routes require `Authorization: Bearer`. The playground page at `/` stays open either way; its evaluation calls then need the same token, so leave the key unset when you are using the page.
+
+Object and array instructions or criteria are sent to the backend as compact JSON text. The Python question objects still store instructions as strings.
+
 ## Benchmark
 
 The benchmark is separate from any one backend. Its rule-grounded fixture ships with the package, and each run evaluates the same cases with one installed backend.

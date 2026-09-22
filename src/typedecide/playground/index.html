@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>typedecide playground</title>
+  <style>
+    :root {
+      --paper: #f3efe4;
+      --ink: #141414;
+      --muted: #5e584e;
+      --line: #141414;
+      --soft: #e4dfd2;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif;
+    }
+
+    button, input, textarea, select { font: inherit; color: inherit; }
+
+    button { cursor: pointer; }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 28px 28px 48px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 24px;
+    }
+
+    .eyebrow {
+      margin: 0;
+      font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Menlo, Consolas, monospace;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 8px 0 0;
+      font-size: 44px;
+      line-height: 0.95;
+      letter-spacing: -0.045em;
+      font-weight: 750;
+    }
+
+    .model {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Menlo, Consolas, monospace;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+
+    .run {
+      flex: none;
+      background: transparent;
+      border: 1px solid var(--line);
+      padding: 12px 16px;
+      font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Menlo, Consolas, monospace;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .run:hover { background: var(--ink); color: var(--paper); }
+
+    .run:disabled { opacity: 0.45; cursor: progress; }
+
+    .examples {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 28px;
+    }
+
+    .examples .run { margin-left: auto; }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: transparent;
+      padding: 7px 12px;
+      font-size: 13px;
+    }
+
+    .chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+    #example-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    button:focus-visible, textarea:focus-visible, input:focus-visible {
+      outline: 2px solid var(--ink);
+      outline-offset: 2px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.8fr);
+      gap: 28px;
+      margin-top: 22px;
+      align-items: start;
+    }
+
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 18px 0 8px;
+    }
+
+    textarea, .field, .option input {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      outline: none;
+    }
+
+    textarea {
+      display: block;
+      min-height: 220px;
+      resize: vertical;
+      font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    textarea:focus, .field:focus, .option input:focus { background: #faf7f0; }
+
+    .card {
+      border: 1px solid var(--line);
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .card-top, .option, .card-foot {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .card-top { margin-bottom: 10px; }
+
+    .id {
+      flex: 1;
+      font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Menlo, Consolas, monospace;
+    }
+
+    .types { display: flex; }
+
+    .type {
+      border: 1px solid var(--line);
+      background: transparent;
+      margin-left: -1px;
+      padding: 8px 10px;
+      font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Menlo, Consolas, monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+    }
+
+    .type:first-child { margin-left: 0; }
+
+    .type[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+    .instructions { min-height: 72px; margin-top: 8px; }
+
+    .option { margin-top: 8px; }
+
+    .mark {
+      flex: none;
+      width: 28px;
+      text-align: center;
+      font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Menlo, Consolas, monospace;
+      font-size: 12px;
+    }
+
+    .option .key {
+      flex: 0 0 9rem;
+      width: 9rem;
+      max-width: 9rem;
+    }
+
+    .option .field:not(.key) { flex: 1; width: auto; min-width: 0; }
+
+    .option .text-button { flex: none; }
+
+    .card-foot { justify-content: space-between; margin-top: 12px; }
+
+    .text-button, .add {
+      background: transparent;
+      border: 1px solid var(--line);
+      padding: 7px 10px;
+      font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Menlo, Consolas, monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .count { color: var(--muted); font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; }
+
+    .pair { display: grid; grid-template-columns: 72px 1fr; gap: 8px; align-items: center; margin-top: 8px; }
+
+    .response {
+      border: 1px solid var(--line);
+      min-height: 220px;
+      padding: 14px;
+    }
+
+    .placeholder { margin: 0; color: var(--muted); }
+
+    .banner {
+      margin: 16px 0 0;
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      background: var(--soft);
+    }
+
+    .answer { padding: 12px 0; border-bottom: 1px solid var(--line); }
+
+    .answer:first-child { padding-top: 0; }
+
+    .answer:last-child { border-bottom: 0; padding-bottom: 0; }
+
+    .answer-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+
+    .answer h2 { margin: 0; font-size: 16px; letter-spacing: -0.02em; }
+
+    .badge {
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .value { margin: 8px 0; font-size: 28px; letter-spacing: -0.04em; font-weight: 700; }
+
+    .bar-row { display: grid; grid-template-columns: minmax(72px, 0.7fr) 1fr auto; gap: 8px; align-items: center; margin-top: 6px; }
+
+    .bar-label, .bar-pct {
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      font-size: 12px;
+    }
+
+    .track { height: 8px; border: 1px solid var(--line); }
+
+    .fill { height: 100%; background: var(--ink); }
+
+    .meta { margin: 12px 0 0; color: var(--muted); font-size: 12px; }
+
+    .footnote { margin: 22px 0 0; color: var(--muted); font-size: 13px; }
+
+    .header-actions { display: flex; gap: 8px; align-items: center; }
+
+    .stage {
+      margin-top: 22px;
+      border: 1px solid var(--line);
+      background: #f7f4ec;
+    }
+
+    canvas#dino {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .dino-hud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: stretch;
+      margin-top: 12px;
+    }
+
+    .meter, .dino-key {
+      border: 1px solid var(--line);
+      background: transparent;
+      min-width: 108px;
+      padding: 10px 12px;
+    }
+
+    .meter p, .dino-key { margin: 0; }
+
+    .readout {
+      margin-top: 4px;
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .dino-key {
+      font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Menlo, Consolas, monospace;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      min-height: 64px;
+    }
+
+    .dino-key[aria-pressed="true"] {
+      background: var(--ink);
+      color: var(--paper);
+      transform: translateY(3px);
+    }
+
+    .dino-log { margin: 14px 0 0; padding: 0; list-style: none; }
+
+    .dino-log li {
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      font-size: 12px;
+      padding: 4px 0;
+      border-bottom: 1px solid var(--soft);
+    }
+
+    @media (max-width: 860px) {
+      h1 { font-size: 34px; }
+      header { align-items: flex-start; flex-direction: column; }
+      .split { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div>
+        <p class="eyebrow" id="page-eyebrow">01 / Playground</p>
+        <h1 id="page-title">Let the model decide</h1>
+        <p class="model" id="model-line">Loading model</p>
+      </div>
+      <div class="header-actions">
+        <button class="chip" id="show-decide" type="button" aria-pressed="true">Decide</button>
+        <button class="chip" id="show-dino" type="button" aria-pressed="false">Dino</button>
+      </div>
+    </header>
+    <div id="decide-view">
+    <div class="examples">
+      <span class="eyebrow">Try an example</span>
+      <div id="example-chips"></div>
+      <button class="run" id="run" type="button">Run</button>
+    </div>
+    <p class="banner" id="banner" hidden></p>
+    <div class="split">
+      <section>
+        <div class="label-row">
+          <label class="eyebrow" for="state">State</label>
+        </div>
+        <textarea id="state" spellcheck="false"></textarea>
+        <div class="label-row">
+          <span class="eyebrow">Questions</span>
+          <button class="add" id="add-question" type="button">Add</button>
+        </div>
+        <div id="questions"></div>
+      </section>
+      <section>
+        <div class="label-row">
+          <span class="eyebrow">Response</span>
+        </div>
+        <div class="response" id="response">
+          <p class="placeholder">Run a request to see answers from the loaded model.</p>
+        </div>
+      </section>
+    </div>
+    <p class="footnote">This page and any client of POST /v1/systemone use the one model loaded when the server started.</p>
+    </div>
+    <div id="dino-view" hidden>
+      <div class="label-row">
+        <span class="eyebrow">Course</span>
+        <button class="run" id="dino-start" type="button">Model run</button>
+      </div>
+      <div class="stage"><canvas id="dino" width="760" height="200"></canvas></div>
+      <div class="dino-hud">
+        <div class="meter">
+          <p class="eyebrow">Latency</p>
+          <p class="readout" id="dino-latency">—</p>
+        </div>
+        <button class="dino-key" id="key-jump" type="button" disabled>Jump</button>
+        <button class="dino-key" id="key-duck" type="button" disabled>Duck</button>
+        <div class="meter">
+          <p class="eyebrow">Score</p>
+          <p class="readout" id="dino-score">0</p>
+        </div>
+      </div>
+      <p class="model" id="dino-status">The model chooses run, jump, or duck for each obstacle.</p>
+      <ol class="dino-log" id="dino-log"></ol>
+      <p class="footnote">Jump and Duck light up when the model’s choice is applied. Latency is the time from the request to that click.</p>
+    </div>
+  </div>
+  <script>
+    const examples = {
+      plant: {
+        label: "Plant clinic",
+        state: "A fiddle-leaf fig has brown crispy edges. The soil is still wet two days after watering, and the pot has no drainage hole.",
+        questions: [
+          choice("next_step", "What should happen to this plant next?", [
+            ["repot", "Move it into a pot with drainage and drier soil"],
+            ["water", "Water it again"],
+            ["wait", "Leave it and check again next week"]
+          ])
+        ]
+      },
+      trail: {
+        label: "Trail window",
+        state: "Ridge forecast for Saturday: 4°C at dawn, wind 40 km/h, rain ending by 9, clear after 11. The group has waterproofs and wants to be down before dark.",
+        questions: [
+          choice("start", "When should the group start the ridge?", [
+            ["dawn", "Leave at first light"],
+            ["late_morning", "Leave once the rain has stopped"],
+            ["cancel", "Stay off the ridge"]
+          ])
+        ]
+      },
+      patch: {
+        label: "Patch review",
+        state: {
+          diff: "rename public function parseConfig to loadConfig; update one internal caller; changelog not updated",
+          tests: "unit tests for the new name pass; no downstream package is in this repo"
+        },
+        questions: [
+          noul("breaking", "Does this change break callers outside the repo?", "External callers of the old name would fail.", "Only this repo's code uses the function."),
+          choice("review", "What should the reviewer do?", [
+            ["approve", "The change is safe to merge"],
+            ["request_changes", "Ask for a changelog or compatibility note"],
+            ["block", "Stop the merge until the public name is restored"]
+          ]),
+          score("risk", "How much harm would a mistaken merge cause?", ["None", "Local inconvenience", "Broken downstream builds"])
+        ]
+      }
+    };
+
+    let activeExample = "plant";
+    let questions = [];
+
+    const stateInput = document.getElementById("state");
+    const questionRoot = document.getElementById("questions");
+    const responseRoot = document.getElementById("response");
+    const banner = document.getElementById("banner");
+    const runButton = document.getElementById("run");
+
+    function choice(id, instructions, options) {
+      return {
+        id,
+        type: "choice",
+        instructions,
+        options: options.map(([optionId, description]) => ({ id: optionId, description })),
+        levels: ["Low", "High"],
+        falseText: "No",
+        trueText: "Yes"
+      };
+    }
+
+    function noul(id, instructions, trueText, falseText) {
+      const question = choice(id, instructions, [["no", "No"], ["yes", "Yes"]]);
+      question.type = "noul";
+      question.trueText = trueText;
+      question.falseText = falseText;
+      return question;
+    }
+
+    function score(id, instructions, levels) {
+      const question = choice(id, instructions, [["a", ""], ["b", ""]]);
+      question.type = "score";
+      question.levels = levels.slice();
+      return question;
+    }
+
+    function loadExample(name) {
+      activeExample = name;
+      const example = examples[name];
+      stateInput.value = typeof example.state === "string"
+        ? example.state
+        : JSON.stringify(example.state, null, 2);
+      questions = structuredClone(example.questions);
+      renderExamples();
+      renderQuestions();
+      hideBanner();
+    }
+
+    function renderExamples() {
+      const root = document.getElementById("example-chips");
+      root.replaceChildren();
+      for (const [name, example] of Object.entries(examples)) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "chip";
+        button.textContent = example.label;
+        button.setAttribute("aria-pressed", String(name === activeExample));
+        button.addEventListener("click", () => loadExample(name));
+        root.appendChild(button);
+      }
+    }
+
+    function renderQuestions() {
+      questionRoot.replaceChildren();
+      questions.forEach((question, index) => questionRoot.appendChild(questionCard(question, index)));
+    }
+
+    function questionCard(question, index) {
+      const card = document.createElement("article");
+      card.className = "card";
+      card.dataset.index = String(index);
+
+      const top = document.createElement("div");
+      top.className = "card-top";
+      const id = input(question.id, "field id");
+      id.dataset.field = "id";
+      id.setAttribute("aria-label", "Question id");
+      top.append(id, typeSwitch(question));
+      card.appendChild(top);
+
+      const instructions = document.createElement("textarea");
+      instructions.className = "field instructions";
+      instructions.value = question.instructions;
+      instructions.dataset.field = "instructions";
+      instructions.setAttribute("aria-label", "Instructions");
+      instructions.spellcheck = false;
+      card.appendChild(instructions);
+
+      if (question.type === "noul") card.append(pair("False", "falseText", question.falseText), pair("True", "trueText", question.trueText));
+      if (question.type === "choice") question.options.forEach((option, optionIndex) => card.appendChild(optionRow(option, optionIndex)));
+      if (question.type === "score") question.levels.forEach((level, levelIndex) => card.appendChild(levelRow(level, levelIndex)));
+
+      card.appendChild(cardFoot(question));
+      return card;
+    }
+
+    function typeSwitch(question) {
+      const wrap = document.createElement("div");
+      wrap.className = "types";
+      for (const kind of ["noul", "choice", "score"]) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "type";
+        button.textContent = kind;
+        button.setAttribute("aria-pressed", String(question.type === kind));
+        button.addEventListener("click", () => {
+          question.type = kind;
+          activeExample = "";
+          renderExamples();
+          renderQuestions();
+        });
+        wrap.appendChild(button);
+      }
+      return wrap;
+    }
+
+    function pair(label, field, value) {
+      const row = document.createElement("label");
+      row.className = "pair";
+      const name = document.createElement("span");
+      name.className = "eyebrow";
+      name.textContent = label;
+      const control = input(value, "field");
+      control.dataset.field = field;
+      row.append(name, control);
+      return row;
+    }
+
+    function optionRow(option, optionIndex) {
+      const row = document.createElement("div");
+      row.className = "option";
+      const mark = document.createElement("span");
+      mark.className = "mark";
+      mark.textContent = String.fromCharCode(65 + optionIndex);
+      const key = input(option.id, "field key");
+      key.dataset.field = "option-id";
+      key.dataset.option = String(optionIndex);
+      key.setAttribute("aria-label", "Option id");
+      const description = input(option.description, "field");
+      description.dataset.field = "option-description";
+      description.dataset.option = String(optionIndex);
+      description.setAttribute("aria-label", "Option description");
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "text-button";
+      remove.textContent = "Remove";
+      remove.dataset.action = "remove-option";
+      remove.dataset.option = String(optionIndex);
+      row.append(mark, key, description, remove);
+      return row;
+    }
+
+    function levelRow(level, levelIndex) {
+      const row = document.createElement("div");
+      row.className = "option";
+      const mark = document.createElement("span");
+      mark.className = "mark";
+      mark.textContent = String(levelIndex);
+      const control = input(level, "field");
+      control.dataset.field = "level";
+      control.dataset.option = String(levelIndex);
+      control.setAttribute("aria-label", "Score level");
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "text-button";
+      remove.textContent = "Remove";
+      remove.dataset.action = "remove-level";
+      remove.dataset.option = String(levelIndex);
+      row.append(mark, control, remove);
+      return row;
+    }
+
+    function cardFoot(question) {
+      const foot = document.createElement("div");
+      foot.className = "card-foot";
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "text-button";
+      remove.textContent = "Remove question";
+      remove.dataset.action = "remove-question";
+      const count = document.createElement("span");
+      count.className = "count";
+      if (question.type === "choice") count.textContent = `${question.options.length} / 255`;
+      if (question.type === "score") count.textContent = `${question.levels.length} / 10`;
+      const add = document.createElement("button");
+      add.type = "button";
+      add.className = "text-button";
+      add.dataset.action = question.type === "score" ? "add-level" : "add-option";
+      add.textContent = "Add";
+      add.hidden = question.type === "noul";
+      foot.append(remove, count, add);
+      return foot;
+    }
+
+    function input(value, className) {
+      const control = document.createElement("input");
+      control.className = className;
+      control.value = value;
+      control.spellcheck = false;
+      return control;
+    }
+
+    stateInput.addEventListener("input", () => {
+      if (!activeExample) return;
+      activeExample = "";
+      renderExamples();
+    });
+
+    questionRoot.addEventListener("input", (event) => {
+      const card = event.target.closest("[data-index]");
+      if (!card) return;
+      if (activeExample) {
+        activeExample = "";
+        renderExamples();
+      }
+      const question = questions[Number(card.dataset.index)];
+      const field = event.target.dataset.field;
+      const optionIndex = Number(event.target.dataset.option);
+      if (field === "id") question.id = event.target.value;
+      if (field === "instructions") question.instructions = event.target.value;
+      if (field === "falseText") question.falseText = event.target.value;
+      if (field === "trueText") question.trueText = event.target.value;
+      if (field === "option-id") question.options[optionIndex].id = event.target.value;
+      if (field === "option-description") question.options[optionIndex].description = event.target.value;
+      if (field === "level") question.levels[optionIndex] = event.target.value;
+    });
+
+    questionRoot.addEventListener("click", (event) => {
+      const action = event.target.dataset.action;
+      if (!action) return;
+      const card = event.target.closest("[data-index]");
+      const index = Number(card.dataset.index);
+      const question = questions[index];
+      const optionIndex = Number(event.target.dataset.option);
+      if (action === "remove-question") questions.splice(index, 1);
+      if (action === "add-option" && question.options.length < 255) {
+        question.options.push({ id: "", description: "" });
+      }
+      if (action === "remove-option") question.options.splice(optionIndex, 1);
+      if (action === "add-level" && question.levels.length < 10) question.levels.push("");
+      if (action === "remove-level") question.levels.splice(optionIndex, 1);
+      activeExample = "";
+      renderExamples();
+      renderQuestions();
+    });
+
+    document.getElementById("add-question").addEventListener("click", () => {
+      questions.push(choice(`question_${questions.length + 1}`, "", [["a", ""], ["b", ""]]));
+      activeExample = "";
+      renderExamples();
+      renderQuestions();
+    });
+
+    function hideBanner() {
+      banner.hidden = true;
+      banner.textContent = "";
+    }
+
+    function showBanner(message) {
+      banner.hidden = false;
+      banner.textContent = message;
+    }
+
+    function readState() {
+      const text = stateInput.value.trim();
+      if (!text) return "";
+      if (text.startsWith("{") || text.startsWith("[")) return JSON.parse(text);
+      return stateInput.value;
+    }
+
+    function toApi(question) {
+      if (question.type === "noul") {
+        return {
+          type: "noul",
+          instructions: question.instructions,
+          criteria: { false: question.falseText, true: question.trueText }
+        };
+      }
+      if (question.type === "score") {
+        return { type: "score", instructions: question.instructions, criteria: question.levels.slice() };
+      }
+      const criteria = {};
+      for (const option of question.options) criteria[option.id] = option.description;
+      return { type: "choice", instructions: question.instructions, criteria };
+    }
+
+    function renderResponse(payload, elapsedMs) {
+      responseRoot.replaceChildren();
+      const answers = payload.answers || {};
+      for (const [id, answer] of Object.entries(answers)) {
+        const block = document.createElement("article");
+        block.className = "answer";
+        const head = document.createElement("div");
+        head.className = "answer-head";
+        const title = document.createElement("h2");
+        title.textContent = id;
+        const badge = document.createElement("span");
+        badge.className = "badge";
+        badge.textContent = answer.type;
+        head.append(title, badge);
+        block.appendChild(head);
+        const value = document.createElement("p");
+        value.className = "value";
+        if (answer.type === "noul") value.textContent = Number(answer.noul).toFixed(2);
+        if (answer.type === "choice") value.textContent = answer.choice;
+        if (answer.type === "score") value.textContent = Number(answer.score).toFixed(2);
+        block.appendChild(value);
+        const distribution = answer.type === "noul"
+          ? { false: 1 - answer.noul, true: answer.noul }
+          : answer.probabilities;
+        for (const [option, probability] of Object.entries(distribution)) {
+          block.appendChild(bar(option, probability, answer.legend && answer.legend[option]));
+        }
+        responseRoot.appendChild(block);
+      }
+      const meta = document.createElement("p");
+      meta.className = "meta";
+      const usage = payload.usage || {};
+      meta.textContent = `${payload.model} · ${elapsedMs} ms · in ${usage.input_tokens ?? "—"} · out ${usage.output_tokens ?? "—"}`;
+      responseRoot.appendChild(meta);
+    }
+
+    function bar(label, probability, legend) {
+      const row = document.createElement("div");
+      row.className = "bar-row";
+      const name = document.createElement("span");
+      name.className = "bar-label";
+      name.textContent = legend ? `${label} ${legend}` : label;
+      const track = document.createElement("div");
+      track.className = "track";
+      const fill = document.createElement("div");
+      fill.className = "fill";
+      fill.style.width = `${Math.max(0, Math.min(1, probability)) * 100}%`;
+      track.appendChild(fill);
+      const pct = document.createElement("span");
+      pct.className = "bar-pct";
+      pct.textContent = `${Math.round(probability * 100)}%`;
+      row.append(name, track, pct);
+      return row;
+    }
+
+    runButton.addEventListener("click", async () => {
+      hideBanner();
+      let state;
+      try {
+        state = readState();
+      } catch {
+        showBanner("State JSON is invalid.");
+        return;
+      }
+      if (!questions.length) {
+        showBanner("Add at least one question.");
+        return;
+      }
+      const body = { state, questions: {} };
+      for (const question of questions) {
+        if (!question.id) {
+          showBanner("Every question needs an id.");
+          return;
+        }
+        if (body.questions[question.id]) {
+          showBanner(`Duplicate question id ${question.id}.`);
+          return;
+        }
+        body.questions[question.id] = toApi(question);
+      }
+      runButton.disabled = true;
+      runButton.textContent = "Running";
+      const started = performance.now();
+      try {
+        const response = await fetch("/v1/systemone", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+        const payload = await response.json();
+        if (!response.ok) {
+          const detail = payload.error || {};
+          showBanner(detail.field ? `${detail.field}: ${detail.message}` : detail.message || "Request failed.");
+          return;
+        }
+        renderResponse(payload, Math.round(performance.now() - started));
+      } catch {
+        showBanner("The server did not return a response.");
+      } finally {
+        runButton.disabled = false;
+        runButton.textContent = "Run";
+      }
+    });
+
+    fetch("/v1/models")
+      .then((response) => response.json())
+      .then((payload) => {
+        const model = payload.models && payload.models[0];
+        document.getElementById("model-line").textContent = model
+          ? `${model.description} · ${model.name}`
+          : "No model reported";
+      })
+      .catch(() => {
+        document.getElementById("model-line").textContent = "Model list unavailable";
+      });
+
+    loadExample("plant");
+  </script>
+  <script>
+    const DINO_X = 64;
+    const DINO_W = 32;
+    const GROUND = 158;
+    const ASK_LEAD = 1.4;
+    const JUMP_LEAD = 0.22;
+    const DUCK_LEAD = 0.22;
+
+    const dinoCanvas = document.getElementById("dino");
+    const dinoCtx = dinoCanvas.getContext("2d");
+    const latencyEl = document.getElementById("dino-latency");
+    const scoreEl = document.getElementById("dino-score");
+    const statusEl = document.getElementById("dino-status");
+    const logEl = document.getElementById("dino-log");
+    const startButton = document.getElementById("dino-start");
+    const jumpKey = document.getElementById("key-jump");
+    const duckKey = document.getElementById("key-duck");
+
+    const runner = {
+      running: false,
+      speed: 240,
+      score: 0,
+      dinoY: 0,
+      dinoV: 0,
+      duckUntil: 0,
+      obstacles: [],
+      spawnIn: 0,
+      nextId: 1,
+      inflight: null,
+      abort: null,
+      log: [],
+      clock: 0,
+      pressTimer: 0,
+    };
+
+    function showView(name) {
+      const dino = name === "dino";
+      document.getElementById("decide-view").hidden = dino;
+      document.getElementById("dino-view").hidden = !dino;
+      document.getElementById("show-decide").setAttribute("aria-pressed", String(!dino));
+      document.getElementById("show-dino").setAttribute("aria-pressed", String(dino));
+      document.getElementById("page-eyebrow").textContent = dino ? "02 / Dino" : "01 / Playground";
+      document.getElementById("page-title").textContent = dino ? "Let the model run" : "Let the model decide";
+      if (!dino) stopRunner();
+    }
+
+    document.getElementById("show-decide").addEventListener("click", () => showView("decide"));
+    document.getElementById("show-dino").addEventListener("click", () => showView("dino"));
+
+    function resetRunner() {
+      runner.speed = 240;
+      runner.score = 0;
+      runner.dinoY = 0;
+      runner.dinoV = 0;
+      runner.duckUntil = 0;
+      runner.obstacles = [];
+      runner.spawnIn = 220;
+      runner.inflight = null;
+      runner.clock = 0;
+      runner.log = [];
+      scoreEl.textContent = "0";
+      latencyEl.textContent = "—";
+      statusEl.textContent = "Waiting for the first obstacle.";
+      logEl.replaceChildren();
+      jumpKey.setAttribute("aria-pressed", "false");
+      duckKey.setAttribute("aria-pressed", "false");
+    }
+
+    function stopRunner() {
+      runner.running = false;
+      if (runner.abort) runner.abort.abort();
+      runner.abort = null;
+      runner.inflight = null;
+      startButton.textContent = "Model run";
+    }
+
+    startButton.addEventListener("click", () => {
+      if (runner.running) {
+        stopRunner();
+        statusEl.textContent = "Stopped.";
+        drawRunner();
+        return;
+      }
+      resetRunner();
+      runner.running = true;
+      runner.abort = new AbortController();
+      startButton.textContent = "Stop";
+      let last = performance.now();
+      const frame = (now) => {
+        if (!runner.running) return;
+        const dt = Math.min(0.05, (now - last) / 1000);
+        last = now;
+        stepRunner(dt, now);
+        drawRunner();
+        requestAnimationFrame(frame);
+      };
+      requestAnimationFrame(frame);
+    });
+
+    function stepRunner(dt, now) {
+      runner.clock += dt;
+      runner.speed = Math.min(460, 240 + runner.score * 10);
+      if (runner.dinoV !== 0 || runner.dinoY > 0) {
+        runner.dinoV += 2400 * dt;
+        runner.dinoY -= runner.dinoV * dt;
+        if (runner.dinoY <= 0) {
+          runner.dinoY = 0;
+          runner.dinoV = 0;
+        }
+      }
+      runner.spawnIn -= runner.speed * dt;
+      if (runner.spawnIn <= 0) spawnObstacle();
+      for (const obstacle of runner.obstacles) obstacle.x -= runner.speed * dt;
+      const dinoRight = DINO_X + DINO_W;
+      for (const obstacle of runner.obstacles) {
+        if (obstacle.plan && obstacle.x <= obstacle.plan.commitX) {
+          const plan = obstacle.plan;
+          obstacle.plan = null;
+          applyAction(plan.action, plan.latency, "on time");
+        }
+        if (!obstacle.asked && !runner.inflight && obstacle.x - dinoRight < runner.speed * ASK_LEAD && obstacle.x > dinoRight) {
+          askModel(obstacle);
+        }
+        if (!obstacle.scored && obstacle.x + obstacle.w < DINO_X) {
+          obstacle.scored = true;
+          runner.score += 1;
+          scoreEl.textContent = String(runner.score);
+        }
+        if (!obstacle.scored && hit(obstacle)) {
+          crash();
+          return;
+        }
+      }
+      runner.obstacles = runner.obstacles.filter((obstacle) => obstacle.x + obstacle.w > -20);
+      if (runner.inflight) {
+        latencyEl.textContent = `${Math.round(now - runner.inflight.started)} ms`;
+        statusEl.textContent = "Waiting for the model";
+      }
+    }
+
+    function spawnObstacle() {
+      const bird = Math.random() < 0.28;
+      const height = bird ? 26 : 30 + Math.floor(Math.random() * 22);
+      runner.obstacles.push({
+        id: runner.nextId++,
+        kind: bird ? "bird" : "cactus",
+        x: dinoCanvas.width + 8,
+        w: bird ? 36 : 18,
+        h: height,
+        lift: bird ? 26 : 0,
+        asked: false,
+        scored: false,
+        plan: null,
+      });
+      runner.spawnIn = runner.speed * (1.9 + Math.random() * 0.8);
+    }
+
+    function askModel(obstacle) {
+      obstacle.asked = true;
+      const started = performance.now();
+      runner.inflight = { id: obstacle.id, started };
+      const distance = Math.max(0, Math.round(obstacle.x - (DINO_X + DINO_W)));
+      fetch("/v1/systemone", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: runner.abort.signal,
+        body: JSON.stringify({
+          state: {
+            speed_px_per_second: Math.round(runner.speed),
+            dino: runner.dinoY > 1 ? "jumping" : ducking() ? "ducking" : "on_ground",
+            obstacle: {
+              kind: obstacle.kind,
+              distance_px: distance,
+              height_px: obstacle.h,
+              bottom_above_ground_px: obstacle.lift,
+            },
+          },
+          questions: {
+            action: {
+              type: "choice",
+              instructions: "Choose the action that avoids `obstacle`. A cactus is on the ground and is avoided by jumping. A bird is in the air and is avoided by ducking. The button is pressed when the obstacle gets close.",
+              criteria: {
+                run: "No avoidance is needed.",
+                jump: "Avoid a ground obstacle.",
+                duck: "Avoid an airborne obstacle.",
+              },
+            },
+          },
+        }),
+      }).then(async (response) => {
+        const payload = await response.json();
+        if (!runner.running || runner.inflight?.id !== obstacle.id) return;
+        const latency = Math.round(performance.now() - started);
+        runner.inflight = null;
+        latencyEl.textContent = `${latency} ms`;
+        if (!response.ok) {
+          remember(`${latency} ms · request failed`);
+          statusEl.textContent = payload.error?.message || "The model request failed.";
+          return;
+        }
+        const action = payload.answers.action.choice;
+        const lead = action === "jump" ? JUMP_LEAD : action === "duck" ? DUCK_LEAD : 0;
+        const commitX = DINO_X + DINO_W + runner.speed * lead;
+        if (action === "run" || obstacle.x <= commitX) {
+          applyAction(action, latency, action === "run" ? "hold" : "late");
+        } else obstacle.plan = { action, commitX, latency };
+      }).catch((error) => {
+        if (error.name === "AbortError") return;
+        runner.inflight = null;
+        statusEl.textContent = "The model request failed.";
+      });
+    }
+
+    function applyAction(action, latency, timing) {
+      if (action === "jump") {
+        if (runner.dinoY < 1) runner.dinoV = -660;
+        pressKey(jumpKey);
+      } else if (action === "duck") {
+        runner.duckUntil = runner.clock + 0.45;
+        pressKey(duckKey);
+      }
+      const label = action.toUpperCase();
+      remember(`${label} · ${latency} ms · ${timing}`);
+      statusEl.textContent = action === "run" ? `Hold · ${latency} ms` : `Clicked ${label} · ${latency} ms · ${timing}`;
+    }
+
+    function pressKey(key) {
+      jumpKey.setAttribute("aria-pressed", "false");
+      duckKey.setAttribute("aria-pressed", "false");
+      key.setAttribute("aria-pressed", "true");
+      window.clearTimeout(runner.pressTimer);
+      runner.pressTimer = window.setTimeout(() => key.setAttribute("aria-pressed", "false"), 180);
+    }
+
+    function remember(line) {
+      runner.log.unshift(line);
+      runner.log = runner.log.slice(0, 6);
+      logEl.replaceChildren();
+      for (const entry of runner.log) {
+        const item = document.createElement("li");
+        item.textContent = entry;
+        logEl.appendChild(item);
+      }
+    }
+
+    function ducking() {
+      return runner.clock < runner.duckUntil && runner.dinoY < 1;
+    }
+
+    function dinoBox() {
+      const height = ducking() ? 20 : 44;
+      const bottom = GROUND - runner.dinoY;
+      return { x: DINO_X + 4, y: bottom - height + 2, w: DINO_W - 8, h: height - 6 };
+    }
+
+    function obstacleBox(obstacle) {
+      const bottom = GROUND - obstacle.lift;
+      return { x: obstacle.x + 4, y: bottom - obstacle.h + 2, w: obstacle.w - 8, h: obstacle.h - 4 };
+    }
+
+    function hit(obstacle) {
+      const a = dinoBox();
+      const b = obstacleBox(obstacle);
+      return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+    }
+
+    function crash() {
+      const latency = latencyEl.textContent;
+      stopRunner();
+      startButton.textContent = "Run again";
+      statusEl.textContent = `Crashed. Last latency ${latency}.`;
+      drawRunner();
+    }
+
+    function drawRunner() {
+      const ctx = dinoCtx;
+      ctx.clearRect(0, 0, dinoCanvas.width, dinoCanvas.height);
+      ctx.fillStyle = "#f7f4ec";
+      ctx.fillRect(0, 0, dinoCanvas.width, dinoCanvas.height);
+      ctx.strokeStyle = "#141414";
+      ctx.fillStyle = "#141414";
+      ctx.beginPath();
+      ctx.moveTo(0, GROUND + 0.5);
+      ctx.lineTo(dinoCanvas.width, GROUND + 0.5);
+      ctx.stroke();
+      const offset = runner.clock * runner.speed;
+      for (let mark = 0; mark < 24; mark += 1) {
+        const x = ((mark * 48 - (offset % 48)) + 48) % (dinoCanvas.width + 48) - 24;
+        ctx.fillRect(x, GROUND + 8, 14, 2);
+      }
+      for (const obstacle of runner.obstacles) {
+        if (obstacle.kind === "bird") drawBird(ctx, obstacle);
+        else drawCactus(ctx, obstacle);
+      }
+      drawDino(ctx);
+      if (!runner.running && startButton.textContent === "Run again") {
+        ctx.font = "16px ui-monospace, Menlo, Consolas, monospace";
+        ctx.fillText("CRASHED", 330, 78);
+      }
+    }
+
+    function drawDino(ctx) {
+      const bottom = GROUND - runner.dinoY;
+      const ducked = ducking();
+      const bodyTop = bottom - (ducked ? 22 : 40);
+      ctx.fillRect(DINO_X, bodyTop + 6, 28, ducked ? 16 : 28);
+      ctx.fillRect(DINO_X + 16, bodyTop, ducked ? 22 : 16, 14);
+      ctx.fillStyle = "#f7f4ec";
+      ctx.fillRect(DINO_X + (ducked ? 32 : 26), bodyTop + 3, 4, 4);
+      ctx.fillStyle = "#141414";
+      if (runner.dinoY < 1) {
+        const step = Math.floor(runner.clock * 12) % 2;
+        ctx.fillRect(DINO_X + 6, bottom - 8, 5, step ? 8 : 4);
+        ctx.fillRect(DINO_X + 16, bottom - 8, 5, step ? 4 : 8);
+      } else {
+        ctx.fillRect(DINO_X + 8, bottom - 8, 5, 8);
+        ctx.fillRect(DINO_X + 18, bottom - 6, 5, 6);
+      }
+    }
+
+    function drawCactus(ctx, obstacle) {
+      const bottom = GROUND;
+      ctx.fillRect(obstacle.x + 6, bottom - obstacle.h, 8, obstacle.h);
+      ctx.fillRect(obstacle.x, bottom - obstacle.h + 14, 6, 16);
+      ctx.fillRect(obstacle.x + 14, bottom - obstacle.h + 18, 6, 14);
+    }
+
+    function drawBird(ctx, obstacle) {
+      const top = GROUND - obstacle.lift - obstacle.h;
+      const flap = Math.floor(runner.clock * 8) % 2 ? 0 : 8;
+      ctx.fillRect(obstacle.x + 10, top + 6, 18, 6);
+      ctx.beginPath();
+      ctx.moveTo(obstacle.x, top + flap);
+      ctx.lineTo(obstacle.x + 14, top + 8);
+      ctx.lineTo(obstacle.x, top + 14);
+      ctx.fill();
+      ctx.fillRect(obstacle.x + 26, top + 7, 8, 3);
+    }
+
+    drawRunner();
+  </script>
+</body>
+</html>
